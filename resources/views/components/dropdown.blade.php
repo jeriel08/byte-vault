@@ -2,36 +2,26 @@
 
 @php
     $alignmentClasses = match ($align) {
-        'left' => 'origin-top-left left-0',
-        'top' => 'origin-top',
-        default => 'origin-top-right right-0',
+        'left' => 'dropdown-menu-start',
+        'top' => '', // Bootstrap doesn’t natively support "top" alignment this way; we’ll assume default
+        default => 'dropdown-menu-end', // Right-aligned
     };
 
+    // Bootstrap doesn’t use Tailwind’s 'w-48' (12rem); we’ll set width via CSS if needed
     $width = match ($width) {
-        '48' => 'w-48',
+        '48' => '12rem', // Matches Tailwind’s w-48
         default => $width,
     };
 @endphp
 
-<div class="relative" x-data="{ open: false }" @click.outside="open = false" @close.stop="open = false">
+<div class="dropdown">
     <!-- Trigger -->
-    <div @click="open = ! open">
+    <div class="dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
         {{ $trigger }}
     </div>
 
     <!-- Dropdown Content -->
-    <div x-show="open"
-         x-transition:enter="transition ease-out duration-200"
-         x-transition:enter-start="opacity-0 scale-95"
-         x-transition:enter-end="opacity-100 scale-100"
-         x-transition:leave="transition ease-in duration-75"
-         x-transition:leave-start="opacity-100 scale-100"
-         x-transition:leave-end="opacity-0 scale-95"
-         class="absolute z-50 mt-2 {{ $width }} rounded-md shadow-lg {{ $alignmentClasses }}"
-         style="display: none;"
-         @click="open = false">
-        <div class="rounded-md ring-1 ring-black ring-opacity-5 py-1">
-            {{ $content }}
-        </div>
+    <div class="dropdown-menu {{ $alignmentClasses }}" aria-labelledby="dropdownMenuButton" style="width: {{ $width }};">
+        {{ $content }}
     </div>
 </div>

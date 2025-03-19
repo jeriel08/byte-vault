@@ -14,12 +14,15 @@
             <a class="navbar-brand fw-semibold" href="{{ route('dashboard') }}">DASHBOARD</a>
         </div>
 
-        <!-- Right side: Account Section with Dropdown Button -->
+        <!-- Right side: Account Section with Dropdown -->
         <div class="d-flex align-items-center me-5 ms-auto">
-            <span class="material-icons-outlined me-2 fs-1 text-dark">account_circle</span>
-            <div>
-                <p class="fw-bold mb-0 text-dark">{{ Auth::user()->firstName }} {{ Auth::user()->lastName }}</p>
-                <small class="mt-0 text-muted">{{ Auth::user()->role }}</small>
+            <!-- User Info -->
+            <div class="d-flex align-items-center">
+                <span class="material-icons-outlined me-2 fs-1 text-dark">account_circle</span>
+                <div>
+                    <p class="fw-bold mb-0 text-dark">{{ Auth::user()->firstName }} {{ Auth::user()->lastName }}</p>
+                    <small class="mt-0 text-muted">{{ Auth::user()->role }}</small>
+                </div>
             </div>
 
             <!-- Dropdown Component -->
@@ -31,15 +34,15 @@
                 </x-slot>
 
                 <x-slot name="content">
-                    <x-dropdown-link :href="route('profile.edit')">
+                    <a class="dropdown-item" href="{{ route('profile.edit') }}">
                         Account Settings
-                    </x-dropdown-link>
+                    </a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault(); this.closest('form').submit();">
+                        <a class="dropdown-item" href="{{ route('logout') }}"
+                        onclick="event.preventDefault(); this.closest('form').submit();">
                             Logout
-                        </x-dropdown-link>
+                        </a>
                     </form>
                 </x-slot>
             </x-dropdown>
