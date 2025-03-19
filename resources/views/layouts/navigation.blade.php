@@ -1,4 +1,4 @@
-<nav class="navbar bg-body-tertiary fixed-top shadow-sm">
+<nav class="navbar fixed-top shadow-sm">
     <div class="container-fluid">
         <!-- Left side: Button and Header -->
         <div class="d-flex align-items-center">
@@ -15,9 +15,9 @@
         </div>
 
         <!-- Right side: Account Section with Dropdown -->
-        <div class="d-flex align-items-center me-5 ms-auto">
+        <div class="d-flex align-items-center me-4 ms-auto">
             <!-- User Info -->
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center me-2">
                 <span class="material-icons-outlined me-2 fs-1 text-dark">account_circle</span>
                 <div>
                     <p class="fw-bold mb-0 text-dark">{{ Auth::user()->firstName }} {{ Auth::user()->lastName }}</p>

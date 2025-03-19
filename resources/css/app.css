@@ -178,8 +178,7 @@ nav.navbar {
     width: 12rem;
     z-index: 1000;
     background-color: var(--color-2) !important;
-    border: 1px solid var(--color-3) !important;
-    border: 1px solid #ddd;
+    border: 2px solid var(--color-5) !important;
     border-radius: 4px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
@@ -196,20 +195,32 @@ nav.navbar {
     color: var(--color-2) !important;
 }
 
+.navbar .text-dark {
+    color: var(--color-1) !important;
+}
+
+.navbar .text-muted {
+    color: var(--color-4) !important;
+}
+
 /* Offcanvas Styling */
 .offcanvas {
     background-color: var(--color-2) !important;
-    color: var(--color-1) !important;
+    color: var(--color-4) !important;
 }
 
 .offcanvas .offcanvas-header {
     border-bottom: 1px solid var(--color-3) !important;
 }
 
-.offcanvas .offcanvas-body a {
+.offcanvas .offcanvas-body a.nav-link {
     color: var(--color-1) !important;
     text-decoration: none;
     transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.offcanvas .offcanvas-body a.nav-link span {
+    color: inherit !important;
 }
 
 .offcanvas .offcanvas-body .nav-link {
@@ -222,15 +233,15 @@ nav.navbar {
     gap: 12px;
 }
 
-.offcanvas .offcanvas-body .nav-link:hover {
+.offcanvas .offcanvas-body a.nav-link:hover {
     background-color: var(--color-5) !important;
     color: var(--color-2) !important;
 }
 
-.offcanvas .offcanvas-body .active {
-    background-color: var(--color-1) !important;
-    color: var(--color-2) !important;
-    font-weight: 600;
+/* Active state */
+.offcanvas .offcanvas-body a.nav-link.active {
+    color: var(--color-2) !important; /* #2a5055 - Dark teal for readability */
+    background-color: var(--color-4); /* #eed6ce - Light peach for contrast */
 }
 
 .offcanvas .offcanvas-header .nav-icon {
