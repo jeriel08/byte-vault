@@ -47,3 +47,75 @@
     cursor: not-allowed; /* Disabled cursor */
     opacity: 0.7; /* Slightly faded */
 }
+
+/* Override Bootstrap's form-control */
+.form-control {
+    background-color: var(--color-1) !important;
+    color: var(--color-2) !important;
+    border: 2px solid var(--color-3) !important;
+    padding: 0.5rem 1rem !important;
+    font-size: 1rem !important;
+    border-radius: 0.375rem !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+/* Focus state */
+.form-control:focus {
+    background-color: var(--color-4) !important;
+    color: var(--color-2) !important;
+    border-color: var(--color-5) !important;
+    box-shadow: 0 0 0 0.2rem rgba(212, 144, 102, 0.25) !important;
+    outline: none !important;
+}
+
+/* Placeholder text */
+.form-control::placeholder {
+    color: var(--color-3) !important;
+    opacity: 0.8 !important;
+}
+
+/* Disabled state */
+.form-control:disabled,
+.form-control[readonly] {
+    background-color: var(--color-3) !important;
+    color: var(--color-4) !important;
+    border-color: var(--color-3) !important;
+    opacity: 0.7 !important;
+}
+
+/* Override Bootstrap's form-check-input */
+.form-check-input {
+    background-color: var(--color-1);
+    border: 2px solid var(--color-3);
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Checked state */
+.form-check-input:checked {
+    background-color: var(--color-2);
+    border-color: var(--color-2);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23eae4da' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+}
+
+/* Focus state */
+.form-check-input:focus {
+    border-color: var(--color-5);
+    box-shadow: 0 0 0 0.2rem rgba(212, 144, 102, 0.25);
+    outline: none;
+}
+
+/* Disabled state */
+.form-check-input:disabled {
+    background-color: var(--color-3);
+    border-color: var(--color-3);
+    opacity: 0.7;
+}
+
+/* Disabled and checked */
+.form-check-input:disabled:checked {
+    background-color: var(--color-3);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23eed6ce' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+}

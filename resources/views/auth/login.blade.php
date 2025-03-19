@@ -29,7 +29,7 @@
         <div class="mt-4">
             <label for="remember_me" class="form-check-label inline-flex items-center">
                 <input id="remember_me" type="checkbox" class="form-check-input" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
+                <span class="ms-2">{{ __('Remember me') }}</span>
             </label>
         </div>
 
