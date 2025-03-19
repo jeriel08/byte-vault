@@ -119,3 +119,115 @@
     background-color: var(--color-3);
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23eed6ce' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
 }
+
+/* Navigation Styling */
+nav.navbar {
+    background-color: var(--color-2) !important;
+    color: var(--color-1) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-size: 1.8em !important;
+    color: var(--color-1) !important;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.navbar .navbar-toggler .navbar-icon {
+    color: var(--color-1) !important;
+    font-size: 2em;
+    transition: color 0.3s ease;
+}
+
+.navbar .navbar-toggler:hover .navbar-icon {
+    color: var(--color-5) !important;
+}
+
+/* Account Section Styling */
+.navbar .d-flex.align-items-center.me-5.ms-auto {
+    color: var(--color-1) !important;
+}
+
+.navbar .d-flex.align-items-center.me-5.ms-auto p {
+    margin-bottom: 0;
+    font-weight: 600;
+}
+
+.navbar .d-flex.align-items-center.me-5.ms-auto small {
+    color: var(--color-3) !important;
+    font-size: 0.9em;
+}
+
+.navbar .btn.border-0.bg-transparent.p-0.ms-2 .material-icons-outlined {
+    color: var(--color-1) !important;
+    font-size: 1.5em;
+    transition: color 0.3s ease;
+}
+
+.navbar .btn.border-0.bg-transparent.p-0.ms-2:hover .material-icons-outlined {
+    color: var(--color-5) !important;
+}
+
+/* Dropdown Menu Styling */
+.navbar .dropdown-menu {
+    background-color: var(--color-2) !important;
+    border: 1px solid var(--color-3) !important;
+}
+
+.navbar .dropdown-item {
+    color: var(--color-1) !important;
+    font-size: 0.95em;
+    padding: 0.5em 1em;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar .dropdown-item:hover {
+    background-color: var(--color-5) !important;
+    color: var(--color-2) !important;
+}
+
+/* Offcanvas Styling */
+.offcanvas {
+    background-color: var(--color-2) !important;
+    color: var(--color-1) !important;
+}
+
+.offcanvas .offcanvas-header {
+    border-bottom: 1px solid var(--color-3) !important;
+}
+
+.offcanvas .offcanvas-body a {
+    color: var(--color-1) !important;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.offcanvas .offcanvas-body .nav-link {
+    background-color: transparent;
+    border-radius: 8px;
+    margin: 0.5em 0;
+    padding: 0.75em 1.5em;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.offcanvas .offcanvas-body .nav-link:hover {
+    background-color: var(--color-5) !important;
+    color: var(--color-2) !important;
+}
+
+.offcanvas .offcanvas-body .active {
+    background-color: var(--color-1) !important;
+    color: var(--color-2) !important;
+    font-weight: 600;
+}
+
+.offcanvas .offcanvas-header .nav-icon {
+    font-size: 4rem;
+}
+
+.offcanvas .text-muted {
+    color: var(--color-3) !important;
+}
