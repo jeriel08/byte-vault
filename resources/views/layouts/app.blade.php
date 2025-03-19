@@ -22,14 +22,14 @@
         <div>
             @include('layouts.navigation')
 
-            <!-- Page Heading -->
+            {{-- <!-- Page Heading -->
             @isset($header)
                 <header class="bg-white shadow-sm">
                     <div class="container mx-auto py-4 px-4">
                         {{ $header }}
                     </div>
                 </header>
-            @endisset
+            @endisset --}}
 
             <!-- Page Content -->
             <main>

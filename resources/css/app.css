@@ -13,6 +13,15 @@
     color: var(--color-2);
 }
 
+body {
+    background-color: var(--color-4) !important;
+}
+
+main {
+    padding-top: 7em;
+    padding-bottom: 3.5em;
+}
+
 .primary-button {
     /* Base styles */
     background-color: var(--color-2); /* Dark teal background */

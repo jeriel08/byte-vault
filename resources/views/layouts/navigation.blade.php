@@ -11,7 +11,17 @@
                 aria-label="Toggle navigation">
                 <span class="material-icons-outlined navbar-icon"> menu </span>
             </button>
-            <a class="navbar-brand fw-semibold" href="{{ route('dashboard') }}">DASHBOARD</a>
+            <a class="navbar-brand fw-semibold" href="{{ route(Route::currentRouteName()) }}">
+                @php
+                    $routeTitles = [
+                        'dashboard' => 'Dashboard',
+                        'profile.edit' => 'Account Settings',
+                        // Add more routes as needed
+                    ];
+                    $currentRoute = Route::currentRouteName();
+                    echo strtoupper($routeTitles[$currentRoute] ?? str_replace('.', ' ', $currentRoute));
+                @endphp
+            </a>
         </div>
 
         <!-- Right side: Account Section with Dropdown -->
