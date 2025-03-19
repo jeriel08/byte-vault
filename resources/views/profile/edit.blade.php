@@ -10,7 +10,7 @@
             <div class="row g-4">
                 <!-- Profile Information Card -->
                 <div class="col-12">
-                    <div class="card h-100 shadow-sm">
+                    <div class="card h-100 shadow-sm account-settings-card">
                         <div class="card-body p-3 p-sm-4">
                             <div class="card-text">
                                 @include('profile.partials.update-profile-information-form')
@@ -21,7 +21,7 @@
             
                 <!-- Password Update Card -->
                 <div class="col-12">
-                    <div class="card h-100 shadow-sm">
+                    <div class="card h-100 shadow-sm account-settings-card">
                         <div class="card-body p-3 p-sm-4">
                             <div class="card-text">
                                 @include('profile.partials.update-password-form')
@@ -32,7 +32,7 @@
             
                 <!-- Delete Account Card -->
                 <div class="col-12">
-                    <div class="card h-100 shadow-sm">
+                    <div class="card h-100 shadow-sm account-settings-card">
                         <div class="card-body p-3 p-sm-4">
                             <div class="card-text">
                                 @include('profile.partials.delete-user-form')

@@ -6,6 +6,7 @@
     --color-3: #828e84;
     --color-4: #eed6ce;
     --color-5: #d49066;
+    --color-6: #faf8f5;
 }
 
 * {
@@ -129,7 +130,7 @@ main {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23eed6ce' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
 }
 
-/* Navigation Styling */
+/* ============================ Navigation Styling ============================ */
 nav.navbar {
     background-color: var(--color-2) !important;
     color: var(--color-1) !important;
@@ -259,4 +260,9 @@ nav.navbar {
 
 .offcanvas .text-muted {
     color: var(--color-3) !important;
+}
+
+/* ============================ Account Settings Styling ============================ */
+.account-settings-card {
+    background-color: var(--color-6) !important;
 }
