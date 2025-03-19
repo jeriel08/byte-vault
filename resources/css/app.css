@@ -23,6 +23,10 @@ main {
     padding-bottom: 3.5em;
 }
 
+ul {
+    list-style-type: none;
+}
+
 .primary-button {
     /* Base styles */
     background-color: var(--color-2); /* Dark teal background */
@@ -265,4 +269,12 @@ nav.navbar {
 /* ============================ Account Settings Styling ============================ */
 .account-settings-card {
     background-color: var(--color-6) !important;
+}
+
+.toast {
+    margin-top: 5.5em !important;
+}
+
+.toast-body {
+    color: var(--color-1) !important;
 }

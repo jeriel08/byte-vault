@@ -35,13 +35,31 @@
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 
             @if (session('status') === 'password-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600 dark:text-gray-400"
-                >{{ __('Saved.') }}</p>
+                <div 
+                    class="toast align-items-center text-bg-success border-0 position-fixed top-0 start-50 translate-middle-x m-5" 
+                    role="alert" 
+                    aria-live="assertive" 
+                    aria-atomic="true" 
+                    data-bs-autohide="true" 
+                    data-bs-delay="2000"
+                    style="z-index: 1000;"
+                >
+                    <div class="toast-header">
+                        <strong class="me-auto text-success">{{ __('Success') }}</strong>
+                        {{-- <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button> --}}
+                    </div>
+                    <div class="toast-body">
+                        {{ __('Your password has been updated.') }}
+                    </div>
+                </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        var toastEl = document.querySelector('.toast');
+                        var toast = new bootstrap.Toast(toastEl);
+                        toast.show();
+                    });
+                </script>
             @endif
         </div>
     </form>
