@@ -1,3 +1,49 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+:root {
+    --color-1: #eae4da;
+    --color-2: #2a5055;
+    --color-3: #828e84;
+    --color-4: #eed6ce;
+    --color-5: #d49066;
+}
+
+* {
+    font-family: "Poppins", sans-serif;
+    color: var(--color-2);
+}
+
+.primary-button {
+    /* Base styles */
+    background-color: var(--color-2); /* Dark teal background */
+    color: var(--color-1); /* Light beige text */
+    border: 1px solid var(--color-3); /* Subtle muted green-gray border */
+    padding: 0.5rem 1rem; /* Comfortable padding */
+    font-size: 1rem; /* Standard text size */
+    font-weight: 500; /* Slightly bold for emphasis */
+    border-radius: 0.375rem; /* Rounded corners (6px) */
+    cursor: pointer; /* Hand cursor on hover */
+    transition: all 0.2s ease-in-out; /* Smooth transitions */
+}
+
+/* Hover state */
+.primary-button:hover {
+    background-color: var(--color-5); /* Warm orange on hover */
+    color: var(--color-2); /* Dark teal text for contrast */
+    border-color: var(--color-5); /* Match border to background */
+}
+
+/* Active state (when clicked) */
+.primary-button:active {
+    background-color: var(--color-4); /* Soft peach for a pressed effect */
+    border-color: var(--color-3); /* Keep the muted border */
+}
+
+/* Disabled state */
+.primary-button:disabled {
+    background-color: var(--color-3); /* Muted green-gray */
+    color: var(--color-4); /* Soft peach text */
+    border-color: var(--color-3);
+    cursor: not-allowed; /* Disabled cursor */
+    opacity: 0.7; /* Slightly faded */
+}
