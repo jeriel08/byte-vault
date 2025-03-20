@@ -110,6 +110,21 @@
                             Returns
                         </x-nav-link>
                     </li> --}}
+
+                    @auth
+                        @if (auth()->user()->role === 'Admin')
+                            <hr>
+                            <li class="nav-item">
+                                <h6 class="text-muted mb-3 px-4 ">Admin Controls</h6>
+                            </li>
+                            <li class="nav-item">
+                                <x-nav-link :href="route('account.manager')" :active="request()->routeIs('account.manager')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
+                                    <span class="material-icons-outlined"> manage_accounts </span>
+                                    {{ __('Account Manager') }}
+                                </x-nav-link>
+                            </li>
+                        @endif
+                    @endauth
                 </ul>
             </div>
         </div>

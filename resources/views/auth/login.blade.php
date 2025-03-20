@@ -43,7 +43,8 @@
             @endif 
             --}}
 
-            <x-primary-button class="mt-3 py-2 px-4 rounded">
+            <x-primary-button class="mt-3 gap-2 rounded">
+                <span class="material-icons-outlined">login</span>
                 {{ __('Log in') }}
             </x-primary-button>
         </div>

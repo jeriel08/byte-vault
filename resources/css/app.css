@@ -62,6 +62,54 @@ ul {
     opacity: 0.7; /* Slightly faded */
 }
 
+.primary-button .material-icons-outlined {
+    color: inherit !important;
+}
+
+.secondary-button {
+    /* Base styles */
+    background-color: var(--color-1); /* Light beige background */
+    color: var(--color-2); /* Dark teal text for contrast */
+    border: 1px solid var(--color-3); /* Subtle muted green-gray border */
+    padding: 0.5rem 1rem; /* Same padding as primary */
+    font-size: 1rem; /* Standard text size */
+    font-weight: 500; /* Slightly bold */
+    border-radius: 0.375rem; /* Rounded corners (6px) */
+    cursor: pointer; /* Hand cursor on hover */
+    transition: all 0.2s ease-in-out; /* Smooth transitions */
+}
+
+/* Ensure all children (including <span>) inherit the color */
+.secondary-button span,
+.secondary-button .material-icons-outlined {
+    color: inherit; /* Matches primary-button behavior */
+}
+
+/* Hover state */
+.secondary-button:hover {
+    background-color: var(--color-6); /* Off-white for a subtle lift */
+    color: var(--color-5); /* Warm orange text for contrast */
+    border-color: var(--color-5); /* Warm orange border */
+}
+
+/* Active state (when clicked) */
+.secondary-button:active {
+    background-color: var(--color-4); /* Soft peach for pressed effect */
+    color: var(--color-2); /* Dark teal text */
+    border-color: var(--color-3); /* Muted green-gray border */
+}
+
+/* Disabled state */
+.secondary-button:disabled {
+    background-color: var(--color-3); /* Muted green-gray */
+    color: var(--color-1); /* Light beige text */
+    border-color: var(--color-3); /* Same as background */
+    cursor: not-allowed; /* Disabled cursor */
+    opacity: 0.7; /* Slightly faded */
+}
+
+/* ============================ Form Styling ============================ */
+
 /* Override Bootstrap's form-control */
 .form-control {
     background-color: var(--color-1) !important;
