@@ -24,11 +24,11 @@
                             <option value="Inactive">Inactive</option>
                         </select>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label for="supplierProfileImage" class="form-label fw-semibold">Profile Image</label>
                         <input type="file" class="form-control" id="supplierProfileImage" name="supplierProfileImage">
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <x-primary-button type="submit" class="mt-4">Submit</x-primary-button>
                 </form> 
             </div>
         </div>

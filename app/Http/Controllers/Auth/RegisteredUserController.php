@@ -33,7 +33,7 @@ class RegisteredUserController extends Controller
             'firstName' => ['required', 'string', 'max:255'],
             'lastName' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:employees'],
-            'phoneNumber' => ['nullable', 'string', 'max:11', 'regex:/^(0\d{10}|\+63\d{10})$/'],
+            'phoneNumber' => ['nullable', 'string', 'max:15', 'regex:/^(0\d{10}|\+63\d{10})$/'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 

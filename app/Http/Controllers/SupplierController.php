@@ -33,12 +33,13 @@ class SupplierController extends Controller
     // Store a new supplier
     public function store(Request $request)
     {
+        // Validate the request data
         $request->validate([
-            'supplierName' => 'required|string|max:255',
-            'supplierAddress' => 'nullable|string',
-            'supplierPhoneNumber' => 'nullable|string|max:20',
-            'supplierProfileImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Image upload
-            'supplierStatus' => 'required|in:Active,Inactive',
+            'supplierName' => ['required', 'string', 'max:255'],
+            'supplierAddress' => ['nullable', 'string'],
+            'supplierPhoneNumber' => ['nullable', 'string', 'max:20', 'regex:/^(0\d{10}|\+63\d{10})$/'],
+            'supplierProfileImage' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'supplierStatus' => ['required', 'in:Active,Inactive'],
         ]);
 
         // Handle image upload (if provided)
@@ -48,15 +49,16 @@ class SupplierController extends Controller
         }
 
         // Create the supplier
-        $supplier = Supplier::create([
+        Supplier::create([
             'supplierName' => $request->supplierName,
             'supplierAddress' => $request->supplierAddress,
             'supplierPhoneNumber' => $request->supplierPhoneNumber,
             'supplierProfileImage' => $imagePath,
-            'supplierStatus' => $request->supplierStatus ?? 'Active',
-            'created_by' => auth()->user(), // Assuming you're using authentication
+            'supplierStatus' => $request->supplierStatus,
+            'created_by' => auth()->id(), // Assign only the user ID
         ]);
 
+        // Redirect with a success message
         return redirect()->route('suppliers.index')->with('success', 'Supplier created successfully!');
     }
 
@@ -72,7 +74,7 @@ class SupplierController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Supplier $supplier)
+    public function edit(Supplier $supplierID)
     {
         //
         $supplier = Supplier::findOrFail($supplierID);
