@@ -77,7 +77,7 @@
                 </div>
             </div>
             <div class="offcanvas-body">
-                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <ul class="navbar-nav justify-content-end flex-grow-1 px-auto">
                     <li class="nav-item">
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
                             <span class="material-icons-outlined"> dashboard </span>
@@ -119,10 +119,10 @@
                         @if (auth()->user()->role === 'Admin')
                             <hr>
                             <li class="nav-item">
-                                <h6 class="text-muted mb-3 px-4 ">Admin Controls</h6>
+                                <h6 class="text-muted px-4 ">Admin Controls</h6>
                             </li>
                             <li class="nav-item">
-                                <x-nav-link :href="route('account.manager')" :active="request()->routeIs('account.manager')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
+                                <x-nav-link :href="route('account.manager')" :active="request()->routeIs('account.manager')" class="btn btn-outline-dark d-flex align-items-center gap-2 mb-3 py-2 px-4">
                                     <span class="material-icons-outlined"> manage_accounts </span>
                                     {{ __('Account Manager') }}
                                 </x-nav-link>

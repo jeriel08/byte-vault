@@ -46,6 +46,13 @@ ul {
     background-color: var(--color-5); /* Warm orange on hover */
     color: var(--color-2); /* Dark teal text for contrast */
     border-color: var(--color-5); /* Match border to background */
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3); /* Solid southeast shadow */
+    transform: translate(
+        -2px,
+        -2px
+    ); /* Optional: Slight movement for a pressed effect */
+    transition: background-color 0.3s ease, color 0.3s ease,
+        border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; /* Smooth transitions */
 }
 
 /* Active state (when clicked) */
@@ -273,10 +280,6 @@ nav.navbar {
     color: var(--color-4) !important;
 }
 
-.offcanvas .offcanvas-header {
-    border-bottom: 1px solid var(--color-3) !important;
-}
-
 .offcanvas .offcanvas-body a.nav-link {
     color: var(--color-1) !important;
     text-decoration: none;
@@ -312,8 +315,12 @@ nav.navbar {
     font-size: 4rem;
 }
 
+.offcanvas hr {
+    border-color: var(--color-1) !important;
+}
+
 .offcanvas .text-muted {
-    color: var(--color-3) !important;
+    color: var(--color-1) !important;
 }
 
 /* ============================ Account Settings Styling ============================ */
