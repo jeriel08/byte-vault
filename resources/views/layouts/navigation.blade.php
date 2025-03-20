@@ -18,8 +18,12 @@
                     $routeTitles = [
                         'dashboard' => 'Dashboard',
                         'profile.edit' => 'Account Settings',
+                        'account.manager' => 'Account Manager',
                         'account.add' => 'Add Account',
                         'account.edit' => 'Edit Account',
+                        'suppliers.index' => 'Suppliers',
+                        'suppliers.create' => 'Add Supplier',
+                        'suppliers.edit' => 'Edit Supplier',
                         // Add more routes as needed
                     ];
                     $currentRoute = Route::currentRouteName();
@@ -96,12 +100,16 @@
                             Customer Orders
                         </x-nav-link>
                     </li>
+                    --}}
+
                     <li class="nav-item">
-                        <x-nav-link :href="route('suppliers')" :active="request()->routeIs('suppliers')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
+                        <x-nav-link :href="route('suppliers.index')" :active="request()->routeIs('suppliers.index')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
                             <span class="material-icons-outlined"> inventory </span>
                             Suppliers
                         </x-nav-link>
                     </li>
+
+                    {{--
                     <li class="nav-item">
                         <x-nav-link :href="route('purchases')" :active="request()->routeIs('purchases')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
                             <span class="material-icons-outlined"> local_shipping </span>
