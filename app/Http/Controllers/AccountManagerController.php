@@ -25,33 +25,80 @@ class AccountManagerController extends BaseController
     {
         // Fetch all employees except the current admin
         $employees = User::where('employeeID', '!=', auth()->user()->employeeID)->get();
-        return view('account-manager', compact('employees'));
+        return view('accounts.account-manager', compact('employees'));
+    }
+
+    public function add()
+    {
+        return view('accounts.add-account');
     }
 
     public function update(Request $request, $employeeID)
     {
         $employee = User::findOrFail($employeeID);
 
-        // Validate the request
         $request->validate([
+            'firstName' => 'required|string|max:255',
+            'lastName' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:employees,username,' . $employee->employeeID . ',employeeID',
+            'email' => 'required|email|max:255|unique:employees,email,' . $employee->employeeID . ',employeeID',
+            'phoneNumber' => 'required|string|max:255',
             'password' => 'nullable|string|min:8|confirmed',
+            'role' => 'required|in:Employee,Admin',
             'status' => 'required|in:Active,Inactive',
         ]);
 
-        // Update password if provided
+        $employee->firstName = $request->firstName;
+        $employee->lastName = $request->lastName;
+        $employee->username = $request->username;
+        $employee->email = $request->email;
+        $employee->phoneNumber = $request->phoneNumber;
         if ($request->filled('password')) {
             $employee->password = Hash::make($request->password);
         }
-
-        // Update status
+        $employee->role = $request->role;
         $employee->status = $request->status;
-
-        // Manually handle updated_at and updated_by since timestamps are off
         $employee->updated_at = now();
         $employee->updated_by = auth()->user()->employeeID;
-
         $employee->save();
 
-        return redirect()->route('account.manager')->with('success', 'Employee updated successfully');
+        return redirect()->route('account.manager')->with('success', 'Account updated successfully');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'firstName' => 'required|string|max:255',
+            'lastName' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:employees,username',
+            'email' => 'required|email|max:255|unique:employees,email',
+            'phoneNumber' => 'required|string|max:255',
+            'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|in:Employee,Admin',
+            'status' => 'required|in:Active,Inactive',
+        ]);
+
+        $employee = new User();
+        $employee->firstName = $request->firstName;
+        $employee->lastName = $request->lastName;
+        $employee->username = $request->username;
+        $employee->email = $request->email;
+        $employee->phoneNumber = $request->phoneNumber;
+        $employee->password = Hash::make($request->password);
+        $employee->role = $request->role;
+        $employee->status = $request->status;
+        $employee->created_at = now();
+        $employee->created_by = auth()->user()->employeeID;
+        $employee->updated_at = now();
+        $employee->updated_by = auth()->user()->employeeID;
+        $employee->save();
+
+        return redirect()->route('account.manager')->with('success', 'Account added successfully');
+    }
+
+    public function edit($employeeID)
+    {
+        $employee = User::findOrFail($employeeID);
+        return view('accounts.edit-account', compact('employee'));
     }
 }

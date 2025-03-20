@@ -20,7 +20,10 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/account-manager', [AccountManagerController::class, 'index'])->name('account.manager');
-    Route::post('/account-manager/update/{employeeID}', [AccountManagerController::class, 'update'])->name('account.update');
+    Route::get('/account-manager/add', [AccountManagerController::class, 'add'])->name('account.add');
+    Route::post('/account-manager/store', [AccountManagerController::class, 'store'])->name('account.store');
+    Route::get('/account-manager/edit/{employeeID}', [AccountManagerController::class, 'edit'])->name('account.edit');
+    Route::patch('/account-manager/update/{employeeID}', [AccountManagerController::class, 'update'])->name('account.update');
 });
 
 require __DIR__ . '/auth.php';
