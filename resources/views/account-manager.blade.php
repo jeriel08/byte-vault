@@ -27,8 +27,8 @@
         <!-- Employee Table -->
         <div class="card">
             <div class="card-body">
-                <table class="table table-bordered table-hover">
-                    <thead class="table-dark">
+                <table class="table table-hover custom-table">
+                    <thead>
                         <tr>
                             <th scope="col" class="py-2 px-4">Name</th>
                             <th scope="col" class="py-2 px-4">Username</th>
@@ -36,7 +36,7 @@
                             <th scope="col" class="py-2 px-4">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="table-group-divider">
                         @foreach ($employees as $employee)
                             <tr>
                                 <td class="py-2 px-4">{{ $employee->firstName }} {{ $employee->lastName }}</td>
@@ -57,7 +57,14 @@
                                                 <option value="Inactive" {{ $employee->status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
                                             </select>
                                         </div>
-                                        <button type="submit" class="btn btn-primary">Update</button>
+                                        <div class="d-flex gap-2">
+                                            <x-primary-button>
+                                                Update
+                                            </x-primary-button>
+                                            <x-secondary-button type="button" onclick="window.history.back()">
+                                                Cancel
+                                            </x-secondary-button>
+                                        </div>
                                     </form>
                                 </td>
                             </tr>

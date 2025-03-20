@@ -1,0 +1,48 @@
+:root {
+    --color-1: #eae4da;
+    --color-2: #2a5055;
+    --color-3: #828e84;
+    --color-4: #eed6ce;
+    --color-5: #d49066;
+    --color-6: #faf8f5;
+}
+
+.custom-table {
+    color: var(--color-2); /* Dark teal text for readability */
+}
+
+/* Header cells */
+.custom-table thead th {
+    border-bottom: 2px solid var(--color-3); /* Thicker muted green-gray border below header */
+    color: var(--color-2) !important;
+}
+
+/* Body rows */
+.custom-table tbody tr {
+    border-bottom: 1px solid var(--color-3); /* Subtle row divider */
+}
+
+/* Hover effect for rows (table-hover) */
+.custom-table.table-hover tbody tr:hover {
+    background-color: var(--color-4); /* Soft peach on hover */
+    color: var(--color-2); /* Keep dark teal text */
+}
+
+/* Table group divider (if used) */
+.custom-table .table-group-divider {
+    border-top: 2px solid var(--color-3); /* Muted green-gray divider */
+}
+
+/* Form controls (inputs and select) */
+.custom-table .form-control,
+.custom-table .form-select {
+    background-color: var(--color-1); /* Light beige background */
+    color: var(--color-2); /* Dark teal text */
+    border: 1px solid var(--color-3); /* Muted green-gray border */
+}
+
+.custom-table .form-control:focus,
+.custom-table .form-select:focus {
+    border-color: var(--color-5); /* Warm orange on focus */
+    box-shadow: 0 0 0 0.2rem rgba(212, 144, 102, 0.25); /* Subtle orange glow */
+}
