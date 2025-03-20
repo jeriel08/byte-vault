@@ -18,42 +18,43 @@
             </x-secondary-button>
 
             {{-- Add Account Button --}}
-            <x-primary-button href="{{ route('account.add') }}">
+            <x-primary-button href="{{ route('account.add') }}" class="mb-4 py-2">
                 <span class="material-icons-outlined">add</span>
                 Add Account
             </x-primary-button>
         </div>
 
         <!-- Employee Table -->
-        <div class="card">
+        <div class="card account-manager-card shadow-sm">
             <div class="card-body">
-                <table class="table table-hover custom-table">
-                    <thead>
-                        <tr>
-                            <th scope="col" class="py-2 px-4">Name</th>
-                            <th scope="col" class="py-2 px-4">Username</th>
-                            <th scope="col" class="py-2 px-4">Status</th>
-                            <th scope="col" class="py-2 px-4">Role</th>
-                            <th scope="col" class="py-2 px-4">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-group-divider">
-                        @foreach ($employees as $employee)
+                <div class="table-responsive">
+                    <table class="table table-hover custom-table">
+                        <thead>
                             <tr>
-                                <td class="py-2 px-4">{{ $employee->firstName }} {{ $employee->lastName }}</td>
-                                <td class="py-2 px-4">{{ $employee->username }}</td>
-                                <td class="py-2 px-4">{{ $employee->status }}</td>
-                                <td class="py-2 px-4">{{ $employee->role }}</td>
-                                <td class="py-2 px-4">
-                                    <x-primary-button href="{{ route('account.edit', $employee->employeeID) }}">
-                                        <span class="material-icons-outlined">edit</span>
-                                        Update
-                                    </x-primary-button>
-                                </td>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Role</th>
+                                <th scope="col">Actions</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            @foreach ($employees as $employee)
+                                <tr>
+                                    <td class="align-middle">{{ $employee->firstName }} {{ $employee->lastName }}</td>
+                                    <td class="align-middle">{{ $employee->email }}</td>
+                                    <td class="align-middle">{{ $employee->status }}</td>
+                                    <td class="align-middle">{{ $employee->role }}</td>
+                                    <td class="align-middle">
+                                        <x-primary-button href="{{ route('account.edit', $employee->employeeID) }}">
+                                            <span class="material-icons-outlined">edit</span>
+                                        </x-primary-button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

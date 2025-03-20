@@ -18,7 +18,7 @@
             </div>
         @endif
 
-        <div class="card">
+        <div class="card account-manager-card">
             <div class="card-body">
                 <form action="{{ route('account.update', $employee->employeeID) }}" method="POST">
                     @csrf
@@ -30,10 +30,6 @@
                     <div class="mb-3">
                         <label for="lastName" class="form-label">Last Name</label>
                         <input type="text" name="lastName" id="lastName" class="form-control" value="{{ old('lastName', $employee->lastName) }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" name="username" id="username" class="form-control" value="{{ old('username', $employee->username) }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
@@ -65,8 +61,8 @@
                             <option value="Inactive" {{ old('status', $employee->status) == 'Inactive' ? 'selected' : '' }}>Inactive</option>
                         </select>
                     </div>
-                    <div class="d-flex gap-2">
-                        <x-primary-button type="submit">
+                    <div class="d-flex gap-3 mt-4">
+                        <x-primary-button type="submit" class="mb-4">
                             Save Changes
                         </x-primary-button>
                         <x-secondary-button href="{{ route('account.manager') }}">

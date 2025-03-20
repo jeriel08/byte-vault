@@ -8,41 +8,51 @@
 }
 
 .custom-table {
-    color: var(--color-2); /* Dark teal text for readability */
+    color: var(--color-2); /* Dark teal text */
+    background-color: var(--color-6) !important; /* Off-white background */
 }
 
 /* Header cells */
 .custom-table thead th {
-    border-bottom: 2px solid var(--color-3); /* Thicker muted green-gray border below header */
+    border-bottom: 2px solid var(--color-3);
     color: var(--color-2) !important;
+    background-color: inherit !important;
 }
 
 /* Body rows */
-.custom-table tbody tr {
-    border-bottom: 1px solid var(--color-3); /* Subtle row divider */
+.custom-table tbody td {
+    border-bottom: 1px solid var(--color-3);
+    background-color: var(--color-6); /* Set default to off-white */
+    transition: background-color 0.3s ease; /* Add transition */
 }
 
-/* Hover effect for rows (table-hover) */
+/* Hover effect for rows */
 .custom-table.table-hover tbody tr:hover {
-    background-color: var(--color-4); /* Soft peach on hover */
-    color: var(--color-2); /* Keep dark teal text */
+    background-color: var(--color-4) !important; /* Soft peach on hover */
+    color: var(--color-2);
 }
 
-/* Table group divider (if used) */
+/* Table group divider */
 .custom-table .table-group-divider {
-    border-top: 2px solid var(--color-3); /* Muted green-gray divider */
+    border-top: 2px solid var(--color-3);
 }
 
-/* Form controls (inputs and select) */
+/* Form controls */
 .custom-table .form-control,
 .custom-table .form-select {
-    background-color: var(--color-1); /* Light beige background */
-    color: var(--color-2); /* Dark teal text */
-    border: 1px solid var(--color-3); /* Muted green-gray border */
+    background-color: var(--color-1);
+    color: var(--color-2);
+    border: 1px solid var(--color-3);
 }
 
 .custom-table .form-control:focus,
 .custom-table .form-select:focus {
-    border-color: var(--color-5); /* Warm orange on focus */
-    box-shadow: 0 0 0 0.2rem rgba(212, 144, 102, 0.25); /* Subtle orange glow */
+    border-color: var(--color-5);
+    box-shadow: 0 0 0 0.2rem rgba(212, 144, 102, 0.25);
+}
+
+.account-manager-card {
+    background-color: var(--color-6) !important;
+    border-color: var(--color-3) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

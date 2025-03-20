@@ -11,11 +11,15 @@
                 aria-label="Toggle navigation">
                 <span class="material-icons-outlined navbar-icon"> menu </span>
             </button>
-            <a class="navbar-brand fw-semibold" href="{{ route(Route::currentRouteName()) }}">
+
+            {{-- <a class="navbar-brand fw-semibold" href="{{ route(Route::currentRouteName(), $employee->employeeID )}}"> --}}
+            <a class="navbar-brand fw-semibold">
                 @php
                     $routeTitles = [
                         'dashboard' => 'Dashboard',
                         'profile.edit' => 'Account Settings',
+                        'account.add' => 'Add Account',
+                        'account.edit' => 'Edit Account',
                         // Add more routes as needed
                     ];
                     $currentRoute = Route::currentRouteName();

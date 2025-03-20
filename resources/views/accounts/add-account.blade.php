@@ -12,7 +12,7 @@
             </div>
         @endif
 
-        <div class="card">
+        <div class="card account-manager-card">
             <div class="card-body">
                 <form action="{{ route('account.store') }}" method="POST">
                     @csrf
@@ -23,10 +23,6 @@
                     <div class="mb-3">
                         <label for="lastName" class="form-label">Last Name</label>
                         <input type="text" name="lastName" id="lastName" class="form-control" value="{{ old('lastName') }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" name="username" id="username" class="form-control" value="{{ old('username') }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>

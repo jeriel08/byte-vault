@@ -23,7 +23,6 @@ class AccountManagerController extends BaseController
 
     public function index()
     {
-        // Fetch all employees except the current admin
         $employees = User::where('employeeID', '!=', auth()->user()->employeeID)->get();
         return view('accounts.account-manager', compact('employees'));
     }
@@ -40,7 +39,6 @@ class AccountManagerController extends BaseController
         $request->validate([
             'firstName' => 'required|string|max:255',
             'lastName' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:employees,username,' . $employee->employeeID . ',employeeID',
             'email' => 'required|email|max:255|unique:employees,email,' . $employee->employeeID . ',employeeID',
             'phoneNumber' => 'required|string|max:255',
             'password' => 'nullable|string|min:8|confirmed',
@@ -50,7 +48,6 @@ class AccountManagerController extends BaseController
 
         $employee->firstName = $request->firstName;
         $employee->lastName = $request->lastName;
-        $employee->username = $request->username;
         $employee->email = $request->email;
         $employee->phoneNumber = $request->phoneNumber;
         if ($request->filled('password')) {
@@ -70,7 +67,6 @@ class AccountManagerController extends BaseController
         $request->validate([
             'firstName' => 'required|string|max:255',
             'lastName' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:employees,username',
             'email' => 'required|email|max:255|unique:employees,email',
             'phoneNumber' => 'required|string|max:255',
             'password' => 'required|string|min:8|confirmed',
@@ -81,7 +77,6 @@ class AccountManagerController extends BaseController
         $employee = new User();
         $employee->firstName = $request->firstName;
         $employee->lastName = $request->lastName;
-        $employee->username = $request->username;
         $employee->email = $request->email;
         $employee->phoneNumber = $request->phoneNumber;
         $employee->password = Hash::make($request->password);
