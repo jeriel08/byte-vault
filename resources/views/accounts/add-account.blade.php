@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
-        <h1 class="text-2xl font-bold mb-4">Add New Account</h1>
+        <h1 class="text-2xl fw-semibold mb-4">Add New Employee Account</h1>
 
         @if ($errors->any())
             <div class="alert alert-danger mb-4">
@@ -54,8 +54,8 @@
                             <option value="Inactive" {{ old('status') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
                         </select>
                     </div>
-                    <div class="d-flex gap-2">
-                        <x-primary-button type="submit">
+                    <div class="d-flex gap-2 mt-4">
+                        <x-primary-button type="submit" class="mb-4">
                             Save Account
                         </x-primary-button>
                         <x-secondary-button href="{{ route('account.manager') }}">

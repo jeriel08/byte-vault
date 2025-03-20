@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
-        <h1 class="text-2xl font-bold mb-4">Edit Account: {{ $employee->firstName }} {{ $employee->lastName }}</h1>
+        <h1 class="text-2xl fw-semibold mb-4">Edit Employee Account: {{ $employee->firstName }} {{ $employee->lastName }}</h1>
 
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">

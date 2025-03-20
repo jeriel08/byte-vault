@@ -56,3 +56,45 @@
     border-color: var(--color-3) !important;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+/* Style for the dropdown */
+.form-select {
+    width: 100%;
+    padding: 0.5rem 1rem !important;
+    font-size: 1rem;
+    color: var(--color-2); /* Dark text color */
+    background-color: var(--color-6); /* Light background */
+    border: 1px solid var(--color-3); /* Secondary color for border */
+    border-radius: 0.5rem;
+    appearance: none; /* Remove default arrow */
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover and focus states */
+.form-select:hover,
+.form-select:focus {
+    border-color: var(--color-5); /* Highlight color for border */
+    box-shadow: 0 0 0 3px rgba(212, 144, 102, 0.2); /* Subtle glow */
+    outline: none;
+}
+
+/* Style for dropdown arrow */
+.form-select {
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%232a5055' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 12px;
+}
+
+/* Style for dropdown options */
+.form-select option {
+    background-color: var(--color-6); /* Light background */
+    color: var(--color-2); /* Dark text color */
+}
+
+/* Style for selected option */
+.form-select option:checked {
+    background-color: var(--color-4); /* Accent color for selected option */
+    color: var(--color-2); /* Dark text color */
+}
