@@ -63,9 +63,8 @@ class BrandController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Brand $brandID)
+    public function edit($brandID)
     {
-        //
         $brand = Brand::findOrFail($brandID);
         return view('brands.edit', compact('brand'));
     }
@@ -73,9 +72,8 @@ class BrandController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Brand $brandID)
+    public function update(Request $request, $brandID)
     {
-        //
         $request->validate([
             'brandName' => ['required', 'string', 'max:255'],
             'brandStatus' => ['required', 'in:Active,Inactive'],
@@ -91,6 +89,9 @@ class BrandController extends Controller
         ];
 
         if ($request->hasFile('brandProfileImage')) {
+            if ($brand->brandProfileImage) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($brand->brandProfileImage);
+            }
             $data['brandProfileImage'] = $request->file('brandProfileImage')->store('brand_images', 'public');
         }
 
