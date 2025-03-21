@@ -23,6 +23,7 @@ class BrandController extends Controller
     public function create()
     {
         //
+        return view('brands.create');
     }
 
     /**
@@ -33,13 +34,20 @@ class BrandController extends Controller
         $request->validate([
             'brandName' => ['required', 'string', 'max:255'],
             'brandStatus' => ['required', 'in:Active,Inactive'],
+            'brandProfileImage' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
 
-        Brand::create([
+        $data = [
             'brandName' => $request->brandName,
             'brandStatus' => $request->brandStatus,
             'created_by' => auth()->id(), // Assign only the user ID
-        ]);
+        ];
+
+        if ($request->hasFile('brandProfileImage')) {
+            $data['brandProfileImage'] = $request->file('brandProfileImage')->store('brand_images', 'public');
+        }
+
+        Brand::create($data);
 
         return redirect()->route('brands.index')->with('success', 'Brand created successfully.');
     }
@@ -55,17 +63,40 @@ class BrandController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Brand $brand)
+    public function edit(Brand $brandID)
     {
         //
+        $brand = Brand::findOrFail($brandID);
+        return view('brands.edit', compact('brand'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Brand $brand)
+    public function update(Request $request, Brand $brandID)
     {
         //
+        $request->validate([
+            'brandName' => ['required', 'string', 'max:255'],
+            'brandStatus' => ['required', 'in:Active,Inactive'],
+            'brandProfileImage' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+        ]);
+
+        $brand = Brand::findOrFail($brandID);
+
+        $data = [
+            'brandName' => $request->brandName,
+            'brandStatus' => $request->brandStatus,
+            'updated_by' => auth()->id(),
+        ];
+
+        if ($request->hasFile('brandProfileImage')) {
+            $data['brandProfileImage'] = $request->file('brandProfileImage')->store('brand_images', 'public');
+        }
+
+        $brand->update($data);
+
+        return redirect()->route('brands.index')->with('success', 'Brand updated successfully.');
     }
 
     /**

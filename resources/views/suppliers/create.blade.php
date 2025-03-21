@@ -40,4 +40,11 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('supplierProfileImage').addEventListener('change', function() {
+            const fileName = this.files.length > 0 ? this.files[0].name : 'No file chosen';
+            document.querySelector('.file-name').textContent = fileName;
+        });
+    </script>
 </x-app-layout>

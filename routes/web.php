@@ -38,7 +38,10 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/brands', [BrandController::class, 'index'])->name('brands.index');
+    Route::get('/brands/create', [BrandController::class, 'create'])->name('brands.create');
     Route::post('/brands', [BrandController::class, 'store'])->name('brands.store');
+    Route::get('/brands/edit/{brandID}', [BrandController::class, 'edit'])->name('brands.edit');
+    Route::put('/brands/{brandID}', [BrandController::class, 'update'])->name('brands.update');
 });
 
 require __DIR__ . '/auth.php';

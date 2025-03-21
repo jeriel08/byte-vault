@@ -8,7 +8,7 @@ class Brand extends Model
 {
     //
     protected $primaryKey = 'brandID';
-    protected $fillable = ['brandName', 'brandStatus', 'created_by', 'updated_by'];
+    protected $fillable = ['brandName', 'brandStatus', 'brandProfileImage', 'created_by', 'updated_by'];
     public $timestamps = true;
 
     // Relationship with products

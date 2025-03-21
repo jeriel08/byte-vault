@@ -2,7 +2,6 @@
     <div class="container mx-auto px-4 py-6">
 
         <div class="d-flex justify-content-end mb-1">
-
             {{-- Add Supplier Button --}}
             <x-primary-button href="{{ route('suppliers.create') }}" class="mb-4 py-2">
                 <span class="material-icons-outlined">add</span>

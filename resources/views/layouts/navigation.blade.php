@@ -24,6 +24,8 @@
                         'suppliers.index' => 'Suppliers',
                         'suppliers.create' => 'Add Supplier',
                         'suppliers.edit' => 'Edit Supplier',
+                        'brands.index' => 'Brands',
+                        'brands.create' => 'Add Brand',
                         // Add more routes as needed
                     ];
                     $currentRoute = Route::currentRouteName();
