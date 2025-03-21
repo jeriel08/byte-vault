@@ -25,8 +25,15 @@
                         </select>
                     </div>
                     <div class="mb-4">
-                        <label for="supplierProfileImage" class="form-label fw-semibold">Profile Image</label>
-                        <input type="file" class="form-control" id="supplierProfileImage" name="supplierProfileImage">
+                        <label for="supplierProfileImage" class="form-label fw-semibold">Supplier Image</label>
+                        <div class="file-upload-wrapper d-flex align-items-center">
+                            <input type="file" name="supplierProfileImage" id="supplierProfileImage" class="file-input" accept="image/*">
+                            <label for="supplierProfileImage" class="file-button">
+                                <span class="material-icons-outlined">upload</span>
+                                Choose File
+                            </label>
+                            <span class="file-name">No file chosen</span>
+                        </div>
                     </div>
                     <x-primary-button type="submit" class="mt-4">Submit</x-primary-button>
                 </form> 

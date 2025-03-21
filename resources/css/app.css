@@ -326,6 +326,8 @@ nav.navbar {
 /* ============================ Account Settings Styling ============================ */
 .account-settings-card {
     background-color: var(--color-6) !important;
+    border: 2px var(--color-2) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .toast {
@@ -342,4 +344,67 @@ nav.navbar {
     height: 150px;
     object-fit: cover;
     border: 2px solid var(--color-2); /* 2px border with a default black color */
+}
+
+/* Wrapper for positioning */
+.file-upload-wrapper {
+    position: relative;
+    display: inline-block; /* Keeps it inline with other elements */
+}
+
+/* Hide the default file input */
+.file-input {
+    display: none; /* Completely hide the input */
+}
+
+/* Style the file button */
+.file-button {
+    /* Base styles inspired by .form-control and .primary-button */
+    background-color: var(
+        --color-1
+    ); /* Light beige background, like form-control */
+    color: var(--color-2); /* Dark teal text, like form-control */
+    border: 2px solid var(--color-3); /* Muted green-gray border, like form-control */
+    padding: 0.5rem 1rem; /* Matches form-control padding */
+    font-size: 1rem; /* Matches form-control font size */
+    font-weight: 500; /* Slightly bold, like primary-button */
+    border-radius: 0.375rem; /* Matches both (6px) */
+    cursor: pointer; /* Hand cursor, like primary-button */
+    transition: all 0.2s ease-in-out; /* Smooth transitions, like both */
+    display: inline-flex; /* Aligns icon and text nicely */
+    align-items: center; /* Vertically centers content */
+    gap: 0.5rem; /* Space between icon and text */
+    text-decoration: none; /* No underline */
+}
+
+/* Hover state */
+.file-button:hover {
+    background-color: var(
+        --color-5
+    ); /* Warm orange, like primary-button hover */
+    color: var(--color-2); /* Dark teal text for contrast */
+    border-color: var(--color-5); /* Match border to background */
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3); /* Solid shadow, like primary-button */
+    transform: translate(-2px, -2px); /* Slight movement, like primary-button */
+}
+
+/* Active state (when clicked) */
+.file-button:active {
+    background-color: var(
+        --color-4
+    ); /* Soft peach, like primary-button active */
+    border-color: var(--color-3); /* Keep muted border */
+    box-shadow: none; /* Remove shadow when pressed */
+    transform: translate(0, 0); /* Reset movement */
+}
+
+/* Ensure the icon inherits the text color */
+.file-button .material-icons-outlined {
+    color: inherit !important;
+}
+
+.file-name {
+    margin-left: 1rem;
+    color: var(--color-2);
+    font-size: 1rem;
 }

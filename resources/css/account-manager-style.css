@@ -53,7 +53,7 @@
 
 .account-manager-card {
     background-color: var(--color-6) !important;
-    border-color: var(--color-3) !important;
+    border: 2px var(--color-2) !important;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 

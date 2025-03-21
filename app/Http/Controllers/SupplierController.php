@@ -74,10 +74,9 @@ class SupplierController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Supplier $supplierID)
+    public function edit(Supplier $supplier)
     {
         //
-        $supplier = Supplier::findOrFail($supplierID);
         return view('suppliers.edit', compact('supplier'));
     }
 

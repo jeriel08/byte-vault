@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
     Route::get('/suppliers/add', [SupplierController::class, 'create'])->name('suppliers.create');
     Route::post('/suppliers/store', [SupplierController::class, 'store'])->name('suppliers.store');
-    Route::get('/suppliers/edit/{supplierID}', [SupplierController::class, 'edit'])->name('suppliers.edit');
+    Route::get('/suppliers/edit/{supplier}', [SupplierController::class, 'edit'])->name('suppliers.edit');
     Route::patch('/suppliers/update/{supplierID}', [SupplierController::class, 'update'])->name('suppliers.update');
 });
 
