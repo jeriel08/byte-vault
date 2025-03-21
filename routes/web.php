@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AccountManagerController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\BrandController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -33,6 +34,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/suppliers/store', [SupplierController::class, 'store'])->name('suppliers.store');
     Route::get('/suppliers/edit/{supplier}', [SupplierController::class, 'edit'])->name('suppliers.edit');
     Route::patch('/suppliers/update/{supplierID}', [SupplierController::class, 'update'])->name('suppliers.update');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/brands', [BrandController::class, 'index'])->name('brands.index');
+    Route::post('/brands', [BrandController::class, 'store'])->name('brands.store');
 });
 
 require __DIR__ . '/auth.php';

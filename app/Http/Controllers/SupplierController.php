@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SupplierController extends Controller
 {
@@ -97,16 +98,16 @@ class SupplierController extends Controller
         // Find the supplier by ID
         $supplier = Supplier::findOrFail($supplierID);
 
-        // // Handle image upload (if provided)
-        // if ($request->hasFile('supplierProfileImage')) {
-        //     // Delete the old image if it exists
-        //     if ($supplier->supplierProfileImage) {
-        //         Storage::delete('public/' . $supplier->supplierProfileImage);
-        //     }
-        //     // Store the new image
-        //     $imagePath = $request->file('supplierProfileImage')->store('supplier_images', 'public');
-        //     $supplier->supplierProfileImage = $imagePath;
-        // }
+        // Handle image upload (if provided)
+        if ($request->hasFile('supplierProfileImage')) {
+            // Delete the old image if it exists
+            if ($supplier->supplierProfileImage) {
+                Storage::delete('public/' . $supplier->supplierProfileImage);
+            }
+            // Store the new image
+            $imagePath = $request->file('supplierProfileImage')->store('supplier_images', 'public');
+            $supplier->supplierProfileImage = $imagePath;
+        }
 
         // Update the supplier data
         $supplier->update([
