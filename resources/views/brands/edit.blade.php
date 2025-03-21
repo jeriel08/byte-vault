@@ -21,7 +21,7 @@
                         <label for="brandStatus" class="form-label fw-semibold">Status</label>
                         <select name="brandStatus" id="brandStatus" class="form-select" required>
                             <option value="Active" {{ $brand->brandStatus == 'Active' ? 'selected' : '' }}>Active</option>
-                            <option value="Invative" {{ $brand->brandStatus == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                            <option value="Inactive" {{ $brand->brandStatus == 'Inactive' ? 'selected' : '' }}>Inactive</option>
                         </select>
                         @error('brandStatus')
                             <span class="text-danger">{{ $message }}</span>
@@ -42,7 +42,7 @@
                         </div>
                         @if ($brand->brandProfileImage)
                             <div class="mt-2">
-                                <img src="{{ asset('storage/' . $brand->brandProfileImage) }}" alt="{{ $brand->brandName }}" style="max-width: 150px; height: auto;">
+                                <img src="{{ asset('storage/' . $brand->brandProfileImage) }}" alt="{{ $brand->brandName }}" class="supplier-image">
                             </div>
                         @endif
                         @error('brandProfileImage')

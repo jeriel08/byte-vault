@@ -42,8 +42,8 @@
                             <!-- Brand Details -->
                             <div class="flex-grow-1 ms-2">
                                 <h5 class="mb-1 fw-semibold">{{ $brand->brandName }}</h5>
-                                <span class="badge {{ $brand->brandStatus ? 'bg-success' : 'bg-danger' }}">
-                                    {{ $brand->brandStatus ? 'Active' : 'Inactive' }}
+                                <span class="badge {{ $brand->brandStatus === 'Active' ? 'bg-success' : 'bg-danger' }}">
+                                    {{ $brand->brandStatus }}
                                 </span>
                             </div>
 
