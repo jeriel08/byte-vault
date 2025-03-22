@@ -27,6 +27,9 @@
                         'brands.index' => 'Brands',
                         'brands.create' => 'Add Brand',
                         'brands.edit' => 'Edit Brand',
+                        'categories.index' => 'Categories',
+                        'categories.create' => 'Add Category',
+                        'categories.edit' => 'Edit Category',
                         // Add more routes as needed
                     ];
                     $currentRoute = Route::currentRouteName();
