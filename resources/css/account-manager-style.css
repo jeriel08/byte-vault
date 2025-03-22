@@ -98,3 +98,58 @@
     background-color: var(--color-4); /* Accent color for selected option */
     color: var(--color-2); /* Dark text color */
 }
+
+/* ========================== Cateogry Accordion Styling ========================== */
+.category-accordion .accordion-item {
+    background-color: var(--color-6); /* Matches account-manager-card */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Matches card shadow */
+    margin-bottom: 10px; /* Spacing between items */
+    border-radius: 8px; /* Rounded corners for the item */
+    overflow: hidden; /* Ensure child elements respect the border radius */
+}
+
+.category-accordion .accordion-button {
+    background-color: var(--color-6); /* Light beige for header */
+    color: var(--color-2); /* Dark teal text */
+    font-weight: 500;
+    padding: 15px;
+    border-radius: 8px 8px 0 0; /* Rounded top corners for the button */
+    padding: 15px 20px; /* Slightly more horizontal padding */
+    font-size: 1.1rem; /* Slightly larger font size */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.category-accordion .accordion-body {
+    padding: 20px; /* More padding for content */
+    font-size: 1rem; /* Consistent font size */
+    line-height: 1.6; /* Improve line spacing */
+}
+
+.category-accordion .accordion-button.collapsed {
+    border-radius: 8px; /* Fully rounded corners when collapsed */
+}
+
+.category-accordion .accordion-button:not(.collapsed) {
+    background-color: var(--color-6); /* Light peach when expanded */
+    color: var(--color-2);
+}
+
+.category-accordion .accordion-body {
+    background-color: #f3ede5; /* Off-white for content */
+    padding: 15px;
+}
+
+.category-accordion .accordion-button::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%232a5055'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+    transition: transform 0.3s ease, background-image 0.3s ease;
+}
+
+.category-accordion .accordion-button:not(.collapsed)::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23d49066'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E"); /* Warm orange arrow when expanded */
+    transform: rotate(-180deg);
+}
+
+.category-accordion .accordion-button:hover {
+    background-color: #f5f0e8; /* Slightly darker than --color-6 */
+    color: var(--color-2); /* Keep the text color consistent */
+}

@@ -12,9 +12,20 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
-        $categories = Category::all();
-        return view('categories.index', compact('categories'));
+        // Fetch all categories with relationships
+        $allCategories = Category::with('children', 'parent')->get();
+
+        // Top-level parents with children (for accordions)
+        $parentCategories = $allCategories->whereNull('parentCategoryID')->filter(function ($category) {
+            return $category->children->isNotEmpty();
+        });
+
+        // Top-level categories without children (standalone cards)
+        $standaloneCategories = $allCategories->whereNull('parentCategoryID')->filter(function ($category) {
+            return $category->children->isEmpty();
+        });
+
+        return view('categories.index', compact('parentCategories', 'standaloneCategories'));
     }
 
     /**

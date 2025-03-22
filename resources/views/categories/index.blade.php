@@ -15,42 +15,121 @@
             </div>
         @endif
 
-        <div class="card account-settings-card">
-            <div class="card-body">
-                <div class="row">
-                    @if ($categories->isEmpty())
-                        <div class="col-12">
-                            <div class="card account-manager-card text-center p-5">
-                                <h5 class="text-muted d-flex justify-content-center align-items-center gap-3">
-                                    No categories yet.
-                                    <span class="material-icons-outlined fs-2">category</span>
-                                </h5>
-                            </div>
-                        </div>
-                    @else
-                        @foreach ($categories as $category)
-                            <div class="col-12 mb-3">
-                                <div class="card account-manager-card p-3 d-flex flex-row align-items-center">
-                                    <div class="flex-grow-1 ms-2">
-                                        <h5 class="mb-1 fw-semibold">{{ $category->categoryName }}</h5>
-                                        <p class="mb-1">{{ $category->categoryDescription ?? 'No description' }}</p>
-                                        @if ($category->parent)
-                                            <p class="mb-1 text-muted">Parent: {{ $category->parent->categoryName }}</p>
-                                        @endif
-                                        <span class="badge {{ $category->categoryStatus === 'Active' ? 'bg-success' : 'bg-danger' }}">
-                                            {{ $category->categoryStatus }}
+        <div class="row">
+            @if ($parentCategories->isEmpty() && $standaloneCategories->isEmpty())
+                <div class="col-12">
+                    <div class="card account-manager-card text-center p-5">
+                        <h5 class="text-muted d-flex justify-content-center align-items-center gap-3">
+                            No categories yet.
+                            <span class="material-icons-outlined fs-2">category</span>
+                        </h5>
+                    </div>
+                </div>
+            @else
+                <!-- Accordion for Top-Level Parent Categories with Children -->
+                <div class="category-accordion mb-3" id="categoriesAccordion">
+                    @foreach ($parentCategories as $parent)
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading{{ $parent->categoryID }}">
+                                <button class="accordion-button {{ $loop->first ? '' : 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $parent->categoryID }}" aria-expanded="{{ $loop->first ? 'true' : 'false' }}" aria-controls="collapse{{ $parent->categoryID }}">
+                                    <div class="flex-grow-1">
+                                        <h5 class="mb-1 fw-semibold">{{ $parent->categoryName }}</h5>
+                                        <p class="mb-1">{{ $parent->categoryDescription ?? 'No description' }}</p>
+                                        <span class="badge {{ $parent->categoryStatus === 'Active' ? 'bg-success' : 'bg-danger' }}">
+                                            {{ $parent->categoryStatus }}
                                         </span>
                                     </div>
-                                    <x-primary-button href="{{ route('categories.edit', $category->categoryID) }}">
+                                </button>
+                            </h2>
+                            <div id="collapse{{ $parent->categoryID }}" class="accordion-collapse collapse {{ $loop->first ? 'show' : '' }}" aria-labelledby="heading{{ $parent->categoryID }}" data-bs-parent="#categoriesAccordion">
+                                <div class="accordion-body">
+                                    <!-- Edit Button for Parent (moved outside collapse button) -->
+                                    <x-primary-button href="{{ route('categories.edit', $parent->categoryID) }}" class="mb-3" style="">
                                         <span class="material-icons-outlined">edit</span>
                                         Edit
                                     </x-primary-button>
+                                    @foreach ($parent->children as $child)
+                                        @if ($child->children->isEmpty())
+                                            <!-- Child without children: Card -->
+                                            <div class="card account-manager-card p-3 d-flex flex-row align-items-center mb-3">
+                                                <div class="flex-grow-1 ms-2">
+                                                    <h5 class="mb-1 fw-semibold">{{ $child->categoryName }}</h5>
+                                                    <p class="mb-1">{{ $child->categoryDescription ?? 'No description' }}</p>
+                                                    <span class="badge {{ $child->categoryStatus === 'Active' ? 'bg-success' : 'bg-danger' }}">
+                                                        {{ $child->categoryStatus }}
+                                                    </span>
+                                                </div>
+                                                <x-primary-button href="{{ route('categories.edit', $child->categoryID) }}">
+                                                    <span class="material-icons-outlined">edit</span>
+                                                    Edit
+                                                </x-primary-button>
+                                            </div>
+                                        @else
+                                            <!-- Child with children: Nested Accordion -->
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="heading{{ $child->categoryID }}">
+                                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $child->categoryID }}" aria-expanded="false" aria-controls="collapse{{ $child->categoryID }}">
+                                                        <div class="flex-grow-1">
+                                                            <h5 class="mb-1 fw-semibold">{{ $child->categoryName }}</h5>
+                                                            <p class="mb-1">{{ $child->categoryDescription ?? 'No description' }}</p>
+                                                            <span class="badge {{ $child->categoryStatus === 'Active' ? 'bg-success' : 'bg-danger' }}">
+                                                                {{ $child->categoryStatus }}
+                                                            </span>
+                                                        </div>
+                                                    </button>
+                                                    <!-- Edit Button for Child with Children -->
+                                                    <x-primary-button href="{{ route('categories.edit', $child->categoryID) }}" class="ms-2 me-3 align-self-center" style="flex-shrink: 0;">
+                                                        <span class="material-icons-outlined">edit</span>
+                                                        Edit
+                                                    </x-primary-button>
+                                                </h2>
+                                                <div id="collapse{{ $child->categoryID }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $child->categoryID }}">
+                                                    <div class="accordion-body">
+                                                        @foreach ($child->children as $grandchild)
+                                                            <div class="card account-manager-card p-3 d-flex flex-row align-items-center mb-3">
+                                                                <div class="flex-grow-1 ms-2">
+                                                                    <h5 class="mb-1 fw-semibold">{{ $grandchild->categoryName }}</h5>
+                                                                    <p class="mb-1">{{ $grandchild->categoryDescription ?? 'No description' }}</p>
+                                                                    <span class="badge {{ $grandchild->categoryStatus === 'Active' ? 'bg-success' : 'bg-danger' }}">
+                                                                        {{ $grandchild->categoryStatus }}
+                                                                    </span>
+                                                                </div>
+                                                                <x-primary-button href="{{ route('categories.edit', $grandchild->categoryID) }}">
+                                                                    <span class="material-icons-outlined">edit</span>
+                                                                    Edit
+                                                                </x-primary-button>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
                                 </div>
                             </div>
-                        @endforeach
-                    @endif
+                        </div>
+                    @endforeach
                 </div>
-            </div>
+
+                <!-- Standalone Top-Level Categories (no children) -->
+                @foreach ($standaloneCategories as $standalone)
+                    <div class="col-12 mb-3">
+                        <div class="card account-manager-card p-3 d-flex flex-row align-items-center">
+                            <div class="flex-grow-1 ms-2">
+                                <h5 class="mb-1 fw-semibold">{{ $standalone->categoryName }}</h5>
+                                <p class="mb-1">{{ $standalone->categoryDescription ?? 'No description' }}</p>
+                                <span class="badge {{ $standalone->categoryStatus === 'Active' ? 'bg-success' : 'bg-danger' }}">
+                                    {{ $standalone->categoryStatus }}
+                                </span>
+                            </div>
+                            <x-primary-button href="{{ route('categories.edit', $standalone->categoryID) }}">
+                                <span class="material-icons-outlined">edit</span>
+                                Edit
+                            </x-primary-button>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
         </div>
     </div>
 </x-app-layout>
