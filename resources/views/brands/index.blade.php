@@ -9,10 +9,11 @@
             </x-primary-button>
         </div>
         
-    
+        <!-- Success Message -->
         @if (session('success'))
-            <div class="alert alert-success">
+            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
                 {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
@@ -41,7 +42,7 @@
 
                             <!-- Brand Details -->
                             <div class="flex-grow-1 ms-2">
-                                <h5 class="mb-1 fw-semibold">{{ $brand->brandName }}</h5>
+                                <h5 class="mb-1 fs-2 fw-semibold">{{ $brand->brandName }}</h5>
                                 <span class="badge {{ $brand->brandStatus === 'Active' ? 'bg-success' : 'bg-danger' }}">
                                     {{ $brand->brandStatus }}
                                 </span>

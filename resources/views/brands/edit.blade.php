@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
-        <h1 class="text-2xl font-bold mb-4">Edit Brand</h1>
+        <h1 class="text-2xl mb-4">Edit Brand: <strong>{{ $brand->brandName }}</strong></h1>
 
         <div class="card account-settings-card">
             <div class="card-body">

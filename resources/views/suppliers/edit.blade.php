@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
-        <h1 class="text-2xl fw-semibold mb-4">Edit Supplier</h1>
+        <h1 class="text-2xl mb-4">Edit Supplier: <strong> {{ $supplier->supplierName }} </strong> </h1>
         <div class="card account-settings-card">
             <div class="card-body">
                 <form action="{{ route('suppliers.update', $supplier->supplierID) }}" method="POST" enctype="multipart/form-data">
