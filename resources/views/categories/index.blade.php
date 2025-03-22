@@ -27,11 +27,11 @@
                 </div>
             @else
                 <!-- Accordion for Top-Level Parent Categories with Children -->
-                <div class="category-accordion mb-3" id="categoriesAccordion">
+                <div class="category-accordion" id="categoriesAccordion">
                     @foreach ($parentCategories as $parent)
-                        <div class="accordion-item">
+                        <div class="accordion-item mb-3">
                             <h2 class="accordion-header" id="heading{{ $parent->categoryID }}">
-                                <button class="accordion-button {{ $loop->first ? '' : 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $parent->categoryID }}" aria-expanded="{{ $loop->first ? 'true' : 'false' }}" aria-controls="collapse{{ $parent->categoryID }}">
+                                <button class="accordion-button p-4 d-flex justify-content-between align-items-center {{ $loop->first ? '' : 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $parent->categoryID }}" aria-expanded="{{ $loop->first ? 'true' : 'false' }}" aria-controls="collapse{{ $parent->categoryID }}">
                                     <div class="flex-grow-1">
                                         <h5 class="mb-1 fw-semibold">{{ $parent->categoryName }}</h5>
                                         <p class="mb-1">{{ $parent->categoryDescription ?? 'No description' }}</p>
@@ -39,6 +39,9 @@
                                             {{ $parent->categoryStatus }}
                                         </span>
                                     </div>
+                                    <span class="material-icons-outlined accordion-icon ms-3 fs-3">
+                                        expand_more
+                                    </span>
                                 </button>
                             </h2>
                             <div id="collapse{{ $parent->categoryID }}" class="accordion-collapse collapse {{ $loop->first ? 'show' : '' }}" aria-labelledby="heading{{ $parent->categoryID }}" data-bs-parent="#categoriesAccordion">
@@ -114,7 +117,7 @@
                 <!-- Standalone Top-Level Categories (no children) -->
                 @foreach ($standaloneCategories as $standalone)
                     <div class="col-12 mb-3">
-                        <div class="card account-manager-card p-3 d-flex flex-row align-items-center">
+                        <div class="card account-manager-card px-3 py-4 d-flex flex-row align-items-center">
                             <div class="flex-grow-1 ms-2">
                                 <h5 class="mb-1 fw-semibold">{{ $standalone->categoryName }}</h5>
                                 <p class="mb-1">{{ $standalone->categoryDescription ?? 'No description' }}</p>
