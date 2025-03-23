@@ -30,6 +30,9 @@
                         'categories.index' => 'Categories',
                         'categories.create' => 'Add Category',
                         'categories.edit' => 'Edit Category',
+                        'products.index' => 'Products',
+                        'products.create' => 'Add Product',
+                        'products.edit' => 'Edit Product',
                         // Add more routes as needed
                     ];
                     $currentRoute = Route::currentRouteName();
@@ -94,19 +97,19 @@
                             Dashboard
                         </x-nav-link>
                     </li>
-                    {{-- <li class="nav-item">
-                        <x-nav-link :href="route('products')" :active="request()->routeIs('products')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
+                    <li class="nav-item">
+                        <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.index')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
                             <span class="material-icons-outlined"> inventory_2 </span>
                             Products
                         </x-nav-link>
                     </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <x-nav-link :href="route('orders')" :active="request()->routeIs('orders')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
                             <span class="material-icons-outlined"> shopping_cart </span>
                             Customer Orders
                         </x-nav-link>
-                    </li>
-                    --}}
+                    </li> --}}
+                   
 
                     <li class="nav-item">
                         <x-nav-link :href="route('suppliers.index')" :active="request()->routeIs('suppliers.index')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">

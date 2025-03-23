@@ -31,7 +31,7 @@
                     @foreach ($parentCategories as $parent)
                         <div class="accordion-item mb-3">
                             <h2 class="accordion-header" id="heading{{ $parent->categoryID }}">
-                                <button class="accordion-button p-4 d-flex justify-content-between align-items-center {{ $loop->first ? '' : 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $parent->categoryID }}" aria-expanded="{{ $loop->first ? 'true' : 'false' }}" aria-controls="collapse{{ $parent->categoryID }}">
+                                <button class="accordion-button p-4 d-flex justify-content-between align-items-center collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $parent->categoryID }}" aria-expanded="false" aria-controls="collapse{{ $parent->categoryID }}">
                                     <div class="flex-grow-1">
                                         <h5 class="mb-1 fw-semibold">{{ $parent->categoryName }}</h5>
                                         <p class="mb-1">{{ $parent->categoryDescription ?? 'No description' }}</p>
@@ -44,8 +44,7 @@
                                     </span>
                                 </button>
                             </h2>
-                            <div id="collapse{{ $parent->categoryID }}" class="accordion-collapse collapse {{ $loop->first ? 'show' : '' }}" aria-labelledby="heading{{ $parent->categoryID }}" data-bs-parent="#categoriesAccordion">
-                                <div class="accordion-body">
+                            <div id="collapse{{ $parent->categoryID }}" class="accordion-collapse collapse" aria-labelledby="heading{{ $parent->categoryID }}" data-bs-parent="#categoriesAccordion">                                <div class="accordion-body">
                                     <!-- Edit Button for Parent (moved outside collapse button) -->
                                     <x-primary-button href="{{ route('categories.edit', $parent->categoryID) }}" class="mb-3" style="">
                                         <span class="material-icons-outlined">edit</span>

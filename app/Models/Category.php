@@ -10,10 +10,10 @@ class Category extends Model
     protected $fillable = ['categoryName', 'categoryDescription', 'parentCategoryID', 'categoryStatus', 'created_by', 'updated_by'];
     public $timestamps = true;
 
-    // public function products()
-    // {
-    //     return $this->hasMany(Product::class, 'categoryID', 'categoryID');
-    // }
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'categoryID', 'categoryID');
+    }
 
     public function parent()
     {

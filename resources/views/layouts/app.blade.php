@@ -16,7 +16,10 @@
         rel="stylesheet" />
 
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/account-manager-style.css'])
+        @vite(['resources/css/app.css', 
+        'resources/js/app.js', 
+        'resources/css/account-manager-style.css',
+        'resources/css/product-style.css'])
     </head>
     <body>
         <div>

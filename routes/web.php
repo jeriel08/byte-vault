@@ -5,6 +5,7 @@ use App\Http\Controllers\AccountManagerController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -56,6 +57,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
     Route::get('/categories/{categoryID}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
     Route::put('/categories/{categoryID}', [CategoryController::class, 'update'])->name('categories.update');
+});
+
+// Products
+Route::middleware('auth')->group(function () {
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+    Route::get('/products/{productID}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{productID}', [ProductController::class, 'update'])->name('products.update');
 });
 
 require __DIR__ . '/auth.php';

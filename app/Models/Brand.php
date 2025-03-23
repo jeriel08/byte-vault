@@ -12,10 +12,10 @@ class Brand extends Model
     public $timestamps = true;
 
     // Relationship with products
-    // public function products()
-    // {
-    //     return $this->hasMany(Product::class, 'brandID', 'brandID');
-    // }
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'brandID', 'brandID');
+    }
 
     // Relationship with the user who created/updated the brand
     public function creator()
