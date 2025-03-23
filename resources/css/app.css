@@ -408,3 +408,7 @@ nav.navbar {
     color: var(--color-2);
     font-size: 1rem;
 }
+
+.modal {
+    border-radius: 0.5em !important;
+}

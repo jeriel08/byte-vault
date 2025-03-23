@@ -33,16 +33,13 @@
                         <label class="fw-semibold mb-2">Product Status</label>
                         <div class="btn-group d-flex flex-wrap gap-2 mb-3" role="group">
                             <button type="button" class="btn category-filter-button flex-grow-1">
-                                <span class="badge me-2">{{ $products->count() }}</span> All
-                            </button>
-                            <button type="button" class="btn category-filter-button flex-grow-1">
                                 <span class="badge me-2">{{ $products->where('productStatus', 'Active')->count() }}</span> Active
                             </button>
                             <button type="button" class="btn category-filter-button flex-grow-1">
                                 <span class="badge me-2">{{ $products->where('productStatus', 'Inactive')->count() }}</span> Inactive
                             </button>
                             <button type="button" class="btn category-filter-button flex-grow-1">
-                                <span class="badge me-2">0</span> Draft
+                                <span class="badge me-2">{{ $products->count() }}</span> All
                             </button>
                         </div>
 
@@ -167,13 +164,32 @@
                                     </div>
                                     
                                     <div class="ms-5 d-flex flex-column gap-2">
-                                        <x-primary-button href="#" class="btn-sm">
+                                        <x-primary-button class="btn-sm" data-bs-toggle="modal" data-bs-target="#productDetailsModal-{{ $product->productID }}">
                                             <span class="material-icons-outlined">visibility</span>
                                         </x-primary-button>
                                         <x-primary-button href="{{ route('products.edit', $product->productID) }}" class="btn-sm">
                                             <span class="material-icons-outlined">edit</span>
                                         </x-primary-button>
                                     </div>
+
+                                    <!-- Modal for Product Details -->
+                                    <x-modal name="productDetailsModal-{{ $product->productID }}" maxWidth="lg">
+                                        <div class="modal-header custom-modal-header">
+                                            <h5 class="modal-title" id="productDetailsModal-{{ $product->productID }}-label">{{ $product->productName }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body custom-modal-body">
+                                            <p><strong class="label">Category:</strong> <span class="value">{{ $product->category->categoryName }}</span></p>
+                                            <p><strong class="label">Brand:</strong> <span class="value">{{ $product->brand->brandName }}</span></p>
+                                            <p><strong class="label">Price:</strong> <span class="value">₱{{ number_format($product->price, 2) }}</span></p>
+                                            <p><strong class="label">Stock:</strong> <span class="value">{{ $product->stockQuantity }}</span></p>
+                                            <p><strong class="label">Description:</strong> <span class="value">{{ $product->productDescription ?? 'No description available' }}</span></p>
+                                            <p><strong class="label">Status:</strong> <span class="value">{{ $product->productStatus }}</span></p>
+                                        </div>
+                                        <div class="modal-footer custom-modal-footer">
+                                            <button type="button" class="btn custom-btn-close" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </x-modal>
                                 </div>
                             </div>
                         @endforeach
