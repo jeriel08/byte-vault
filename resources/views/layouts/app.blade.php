@@ -15,6 +15,9 @@
         href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Round"
         rel="stylesheet" />
 
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 
         'resources/js/app.js', 
