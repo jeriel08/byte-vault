@@ -14,8 +14,12 @@
             </x-primary-button>
         </div>
 
+        <!-- Success Message -->
         @if (session('success'))
-            <div class="alert alert-success mb-4 mx-4">{{ session('success') }}</div>
+            <div class="alert alert-success alert-dismissible fade show mx-4 mb-4" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         @endif
 
         <div class="row mx-2">
@@ -77,11 +81,11 @@
                         <div class="accordion mb-3" id="categoryAccordion">
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="categoryHeading">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#categoryCollapse" aria-expanded="true" aria-controls="categoryCollapse">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#categoryCollapse" aria-expanded="false" aria-controls="categoryCollapse">
                                         Select Categories
                                     </button>
                                 </h2>
-                                <div id="categoryCollapse" class="accordion-collapse collapse show" aria-labelledby="categoryHeading" data-bs-parent="#categoryAccordion">
+                                <div id="categoryCollapse" class="accordion-collapse collapse" aria-labelledby="categoryHeading" data-bs-parent="#categoryAccordion">
                                     <div class="accordion-body">
                                         @foreach ($products->pluck('category')->unique('categoryID') as $category)
                                             <div class="form-check">
@@ -106,11 +110,11 @@
                         <div class="accordion mb-3" id="brandAccordion">
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="brandHeading">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#brandCollapse" aria-expanded="true" aria-controls="brandCollapse">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#brandCollapse" aria-expanded="false" aria-controls="brandCollapse">
                                         Select Brands
                                     </button>
                                 </h2>
-                                <div id="brandCollapse" class="accordion-collapse collapse show" aria-labelledby="brandHeading" data-bs-parent="#brandAccordion">
+                                <div id="brandCollapse" class="accordion-collapse collapse" aria-labelledby="brandHeading" data-bs-parent="#brandAccordion">
                                     <div class="accordion-body">
                                         @foreach ($products->pluck('brand')->unique('brandID') as $brand)
                                             <div class="form-check">
@@ -130,6 +134,53 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Product Cards -->
+            <div class="col-lg-9 col-md-8 col-sm-12 product-table" id="productTable">
+                @if ($products->isEmpty())
+                    <div class="text-center p-5">
+                        <h5 class="text-muted d-flex justify-content-center align-items-center gap-3">
+                            No products yet.
+                            <span class="material-icons-outlined fs-2">inventory</span>
+                        </h5>
+                    </div>
+                @else
+                    <div class="row">
+                        @foreach ($products as $product)
+                            <div class="col-12 mb-4">
+                                <div class="card account-manager-card p-3 d-flex flex-row align-items-center">
+                                    <div class="flex-grow-1">
+                                        <h5 class="mb-1 fw-semibold fs-4">{{ $product->productName }}</h5>
+                                        <p class="mb-0 text-muted">
+                                            {{ $product->category->categoryName }} • 
+                                            {{ $product->brand->brandName }} • 
+                                            <strong>Stock: {{ $product->stockQuantity }}</strong>
+                                        </p>
+                                    </div>
+                    
+                                    <div class="d-flex align-items-center mx-3 price-section">
+                                        <span class="vr me-3"></span>
+                                        <div class="d-flex flex-column">
+                                            <span class="text-muted"><small>Selling Price</small></span>
+                                            <span class="fw-semibold fs-5">₱{{ number_format($product->price, 2) }}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="ms-5 d-flex flex-column gap-2">
+                                        <x-primary-button href="#" class="btn-sm">
+                                            <span class="material-icons-outlined">visibility</span>
+                                        </x-primary-button>
+                                        <x-primary-button href="{{ route('products.edit', $product->productID) }}" class="btn-sm">
+                                            <span class="material-icons-outlined">edit</span>
+                                        </x-primary-button>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+            
         </div>
     </div>
 </x-app-layout>

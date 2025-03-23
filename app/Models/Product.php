@@ -8,6 +8,8 @@ class Product extends Model
 {
     //
     protected $primaryKey = 'productID';
+    public $incrementing = true;
+    protected $keyType = 'int';
     protected $fillable = [
         'productName',
         'productDescription',

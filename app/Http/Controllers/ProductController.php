@@ -71,10 +71,8 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $productID)
+    public function edit(Product $product)
     {
-        //
-        $product = Product::findOrFail($productID);
         $brands = Brand::where('brandStatus', 'Active')->get();
         $categories = Category::where('categoryStatus', 'Active')->get();
         return view('products.edit', compact('product', 'brands', 'categories'));
