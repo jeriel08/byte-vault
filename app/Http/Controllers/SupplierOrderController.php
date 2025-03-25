@@ -23,12 +23,17 @@ class SupplierOrderController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
         $suppliers = Supplier::where('supplierStatus', 'Active')->get();
         $products = Product::where('productStatus', 'Active')->get();
-        return view('supplier_orders.create', compact('suppliers', 'products'));
+        $reorderOrder = null;
+
+        if ($request->has('reorder')) {
+            $reorderOrder = SupplierOrder::with('details.product')->findOrFail($request->reorder);
+        }
+
+        return view('supplier_orders.create', compact('suppliers', 'products', 'reorderOrder'));
     }
 
     /**

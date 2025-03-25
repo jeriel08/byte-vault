@@ -114,6 +114,10 @@
                                             <x-primary-button href="{{ route('supplier_orders.edit', $supplierOrder->supplierOrderID) }}" class="btn-sm">
                                                 <span class="material-icons-outlined">edit</span>
                                             </x-primary-button>
+                                        @else
+                                            <x-primary-button href="{{ route('supplier_orders.create', ['reorder' => $supplierOrder->supplierOrderID]) }}" class="btn-sm">
+                                                <span class="material-icons-outlined">replay</span>
+                                            </x-primary-button>
                                         @endif
                                     </div>
                                 </div>

@@ -18,19 +18,21 @@
                         <select name="supplierID" id="supplierID" class="form-select" required>
                             <option value="">Select Supplier</option>
                             @foreach ($suppliers as $supplier)
-                                <option value="{{ $supplier->supplierID }}">{{ $supplier->supplierName }}</option>
+                                <option value="{{ $supplier->supplierID }}" {{ $reorderOrder && $reorderOrder->supplierID == $supplier->supplierID ? 'selected' : '' }}>
+                                    {{ $supplier->supplierName }}
+                                </option>
                             @endforeach
                         </select>
                         @error('supplierID') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                     <div class="mb-3">
                         <label for="orderDate" class="form-label fw-semibold">Order Date</label>
-                        <input type="date" name="orderDate" id="orderDate" class="form-control" required>
+                        <input type="date" name="orderDate" id="orderDate" class="form-control" value="{{ $reorderOrder ? $reorderOrder->orderDate->format('Y-m-d') : now()->format('Y-m-d') }}" required>
                         @error('orderDate') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                     <div class="mb-4">
                         <label for="expectedDeliveryDate" class="form-label fw-semibold">Expected Delivery Date</label>
-                        <input type="date" name="expectedDeliveryDate" id="expectedDeliveryDate" class="form-control">
+                        <input type="date" name="expectedDeliveryDate" id="expectedDeliveryDate" class="form-control" value="{{ $reorderOrder && $reorderOrder->expectedDeliveryDate ? $reorderOrder->expectedDeliveryDate->format('Y-m-d') : '' }}">
                         @error('expectedDeliveryDate') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                     <hr class="mb-4">
@@ -41,7 +43,36 @@
                             Add Product
                         </x-secondary-button>
                         <div id="productList">
-                            <!-- Products will be appended here as cards -->
+                            @if ($reorderOrder)
+                                @foreach ($reorderOrder->details as $index => $detail)
+                                    <div class="card account-manager-card p-3 d-flex flex-row align-items-center mb-3">
+                                        <div class="flex-grow-1">
+                                            <h5 class="mb-1 fw-semibold">{{ $detail->product->productName }}</h5>
+                                        </div>
+                                        <div class="d-flex align-items-center mx-3">
+                                            <span class="vr me-3"></span>
+                                            <div class="d-flex flex-row gap-3 align-items-start">
+                                                <div class="text-start" style="min-width: 80px;">
+                                                    <span class="text-muted d-block"><small>Quantity</small></span>
+                                                    <span class="fw-semibold fs-5">{{ $detail->quantity }}</span>
+                                                </div>
+                                                <div class="text-start" style="min-width: 100px;">
+                                                    <span class="text-muted d-block"><small>Unit Cost</small></span>
+                                                    <span class="fw-semibold fs-5">₱{{ number_format($detail->unitCost, 2) }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="ms-5">
+                                            <button type="button" class="btn btn-danger btn-sm remove-product">
+                                                <span class="material-icons-outlined danger-badge fs-1">delete</span>
+                                            </button>
+                                        </div>
+                                        <input type="hidden" name="details[{{ $index }}][productID]" value="{{ $detail->productID }}">
+                                        <input type="hidden" name="details[{{ $index }}][quantity]" value="{{ $detail->quantity }}">
+                                        <input type="hidden" name="details[{{ $index }}][unitCost]" value="{{ $detail->unitCost }}">
+                                    </div>
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                     <hr class="mb-3">
@@ -89,7 +120,7 @@
 
     <!-- JavaScript for Managing Products -->
     <script>
-        let index = 0;
+        let index = {{ $reorderOrder ? $reorderOrder->details->count() : 0 }};
         document.getElementById('addProductBtn').addEventListener('click', function() {
             const productID = document.getElementById('productID').value;
             const quantity = document.getElementById('quantity').value;
@@ -99,7 +130,6 @@
                 const productName = document.querySelector(`#productID option[value="${productID}"]`).text;
                 const productList = document.getElementById('productList');
                 
-                // Create card-like structure
                 const productCard = document.createElement('div');
                 productCard.className = 'card account-manager-card p-3 d-flex flex-row align-items-center mb-3';
                 productCard.innerHTML = `
@@ -131,7 +161,6 @@
                 productList.appendChild(productCard);
                 index++;
 
-                // Close modal and reset form
                 bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
                 document.getElementById('productID').value = '';
                 document.getElementById('quantity').value = '';
