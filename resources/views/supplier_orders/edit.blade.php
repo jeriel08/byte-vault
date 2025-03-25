@@ -75,6 +75,10 @@
                                                 <span class="fw-semibold fs-5">₱{{ number_format($detail->unitCost, 2) }}</span>
                                             </div>
                                             <div class="text-start" style="min-width: 100px;">
+                                                <span class="text-muted d-block"><small>Received Qty</small></span>
+                                                <span class="fw-semibold fs-5">{{ $detail->receivedQuantity }}</span>
+                                            </div>
+                                            <div class="text-start" style="min-width: 100px;">
                                                 <span class="text-muted d-block"><small>Status</small></span>
                                                 <span class="badge bg-{{ $detail->status === 'Pending' ? 'warning' : ($detail->status === 'Received' ? 'success' : 'danger') }}">
                                                     {{ $detail->status }}
@@ -91,9 +95,10 @@
                                     <input type="hidden" name="details[{{ $index }}][productID]" value="{{ $detail->productID }}">
                                     <input type="hidden" name="details[{{ $index }}][quantity]" value="{{ $detail->quantity }}">
                                     <input type="hidden" name="details[{{ $index }}][unitCost]" value="{{ $detail->unitCost }}">
+                                    <input type="hidden" name="details[{{ $index }}][receivedQuantity]" value="{{ $detail->receivedQuantity }}">
                                     <input type="hidden" name="details[{{ $index }}][status]" value="{{ $detail->status }}">
                                 </div>
-
+                        
                                 <!-- Edit Product Modal -->
                                 <x-modal name="editProductModal-{{ $detail->supplierOrderDetailID }}" maxWidth="lg">
                                     <div class="modal-header custom-modal-header">
@@ -108,6 +113,10 @@
                                         <div class="row mb-3">
                                             <label class="form-label fw-semibold">Unit Cost</label>
                                             <input type="number" class="form-control edit-unitCost" value="{{ $detail->unitCost }}" step="0.01" min="0" required>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <label class="form-label fw-semibold">Received Quantity</label>
+                                            <input type="number" class="form-control edit-receivedQuantity" value="{{ $detail->receivedQuantity }}" min="0" max="{{ $detail->quantity }}" required>
                                         </div>
                                         <div class="row mb-3">
                                             <label class="form-label fw-semibold">Status</label>
@@ -142,20 +151,34 @@
                 const modal = e.target.closest('.modal');
                 const detailId = e.target.dataset.detailId;
                 const card = document.querySelector(`.card[data-detail-id="${detailId}"]`);
-                const quantity = modal.querySelector('.edit-quantity').value;
+                const quantity = parseInt(modal.querySelector('.edit-quantity').value);
                 const unitCost = modal.querySelector('.edit-unitCost').value;
-                const status = modal.querySelector('.edit-status').value;
+                const receivedQuantity = parseInt(modal.querySelector('.edit-receivedQuantity').value);
+                let status = modal.querySelector('.edit-status').value;
+    
+                // Validate receivedQuantity
+                if (receivedQuantity < 0 || receivedQuantity > quantity) {
+                    alert('Received Quantity must be between 0 and the ordered Quantity.');
+                    return;
+                }
+    
+                // Auto-set status to Received if receivedQuantity equals quantity
+                if (receivedQuantity === quantity) {
+                    status = 'Received';
+                }
     
                 // Update card display
                 card.querySelector('.text-start:nth-child(1) .fw-semibold').textContent = quantity;
                 card.querySelector('.text-start:nth-child(2) .fw-semibold').textContent = `₱${parseFloat(unitCost).toFixed(2)}`;
+                card.querySelector('.text-start:nth-child(3) .fw-semibold').textContent = receivedQuantity;
                 const badge = card.querySelector('.badge');
                 badge.textContent = status;
                 badge.className = `badge bg-${status === 'Pending' ? 'warning' : (status === 'Received' ? 'success' : 'danger')}`;
     
-                // Update hidden inputs using more specific selectors
+                // Update hidden inputs
                 card.querySelector('input[name$="[quantity]"]').value = quantity;
                 card.querySelector('input[name$="[unitCost]"]').value = unitCost;
+                card.querySelector('input[name$="[receivedQuantity]"]').value = receivedQuantity;
                 card.querySelector('input[name$="[status]"]').value = status;
     
                 bootstrap.Modal.getInstance(modal).hide();

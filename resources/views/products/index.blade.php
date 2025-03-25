@@ -164,7 +164,7 @@
                                         <span class="vr me-3"></span>
                                         <div class="d-flex flex-column">
                                             <span class="text-muted"><small>Selling Price</small></span>
-                                            <span class="fw-semibold fs-5 d-flex align-items-center gap-1">
+                                            <span class="fw-semibold fs-5 d-flex align-items-center gap-1" style="width: 7rem;">
                                                 ₱{{ number_format($product->price, 2) }}
                                                 @if ($product->price == 0)
                                                     <span class="badge bg-danger ms-2">

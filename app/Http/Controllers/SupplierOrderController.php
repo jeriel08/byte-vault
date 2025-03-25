@@ -115,6 +115,7 @@ class SupplierOrderController extends Controller
             'details.*.productID' => 'required|exists:products,productID',
             'details.*.quantity' => 'required|integer|min:1',
             'details.*.unitCost' => 'required|numeric|min:0',
+            'details.*.receivedQuantity' => 'required|integer|min:0',
             'details.*.status' => 'required|in:Pending,Received,Cancelled',
         ]);
 
@@ -123,13 +124,13 @@ class SupplierOrderController extends Controller
             'supplierID' => $request->supplierID,
             'orderDate' => $request->orderDate,
             'expectedDeliveryDate' => $request->expectedDeliveryDate,
-            'status' => $request->status, // Manual status from the form
+            'status' => $request->status,
             'updated_by' => auth()->id(),
         ]);
 
         // Calculate total cost and update details
         $totalCost = 0;
-        $allDetailsReceived = true; // Track if all details are Received
+        $allDetailsReceived = true;
 
         foreach ($request->details as $index => $detailData) {
             $subtotal = $detailData['quantity'] * $detailData['unitCost'];
@@ -138,16 +139,30 @@ class SupplierOrderController extends Controller
             $detail = SupplierOrderDetail::findOrFail($detailData['supplierOrderDetailID']);
             $oldStatus = $detail->status;
 
-            // If order status is Received or Cancelled, sync detail status
+            // Validate receivedQuantity server-side
+            if ($detailData['receivedQuantity'] > $detailData['quantity']) {
+                return back()->withErrors(['details.' . $index . '.receivedQuantity' => 'Received Quantity cannot exceed Ordered Quantity.']);
+            }
+
+            // If order status is Received, set all details to Received and receivedQuantity to quantity
             if ($request->status === 'Received') {
                 $detailData['status'] = 'Received';
-            } elseif ($request->status === 'Cancelled') {
+                $detailData['receivedQuantity'] = $detailData['quantity'];
+            }
+            // If order status is Cancelled, set all details to Cancelled and reset receivedQuantity
+            elseif ($request->status === 'Cancelled') {
                 $detailData['status'] = 'Cancelled';
+                $detailData['receivedQuantity'] = 0;
+            }
+            // If receivedQuantity equals quantity, set status to Received
+            elseif ($detailData['receivedQuantity'] == $detailData['quantity']) {
+                $detailData['status'] = 'Received';
             }
 
             $detail->update([
                 'quantity' => $detailData['quantity'],
                 'unitCost' => $detailData['unitCost'],
+                'receivedQuantity' => $detailData['receivedQuantity'],
                 'status' => $detailData['status'],
             ]);
 
@@ -155,14 +170,13 @@ class SupplierOrderController extends Controller
             if ($detailData['status'] === 'Received' && $oldStatus !== 'Received') {
                 $product = Product::findOrFail($detail->productID);
                 $product->update([
-                    'stockQuantity' => $product->stockQuantity + $detailData['quantity'],
+                    'stockQuantity' => $product->stockQuantity + $detailData['receivedQuantity'],
                     'price' => $detailData['unitCost'],
                     'updated_by' => auth()->id(),
                 ]);
-                $detail->update(['receivedQuantity' => $detailData['quantity']]);
             }
 
-            // Check if all details are Received (for order status sync)
+            // Check if all details are Received
             if ($detailData['status'] !== 'Received') {
                 $allDetailsReceived = false;
             }

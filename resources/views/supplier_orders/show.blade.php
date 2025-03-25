@@ -49,6 +49,10 @@
                                             <span class="text-muted d-block"><small>Unit Cost</small></span>
                                             <span class="fw-semibold fs-5">₱{{ number_format($detail->unitCost, 2) }}</span>
                                         </div>
+                                        <div class="text-start me-4" style="min-width: 80px;">
+                                            <span class="text-muted d-block"><small>Quantity Received</small></span>
+                                            <span class="fw-semibold fs-5">{{ $detail->receivedQuantity }}</span>
+                                        </div>
                                         <div class="text-start me-4" style="min-width: 100px;">
                                             <span class="text-muted d-block"><small>Status</small></span>
                                             <span class="badge bg-{{ $detail->status === 'Pending' ? 'warning' : ($detail->status === 'Received' ? 'success' : 'danger') }} fs-6">
