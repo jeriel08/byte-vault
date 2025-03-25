@@ -7,6 +7,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SupplierOrderController;
+use App\Http\Controllers\AdjustmentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -77,6 +78,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/supplier-orders/{supplierOrder}/edit', [SupplierOrderController::class, 'edit'])->name('supplier_orders.edit');
     Route::put('/supplier-orders/{supplierOrderID}', [SupplierOrderController::class, 'update'])->name('supplier_orders.update');
     Route::get('/supplier-orders/{supplierOrder}', [SupplierOrderController::class, 'show'])->name('supplier_orders.show');
+});
+
+// Adjustments
+Route::middleware('auth')->group(function () {
+    Route::get('/adjustments', [AdjustmentController::class, 'index'])->name('adjustments.index');
+    Route::get('/adjustments/create', [AdjustmentController::class, 'create'])->name('adjustments.create');
+    Route::post('/adjustments', [AdjustmentController::class, 'store'])->name('adjustments.store');
 });
 
 require __DIR__ . '/auth.php';
