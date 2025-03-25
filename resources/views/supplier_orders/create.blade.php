@@ -1,10 +1,18 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
-        <h1 class="text-2xl font-bold mb-4">Create New Supplier Order</h1>
-        <div class="card account-settings-card">
+        <div class="d-flex justify-content-between align-items-center">
+            <h1 class="text-2xl font-bold mb-4">Create New Supplier Order</h1>
+            <x-secondary-button href="{{ route('supplier_orders.index') }}">
+                <span class="material-icons-outlined">arrow_back</span>
+                Go back
+            </x-secondary-button>
+        </div>
+        
+        <div class="card account-settings-card p-3">
             <div class="card-body">
-                <form action="{{ route('supplier_orders.store') }}" method="POST">
+                <form action="{{ route('supplier_orders.store') }}" method="POST" id="supplierOrderForm">
                     @csrf
+                    <h5 class="fw-semibold mb-3">Order Information</h5>
                     <div class="mb-3">
                         <label for="supplierID" class="form-label fw-semibold">Supplier</label>
                         <select name="supplierID" id="supplierID" class="form-select" required>
@@ -20,42 +28,23 @@
                         <input type="date" name="orderDate" id="orderDate" class="form-control" required>
                         @error('orderDate') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label for="expectedDeliveryDate" class="form-label fw-semibold">Expected Delivery Date</label>
                         <input type="date" name="expectedDeliveryDate" id="expectedDeliveryDate" class="form-control">
                         @error('expectedDeliveryDate') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
-
-                    <!-- Dynamic Order Details -->
-                    <div id="orderDetails">
+                    <hr class="mb-4">
+                    <!-- Order Details Section -->
+                    <div id="orderDetails" class="mb-3">
                         <h5 class="fw-semibold mb-3">Order Details</h5>
-                        <div class="detail-row mb-3" data-index="0">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="form-label fw-semibold">Product</label>
-                                    <select name="details[0][productID]" class="form-select" required>
-                                        <option value="">Select Product</option>
-                                        @foreach ($products as $product)
-                                            <option value="{{ $product->productID }}">{{ $product->productName }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label fw-semibold">Quantity</label>
-                                    <input type="number" name="details[0][quantity]" class="form-control" min="1" required>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label fw-semibold">Unit Cost</label>
-                                    <input type="number" name="details[0][unitCost]" class="form-control" step="0.01" min="0" required>
-                                </div>
-                                <div class="col-md-2 d-flex align-items-end">
-                                    <button type="button" class="btn btn-danger remove-detail">Remove</button>
-                                </div>
-                            </div>
+                        <x-secondary-button type="button" class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                            Add Product
+                        </x-secondary-button>
+                        <div id="productList">
+                            <!-- Products will be appended here as cards -->
                         </div>
                     </div>
-                    <button type="button" id="addDetail" class="btn btn-secondary mb-3">Add Item</button>
-
+                    <hr class="mb-3">
                     <x-primary-button type="submit" class="mt-4">
                         <span class="material-icons-outlined">save</span>
                         Save Order
@@ -65,45 +54,94 @@
         </div>
     </div>
 
-    <!-- JavaScript for Dynamic Rows -->
-    <script>
-        let index = 1;
-        document.getElementById('addDetail').addEventListener('click', function() {
-            const container = document.getElementById('orderDetails');
-            const newRow = document.createElement('div');
-            newRow.className = 'detail-row mb-3';
-            newRow.dataset.index = index;
-            newRow.innerHTML = `
-                <div class="row">
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold">Product</label>
-                        <select name="details[${index}][productID]" class="form-select" required>
-                            <option value="">Select Product</option>
-                            @foreach ($products as $product)
-                                <option value="{{ $product->productID }}">{{ $product->productName }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold">Quantity</label>
-                        <input type="number" name="details[${index}][quantity]" class="form-control" min="1" required>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold">Unit Cost</label>
-                        <input type="number" name="details[${index}][unitCost]" class="form-control" step="0.01" min="0" required>
-                    </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <button type="button" class="btn btn-danger remove-detail">Remove</button>
-                    </div>
+    <!-- Modal for Adding Products -->
+    <x-modal name="addProductModal" maxWidth="lg">
+        <div class="modal-header custom-modal-header">
+            <h5 class="modal-title" id="addProductModal-label">Add Product to Order</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body custom-modal-body">
+            <div class="row d-flex justify-content-center align-content-center">
+                <div class="row mb-3">
+                    <label class="form-label fw-semibold">Product</label>
+                    <select id="productID" class="form-select" required>
+                        <option value="">Select Product</option>
+                        @foreach ($products as $product)
+                            <option value="{{ $product->productID }}">{{ $product->productName }}</option>
+                        @endforeach
+                    </select>
                 </div>
-            `;
-            container.appendChild(newRow);
-            index++;
+                <div class="row mb-3">
+                    <label class="form-label fw-semibold">Quantity</label>
+                    <input type="number" id="quantity" class="form-control" min="1" required>
+                </div>
+                <div class="row mb-3">
+                    <label class="form-label fw-semibold">Unit Cost</label>
+                    <input type="number" id="unitCost" class="form-control" step="0.01" min="0" required>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer custom-modal-footer pb-0">
+            <x-primary-button type="button" class="btn btn-primary mb-4" id="addProductBtn">Add Product</x-primary-button>
+            <x-secondary-button type="button" data-bs-dismiss="modal">Close</x-secondary-button>
+        </div>
+    </x-modal>
+
+    <!-- JavaScript for Managing Products -->
+    <script>
+        let index = 0;
+        document.getElementById('addProductBtn').addEventListener('click', function() {
+            const productID = document.getElementById('productID').value;
+            const quantity = document.getElementById('quantity').value;
+            const unitCost = document.getElementById('unitCost').value;
+
+            if (productID && quantity && unitCost) {
+                const productName = document.querySelector(`#productID option[value="${productID}"]`).text;
+                const productList = document.getElementById('productList');
+                
+                // Create card-like structure
+                const productCard = document.createElement('div');
+                productCard.className = 'card account-manager-card p-3 d-flex flex-row align-items-center mb-3';
+                productCard.innerHTML = `
+                    <div class="flex-grow-1">
+                        <h5 class="mb-1 fw-semibold">${productName}</h5>
+                    </div>
+                    <div class="d-flex align-items-center mx-3">
+                        <span class="vr me-3"></span>
+                        <div class="d-flex flex-row gap-3 align-items-start">
+                            <div class="text-start" style="min-width: 80px;">
+                                <span class="text-muted d-block"><small>Quantity</small></span>
+                                <span class="fw-semibold fs-5">${quantity}</span>
+                            </div>
+                            <div class="text-start" style="min-width: 100px;">
+                                <span class="text-muted d-block"><small>Unit Cost</small></span>
+                                <span class="fw-semibold fs-5">₱${parseFloat(unitCost).toFixed(2)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ms-5">
+                        <button type="button" class="btn btn-danger btn-sm remove-product">
+                            <span class="material-icons-outlined danger-badge fs-1">delete</span>
+                        </button>
+                    </div>
+                    <input type="hidden" name="details[${index}][productID]" value="${productID}">
+                    <input type="hidden" name="details[${index}][quantity]" value="${quantity}">
+                    <input type="hidden" name="details[${index}][unitCost]" value="${unitCost}">
+                `;
+                productList.appendChild(productCard);
+                index++;
+
+                // Close modal and reset form
+                bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
+                document.getElementById('productID').value = '';
+                document.getElementById('quantity').value = '';
+                document.getElementById('unitCost').value = '';
+            }
         });
 
         document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('remove-detail')) {
-                e.target.closest('.detail-row').remove();
+            if (e.target.closest('.remove-product')) {
+                e.target.closest('.card').remove();
             }
         });
     </script>

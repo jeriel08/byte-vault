@@ -76,6 +76,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/supplier-orders', [SupplierOrderController::class, 'store'])->name('supplier_orders.store');
     Route::get('/supplier-orders/{supplierOrder}/edit', [SupplierOrderController::class, 'edit'])->name('supplier_orders.edit');
     Route::put('/supplier-orders/{supplierOrderID}', [SupplierOrderController::class, 'update'])->name('supplier_orders.update');
+    Route::get('/supplier-orders/{supplierOrder}', [SupplierOrderController::class, 'show'])->name('supplier_orders.show');
 });
 
 require __DIR__ . '/auth.php';

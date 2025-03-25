@@ -18,6 +18,12 @@ class SupplierOrder extends Model
         'updated_by',
     ];
 
+    // Cast dates to Carbon instances
+    protected $casts = [
+        'orderDate' => 'date',
+        'expectedDeliveryDate' => 'date',
+    ];
+
     public function supplier()
     {
         return $this->belongsTo(Supplier::class, 'supplierID', 'supplierID');

@@ -82,6 +82,8 @@ class SupplierOrderController extends Controller
     public function show(SupplierOrder $supplierOrder)
     {
         //
+        $supplierOrder->load('supplier', 'details.product');
+        return view('supplier_orders.show', compact('supplierOrder'));
     }
 
     /**
@@ -92,44 +94,86 @@ class SupplierOrderController extends Controller
         //
         $suppliers = Supplier::where('supplierStatus', 'Active')->get();
         $products = Product::where('productStatus', 'Active')->get();
+        $supplierOrder->load('details.product', 'supplier');
         return view('supplier_orders.edit', compact('supplierOrder', 'suppliers', 'products'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, SupplierOrder $supplierOrderID)
+    public function update(Request $request, $supplierOrderID)
     {
-        //
         $supplierOrder = SupplierOrder::findOrFail($supplierOrderID);
 
         $request->validate([
-            'status' => 'required|in:Pending,Cancelled,Received',
+            'supplierID' => 'required|exists:suppliers,supplierID',
+            'orderDate' => 'required|date',
+            'expectedDeliveryDate' => 'nullable|date|after_or_equal:orderDate',
+            'status' => 'required|in:Pending,Received,Cancelled',
+            'details' => 'required|array',
+            'details.*.supplierOrderDetailID' => 'sometimes|exists:supplier_order_details,supplierOrderDetailID',
+            'details.*.productID' => 'required|exists:products,productID',
+            'details.*.quantity' => 'required|integer|min:1',
+            'details.*.unitCost' => 'required|numeric|min:0',
+            'details.*.status' => 'required|in:Pending,Received,Cancelled',
         ]);
 
+        // Update supplier order main details
         $supplierOrder->update([
-            'status' => $request->status,
+            'supplierID' => $request->supplierID,
+            'orderDate' => $request->orderDate,
+            'expectedDeliveryDate' => $request->expectedDeliveryDate,
+            'status' => $request->status, // Manual status from the form
             'updated_by' => auth()->id(),
         ]);
 
-        // Update product stock and price when status changes to Received
-        if ($request->status === 'Received') {
-            $details = $supplierOrder->details;
-            foreach ($details as $detail) {
-                $product = Product::find($detail->productID);
-                if ($product) {
-                    $product->update([
-                        'stockQuantity' => $product->stockQuantity + $detail->quantity,
-                        'price' => $detail->unitCost, // Updates price to latest unit cost
-                        'updated_by' => auth()->id(),
-                    ]);
-                    $detail->update([
-                        'receivedQuantity' => $detail->quantity,
-                        'status' => 'Received',
-                    ]);
-                }
+        // Calculate total cost and update details
+        $totalCost = 0;
+        $allDetailsReceived = true; // Track if all details are Received
+
+        foreach ($request->details as $index => $detailData) {
+            $subtotal = $detailData['quantity'] * $detailData['unitCost'];
+            $totalCost += $subtotal;
+
+            $detail = SupplierOrderDetail::findOrFail($detailData['supplierOrderDetailID']);
+            $oldStatus = $detail->status;
+
+            // If order status is Received or Cancelled, sync detail status
+            if ($request->status === 'Received') {
+                $detailData['status'] = 'Received';
+            } elseif ($request->status === 'Cancelled') {
+                $detailData['status'] = 'Cancelled';
+            }
+
+            $detail->update([
+                'quantity' => $detailData['quantity'],
+                'unitCost' => $detailData['unitCost'],
+                'status' => $detailData['status'],
+            ]);
+
+            // Update product if status changes to Received
+            if ($detailData['status'] === 'Received' && $oldStatus !== 'Received') {
+                $product = Product::findOrFail($detail->productID);
+                $product->update([
+                    'stockQuantity' => $product->stockQuantity + $detailData['quantity'],
+                    'price' => $detailData['unitCost'],
+                    'updated_by' => auth()->id(),
+                ]);
+                $detail->update(['receivedQuantity' => $detailData['quantity']]);
+            }
+
+            // Check if all details are Received (for order status sync)
+            if ($detailData['status'] !== 'Received') {
+                $allDetailsReceived = false;
             }
         }
+
+        // If all details are Received and order status isn’t already Received, update it
+        if ($allDetailsReceived && $supplierOrder->status !== 'Received') {
+            $supplierOrder->update(['status' => 'Received']);
+        }
+
+        $supplierOrder->update(['totalCost' => $totalCost]);
 
         return redirect()->route('supplier_orders.index')->with('success', 'Supplier order updated successfully.');
     }
