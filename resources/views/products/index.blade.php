@@ -148,10 +148,15 @@
                                 <div class="card account-manager-card p-3 d-flex flex-row align-items-center">
                                     <div class="flex-grow-1">
                                         <h5 class="mb-1 fw-semibold fs-4">{{ $product->productName }}</h5>
-                                        <p class="mb-0 text-muted">
+                                        <p class="mb-0 text-muted d-flex align-items-center gap-1">
                                             {{ $product->category->categoryName }} • 
                                             {{ $product->brand->brandName }} • 
                                             <strong>Stock: {{ $product->stockQuantity }}</strong>
+                                            @if ($product->stockQuantity >= 0 && $product->stockQuantity <= 10)
+                                                <a href="{{ route('supplier_orders.index', ['supplier_id' => $product->supplierID]) }}" class="badge bg-danger ms-2">
+                                                    <span class="material-icons-outlined danger-badge">priority_high</span>
+                                                </a>
+                                            @endif
                                         </p>
                                     </div>
                     
@@ -159,7 +164,14 @@
                                         <span class="vr me-3"></span>
                                         <div class="d-flex flex-column">
                                             <span class="text-muted"><small>Selling Price</small></span>
-                                            <span class="fw-semibold fs-5">₱{{ number_format($product->price, 2) }}</span>
+                                            <span class="fw-semibold fs-5 d-flex align-items-center gap-1" style="width: 7rem;">
+                                                ₱{{ number_format($product->price, 2) }}
+                                                @if ($product->price == 0)
+                                                    <a href="{{ route('supplier_orders.index', ['supplier_id' => $product->supplierID]) }}" class="badge bg-danger ms-2">
+                                                        <span class="material-icons-outlined danger-badge">priority_high</span>
+                                                    </a>
+                                                @endif
+                                            </span>
                                         </div>
                                     </div>
                                     
@@ -181,8 +193,28 @@
                                         <div class="modal-body custom-modal-body">
                                             <p><strong class="label">Category:</strong> <span class="value">{{ $product->category->categoryName }}</span></p>
                                             <p><strong class="label">Brand:</strong> <span class="value">{{ $product->brand->brandName }}</span></p>
-                                            <p><strong class="label">Price:</strong> <span class="value">₱{{ number_format($product->price, 2) }}</span></p>
-                                            <p><strong class="label">Stock:</strong> <span class="value">{{ $product->stockQuantity }}</span></p>
+                                            <p>
+                                                <strong class="label">Price:</strong> 
+                                                <span class="value d-inline-flex align-items-center gap-1">
+                                                    ₱{{ number_format($product->price, 2) }}
+                                                    @if ($product->price == 0)
+                                                        <a href="{{ route('supplier_orders.index', ['supplier_id' => $product->supplierID]) }}" class="badge bg-danger ms-1">
+                                                            <span class="material-icons-outlined danger-badge">priority_high</span>
+                                                        </a>
+                                                    @endif
+                                                </span>
+                                            </p>
+                                            <p>
+                                                <strong class="label">Stock:</strong> 
+                                                <span class="value d-inline-flex align-items-center gap-1">
+                                                    {{ $product->stockQuantity }}
+                                                    @if ($product->stockQuantity >= 0 && $product->stockQuantity <= 10)
+                                                        <a href="{{ route('supplier_orders.index', ['supplier_id' => $product->supplierID]) }}" class="badge bg-danger ms-1">
+                                                            <span class="material-icons-outlined danger-badge">priority_high</span>
+                                                        </a>
+                                                    @endif
+                                                </span>
+                                            </p>
                                             <p><strong class="label">Description:</strong> <span class="value">{{ $product->productDescription ?? 'No description available' }}</span></p>
                                             <p><strong class="label">Status:</strong> <span class="value">{{ $product->productStatus }}</span></p>
                                         </div>
@@ -196,7 +228,6 @@
                     </div>
                 @endif
             </div>
-            
         </div>
     </div>
 </x-app-layout>

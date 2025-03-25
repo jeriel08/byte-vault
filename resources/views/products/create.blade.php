@@ -36,16 +36,6 @@
                         @error('categoryID') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                     <div class="mb-3">
-                        <label for="price" class="form-label fw-semibold">Price</label>
-                        <input type="number" name="price" id="price" class="form-control" step="0.01" min="0" required>
-                        @error('price') <span class="text-danger">{{ $message }}</span> @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="stockQuantity" class="form-label fw-semibold">Stock Quantity</label>
-                        <input type="number" name="stockQuantity" id="stockQuantity" class="form-control" min="0" required>
-                        @error('stockQuantity') <span class="text-danger">{{ $message }}</span> @enderror
-                    </div>
-                    <div class="mb-3">
                         <label for="productStatus" class="form-label fw-semibold">Status</label>
                         <select name="productStatus" id="productStatus" class="form-select" required>
                             <option value="Active">Active</option>

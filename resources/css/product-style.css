@@ -291,3 +291,9 @@
     background-color: var(--color-4); /* Light peach on hover */
     color: var(--color-2); /* Dark teal text on hover */
 }
+
+.danger-badge {
+    font-size: 14px !important;
+    vertical-align: middle !important;
+    color: #ffff !important;
+}

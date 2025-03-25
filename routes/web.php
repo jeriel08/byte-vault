@@ -6,6 +6,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SupplierOrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -66,6 +67,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/products', [ProductController::class, 'store'])->name('products.store');
     Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
     Route::put('/products/{productID}', [ProductController::class, 'update'])->name('products.update');
+});
+
+// Supplier Orders
+Route::middleware('auth')->group(function () {
+    Route::get('/supplier-orders', [SupplierOrderController::class, 'index'])->name('supplier_orders.index');
+    Route::get('/supplier-orders/create', [SupplierOrderController::class, 'create'])->name('supplier_orders.create');
+    Route::post('/supplier-orders', [SupplierOrderController::class, 'store'])->name('supplier_orders.store');
+    Route::get('/supplier-orders/{supplierOrder}/edit', [SupplierOrderController::class, 'edit'])->name('supplier_orders.edit');
+    Route::put('/supplier-orders/{supplierOrderID}', [SupplierOrderController::class, 'update'])->name('supplier_orders.update');
+    Route::get('/supplier-orders/{supplierOrder}', [SupplierOrderController::class, 'show'])->name('supplier_orders.show');
 });
 
 require __DIR__ . '/auth.php';
