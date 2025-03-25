@@ -153,7 +153,7 @@
                                             {{ $product->brand->brandName }} • 
                                             <strong>Stock: {{ $product->stockQuantity }}</strong>
                                             @if ($product->stockQuantity >= 0 && $product->stockQuantity <= 10)
-                                                <a href="{{ route('supplier_orders.index') }}" class="badge bg-danger ms-2">
+                                                <a href="{{ route('supplier_orders.index', ['supplier_id' => $product->supplierID]) }}" class="badge bg-danger ms-2">
                                                     <span class="material-icons-outlined danger-badge">priority_high</span>
                                                 </a>
                                             @endif
@@ -167,7 +167,7 @@
                                             <span class="fw-semibold fs-5 d-flex align-items-center gap-1" style="width: 7rem;">
                                                 ₱{{ number_format($product->price, 2) }}
                                                 @if ($product->price == 0)
-                                                    <a href="{{ route('supplier_orders.index') }}" class="badge bg-danger ms-2">
+                                                    <a href="{{ route('supplier_orders.index', ['supplier_id' => $product->supplierID]) }}" class="badge bg-danger ms-2">
                                                         <span class="material-icons-outlined danger-badge">priority_high</span>
                                                     </a>
                                                 @endif
@@ -198,7 +198,7 @@
                                                 <span class="value d-inline-flex align-items-center gap-1">
                                                     ₱{{ number_format($product->price, 2) }}
                                                     @if ($product->price == 0)
-                                                        <a href="{{ route('supplier_orders.index') }}" class="badge bg-danger ms-1">
+                                                        <a href="{{ route('supplier_orders.index', ['supplier_id' => $product->supplierID]) }}" class="badge bg-danger ms-1">
                                                             <span class="material-icons-outlined danger-badge">priority_high</span>
                                                         </a>
                                                     @endif
@@ -209,7 +209,7 @@
                                                 <span class="value d-inline-flex align-items-center gap-1">
                                                     {{ $product->stockQuantity }}
                                                     @if ($product->stockQuantity >= 0 && $product->stockQuantity <= 10)
-                                                        <a href="{{ route('supplier_orders.index') }}" class="badge bg-danger ms-1">
+                                                        <a href="{{ route('supplier_orders.index', ['supplier_id' => $product->supplierID]) }}" class="badge bg-danger ms-1">
                                                             <span class="material-icons-outlined danger-badge">priority_high</span>
                                                         </a>
                                                     @endif

@@ -13,11 +13,41 @@ class SupplierOrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $supplierOrders = SupplierOrder::with('supplier')->get();
-        return view('supplier_orders.index', compact('supplierOrders'));
+        $query = SupplierOrder::with('supplier')->latest(); // Default sort by recent
+
+        // Filter by status
+        if ($request->has('status') && in_array($request->status, ['Pending', 'Received', 'Cancelled'])) {
+            $query->where('status', $request->status);
+        }
+
+        // Filter by supplier
+        if ($request->has('supplier_id') && $request->supplier_id) {
+            $query->where('supplierID', $request->supplier_id);
+        }
+
+        // Filter by date range
+        if ($request->has('date_from') && $request->date_from) {
+            $query->where('orderDate', '>=', $request->date_from);
+        }
+        if ($request->has('date_to') && $request->date_to) {
+            $query->where('orderDate', '<=', $request->date_to);
+        }
+
+        // Sort by
+        if ($request->has('sort_by')) {
+            if ($request->sort_by === 'date_asc') {
+                $query->oldest('orderDate');
+            } elseif ($request->sort_by === 'date_desc') {
+                $query->latest('orderDate');
+            }
+        }
+
+        $supplierOrders = $query->get();
+        $suppliers = Supplier::where('supplierStatus', 'Active')->get(); // For the supplier filter dropdown
+
+        return view('supplier_orders.index', compact('supplierOrders', 'suppliers'));
     }
 
     /**
