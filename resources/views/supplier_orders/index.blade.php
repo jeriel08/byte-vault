@@ -199,8 +199,8 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-danger">Cancel Order</button>
+                                                <x-danger-button type="submit">Cancel Order</x-danger-button>
+                                                <x-secondary-button type="button" data-bs-dismiss="modal" >Close</x-secondary-button>
                                             </div>
                                         </form>
                                     </x-modal>

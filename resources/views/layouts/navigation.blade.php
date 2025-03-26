@@ -64,13 +64,15 @@
                 </x-slot>
 
                 <x-slot name="content">
-                    <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                    <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('profile.edit') }}">
+                        <span class="material-icons-outlined">settings</span>
                         Account Settings
                     </a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <a class="dropdown-item" href="{{ route('logout') }}"
+                        <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('logout') }}"
                         onclick="event.preventDefault(); this.closest('form').submit();">
+                            <span class="material-icons-outlined">logout</span>
                             Logout
                         </a>
                     </form>

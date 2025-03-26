@@ -10,7 +10,7 @@
         @endif
 
         <!-- Buttons -->
-        <div class="d-flex justify-content-between mb-1">
+        <div class="d-flex justify-content-between mb-4">
             {{-- Filter Button --}}
             <x-secondary-button>
                 <span class="material-icons-outlined">filter_alt</span>
@@ -18,7 +18,7 @@
             </x-secondary-button>
 
             {{-- Add Account Button --}}
-            <x-primary-button href="{{ route('account.add') }}" class="mb-4 py-2">
+            <x-primary-button href="{{ route('account.add') }}" class="py-2">
                 <span class="material-icons-outlined">add</span>
                 Add Account
             </x-primary-button>
