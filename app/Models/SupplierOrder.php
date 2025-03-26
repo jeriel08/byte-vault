@@ -12,9 +12,13 @@ class SupplierOrder extends Model
         'supplierID',
         'orderDate',
         'expectedDeliveryDate',
-        'status',
         'totalCost',
+        'orderPlacedDate',
+        'receivedDate',
+        'cancelledDate',
+        'created_at',
         'created_by',
+        'updated_at',
         'updated_by',
     ];
 
@@ -22,6 +26,11 @@ class SupplierOrder extends Model
     protected $casts = [
         'orderDate' => 'date',
         'expectedDeliveryDate' => 'date',
+        'orderPlacedDate' => 'date',
+        'receivedDate' => 'date',
+        'cancelledDate' => 'date',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function supplier()

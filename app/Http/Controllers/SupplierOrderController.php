@@ -15,37 +15,28 @@ class SupplierOrderController extends Controller
      */
     public function index(Request $request)
     {
-        $query = SupplierOrder::with('supplier')->latest(); // Default sort by recent
-
-        // Filter by status
-        if ($request->has('status') && in_array($request->status, ['Pending', 'Received', 'Cancelled'])) {
-            $query->where('status', $request->status);
-        }
+        // This method likely already works with filters; just ensure it uses the new date fields instead of status
+        $query = SupplierOrder::query();
 
         // Filter by supplier
-        if ($request->has('supplier_id') && $request->supplier_id) {
+        if ($request->has('supplier_id')) {
             $query->where('supplierID', $request->supplier_id);
         }
 
         // Filter by date range
-        if ($request->has('date_from') && $request->date_from) {
+        if ($request->has('date_from')) {
             $query->where('orderDate', '>=', $request->date_from);
         }
-        if ($request->has('date_to') && $request->date_to) {
+        if ($request->has('date_to')) {
             $query->where('orderDate', '<=', $request->date_to);
         }
 
-        // Sort by
-        if ($request->has('sort_by')) {
-            if ($request->sort_by === 'date_asc') {
-                $query->oldest('orderDate');
-            } elseif ($request->sort_by === 'date_desc') {
-                $query->latest('orderDate');
-            }
-        }
+        // Sort by order date
+        $sortBy = $request->input('sort_by', 'date_desc');
+        $query->orderBy('orderDate', $sortBy === 'date_asc' ? 'asc' : 'desc');
 
         $supplierOrders = $query->get();
-        $suppliers = Supplier::where('supplierStatus', 'Active')->get(); // For the supplier filter dropdown
+        $suppliers = Supplier::all(); // Assuming a Supplier model exists
 
         return view('supplier_orders.index', compact('supplierOrders', 'suppliers'));
     }
@@ -71,8 +62,7 @@ class SupplierOrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        $request->validate([
+        $validated = $request->validate([
             'supplierID' => 'required|exists:suppliers,supplierID',
             'orderDate' => 'required|date',
             'expectedDeliveryDate' => 'nullable|date|after_or_equal:orderDate',
@@ -82,31 +72,29 @@ class SupplierOrderController extends Controller
             'details.*.unitCost' => 'required|numeric|min:0',
         ]);
 
+        $totalCost = collect($request->details)->sum(function ($detail) {
+            return $detail['quantity'] * $detail['unitCost'];
+        });
+
         $supplierOrder = SupplierOrder::create([
             'supplierID' => $request->supplierID,
             'orderDate' => $request->orderDate,
             'expectedDeliveryDate' => $request->expectedDeliveryDate,
-            'status' => 'Pending',
-            'totalCost' => 0, // Will be calculated later
+            'totalCost' => $totalCost,
+            'orderPlacedDate' => now(), // Set when order is placed
             'created_by' => auth()->id(),
+            'created_at' => now(),
         ]);
 
-        $totalCost = 0;
         foreach ($request->details as $detail) {
-            $subtotal = $detail['quantity'] * $detail['unitCost'];
-            $totalCost += $subtotal;
-
             SupplierOrderDetail::create([
                 'supplierOrderID' => $supplierOrder->supplierOrderID,
                 'productID' => $detail['productID'],
                 'quantity' => $detail['quantity'],
                 'unitCost' => $detail['unitCost'],
-                'receivedQuantity' => 0,
-                'status' => 'Pending',
+                'receivedQuantity' => 0, // Initially 0, updated when received
             ]);
         }
-
-        $supplierOrder->update(['totalCost' => $totalCost]);
 
         return redirect()->route('supplier_orders.index')->with('success', 'Supplier order created successfully.');
     }
@@ -140,89 +128,99 @@ class SupplierOrderController extends Controller
     {
         $supplierOrder = SupplierOrder::findOrFail($supplierOrderID);
 
-        $request->validate([
+        // Handle "Receive" action from index.blade.php dropdown
+        if ($request->has('markAsReceived')) {
+            // Prevent receiving an already received or cancelled order
+            if ($supplierOrder->receivedDate || $supplierOrder->cancelledDate) {
+                return redirect()->route('supplier_orders.index')->with('error', 'This order has already been received or cancelled.');
+            }
+
+            $supplierOrder->update([
+                'receivedDate' => now(),
+                'updated_by' => auth()->id(),
+                'updated_at' => now(),
+            ]);
+
+            // Update receivedQuantity and product stock/price
+            foreach ($supplierOrder->details as $detail) {
+                // Set receivedQuantity to match quantity (no partial receiving)
+                $detail->update(['receivedQuantity' => $detail->quantity]);
+
+                // Update the product's stock and price
+                $product = Product::find($detail->productID);
+                if ($product) {
+                    $product->update([
+                        'stockQuantity' => $product->stockQuantity + $detail->quantity,
+                        'price' => $detail->unitCost, // Latest price from supplier order
+                    ]);
+                }
+            }
+
+            return redirect()->route('supplier_orders.index')->with('success', 'Supplier order marked as received, stock and prices updated.');
+        }
+
+        // Handle "Cancel" action from index.blade.php dropdown
+        if ($request->has('markAsCancelled')) {
+            // Prevent cancelling an already received or cancelled order
+            if ($supplierOrder->receivedDate || $supplierOrder->cancelledDate) {
+                return redirect()->route('supplier_orders.index')->with('error', 'This order has already been received or cancelled.');
+            }
+
+            $supplierOrder->update([
+                'cancelledDate' => now(),
+                'updated_by' => auth()->id(),
+                'updated_at' => now(),
+            ]);
+
+            return redirect()->route('supplier_orders.index')->with('success', 'Supplier order marked as cancelled.');
+        }
+
+        // Handle regular updates from edit.blade.php
+        $validated = $request->validate([
             'supplierID' => 'required|exists:suppliers,supplierID',
             'orderDate' => 'required|date',
             'expectedDeliveryDate' => 'nullable|date|after_or_equal:orderDate',
-            'status' => 'required|in:Pending,Received,Cancelled',
             'details' => 'required|array',
             'details.*.supplierOrderDetailID' => 'sometimes|exists:supplier_order_details,supplierOrderDetailID',
             'details.*.productID' => 'required|exists:products,productID',
             'details.*.quantity' => 'required|integer|min:1',
             'details.*.unitCost' => 'required|numeric|min:0',
-            'details.*.receivedQuantity' => 'required|integer|min:0',
-            'details.*.status' => 'required|in:Pending,Received,Cancelled',
+            'details.*.receivedQuantity' => 'required|integer|min:0|lte:details.*.quantity',
         ]);
 
-        // Update supplier order main details
+        $totalCost = collect($request->details)->sum(function ($detail) {
+            return $detail['quantity'] * $detail['unitCost'];
+        });
+
         $supplierOrder->update([
             'supplierID' => $request->supplierID,
             'orderDate' => $request->orderDate,
             'expectedDeliveryDate' => $request->expectedDeliveryDate,
-            'status' => $request->status,
+            'totalCost' => $totalCost,
             'updated_by' => auth()->id(),
+            'updated_at' => now(),
         ]);
 
-        // Calculate total cost and update details
-        $totalCost = 0;
-        $allDetailsReceived = true;
+        // Sync order details (no stock/price updates here, only on receive)
+        $existingDetailIds = $supplierOrder->details->pluck('supplierOrderDetailID')->toArray();
+        $submittedDetailIds = collect($request->details)->pluck('supplierOrderDetailID')->filter()->toArray();
 
-        foreach ($request->details as $index => $detailData) {
-            $subtotal = $detailData['quantity'] * $detailData['unitCost'];
-            $totalCost += $subtotal;
+        SupplierOrderDetail::where('supplierOrderID', $supplierOrder->supplierOrderID)
+            ->whereNotIn('supplierOrderDetailID', $submittedDetailIds)
+            ->delete();
 
-            $detail = SupplierOrderDetail::findOrFail($detailData['supplierOrderDetailID']);
-            $oldStatus = $detail->status;
-
-            // Validate receivedQuantity server-side
-            if ($detailData['receivedQuantity'] > $detailData['quantity']) {
-                return back()->withErrors(['details.' . $index . '.receivedQuantity' => 'Received Quantity cannot exceed Ordered Quantity.']);
-            }
-
-            // If order status is Received, set all details to Received and receivedQuantity to quantity
-            if ($request->status === 'Received') {
-                $detailData['status'] = 'Received';
-                $detailData['receivedQuantity'] = $detailData['quantity'];
-            }
-            // If order status is Cancelled, set all details to Cancelled and reset receivedQuantity
-            elseif ($request->status === 'Cancelled') {
-                $detailData['status'] = 'Cancelled';
-                $detailData['receivedQuantity'] = 0;
-            }
-            // If receivedQuantity equals quantity, set status to Received
-            elseif ($detailData['receivedQuantity'] == $detailData['quantity']) {
-                $detailData['status'] = 'Received';
-            }
-
-            $detail->update([
-                'quantity' => $detailData['quantity'],
-                'unitCost' => $detailData['unitCost'],
-                'receivedQuantity' => $detailData['receivedQuantity'],
-                'status' => $detailData['status'],
-            ]);
-
-            // Update product if status changes to Received
-            if ($detailData['status'] === 'Received' && $oldStatus !== 'Received') {
-                $product = Product::findOrFail($detail->productID);
-                $product->update([
-                    'stockQuantity' => $product->stockQuantity + $detailData['receivedQuantity'],
-                    'price' => $detailData['unitCost'],
-                    'updated_by' => auth()->id(),
-                ]);
-            }
-
-            // Check if all details are Received
-            if ($detailData['status'] !== 'Received') {
-                $allDetailsReceived = false;
-            }
+        foreach ($request->details as $detail) {
+            SupplierOrderDetail::updateOrCreate(
+                ['supplierOrderDetailID' => $detail['supplierOrderDetailID'] ?? null],
+                [
+                    'supplierOrderID' => $supplierOrder->supplierOrderID,
+                    'productID' => $detail['productID'],
+                    'quantity' => $detail['quantity'],
+                    'unitCost' => $detail['unitCost'],
+                    'receivedQuantity' => $detail['receivedQuantity'],
+                ]
+            );
         }
-
-        // If all details are Received and order status isn’t already Received, update it
-        if ($allDetailsReceived && $supplierOrder->status !== 'Received') {
-            $supplierOrder->update(['status' => 'Received']);
-        }
-
-        $supplierOrder->update(['totalCost' => $totalCost]);
 
         return redirect()->route('supplier_orders.index')->with('success', 'Supplier order updated successfully.');
     }

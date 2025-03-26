@@ -39,7 +39,7 @@
                     <!-- Order Details Section -->
                     <div id="orderDetails" class="mb-3">
                         <h5 class="fw-semibold mb-3">Order Details</h5>
-                        <x-secondary-button type="button" class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                        <x-secondary-button type="button" class=" mb-3" data-bs-toggle="modal" data-bs-target="#addProductModal">
                             Add Product
                         </x-secondary-button>
                         <div id="productList">
