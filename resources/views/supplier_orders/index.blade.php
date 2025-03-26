@@ -170,19 +170,40 @@
                                                         </form>
                                                     </li>
                                                     <li>
-                                                        <form action="{{ route('supplier_orders.update', $supplierOrder->supplierOrderID) }}" method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('PUT')
-                                                            <input type="hidden" name="markAsCancelled" value="1">
-                                                            <button type="submit" class="dropdown-item">
-                                                                <span class="material-icons-outlined align-middle me-2">cancel</span> Cancel
-                                                            </button>
-                                                        </form>
+                                                        <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#cancelModal-{{ $supplierOrder->supplierOrderID }}">
+                                                            <span class="material-icons-outlined align-middle me-2">cancel</span> Cancel
+                                                        </button>
                                                     </li>
                                                 @endif
                                             </ul>
                                         </div>
                                     </div>
+
+                                    {{-- Cancel Modal using Blade Component --}}
+                                    <x-modal name="cancelModal-{{ $supplierOrder->supplierOrderID }}" maxWidth="md">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="cancelModal-{{ $supplierOrder->supplierOrderID }}-label">Cancel Order #{{ $supplierOrder->supplierOrderID }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form action="{{ route('supplier_orders.update', $supplierOrder->supplierOrderID) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="modal-body">
+                                                <input type="hidden" name="markAsCancelled" value="1">
+                                                <div class="mb-3">
+                                                    <label for="cancellationRemark-{{ $supplierOrder->supplierOrderID }}" class="form-label">Reason for Cancellation</label>
+                                                    <textarea class="form-control" id="cancellationRemark-{{ $supplierOrder->supplierOrderID }}" name="cancellationRemark" rows="3" required placeholder="Enter the reason for cancelling this order"></textarea>
+                                                    @error('cancellationRemark')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-danger">Cancel Order</button>
+                                            </div>
+                                        </form>
+                                    </x-modal>
                                 </div>
                             </div>
                         @endforeach

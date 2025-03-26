@@ -16,6 +16,7 @@ class SupplierOrder extends Model
         'orderPlacedDate',
         'receivedDate',
         'cancelledDate',
+        'cancellationRemark',
         'created_at',
         'created_by',
         'updated_at',

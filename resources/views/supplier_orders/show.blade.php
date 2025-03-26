@@ -27,6 +27,12 @@
                     <label class="form-label fw-semibold">Total Order Cost:</label>
                     <p class="form-control-plaintext">₱{{ number_format($supplierOrder->totalCost, 2) }}</p>
                 </div>
+                @if ($supplierOrder->cancelledDate)
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Cancellation Reason:</label>
+                        <p class="form-control-plaintext">{{ $supplierOrder->cancellationRemark }}</p>
+                    </div>
+                @endif
                 <hr class="mb-4">
                 
                 <!-- Order Details Section -->
@@ -48,10 +54,6 @@
                                         <div class="text-start me-4" style="min-width: 100px;">
                                             <span class="text-muted d-block"><small>Unit Cost</small></span>
                                             <span class="fw-semibold fs-5">₱{{ number_format($detail->unitCost, 2) }}</span>
-                                        </div>
-                                        <div class="text-start me-4" style="min-width: 80px;">
-                                            <span class="text-muted d-block"><small>Quantity Received</small></span>
-                                            <span class="fw-semibold fs-5">{{ $detail->receivedQuantity }}</span>
                                         </div>
                                     </div>
                                 </div>

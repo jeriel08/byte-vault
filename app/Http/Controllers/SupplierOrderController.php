@@ -155,9 +155,8 @@ class SupplierOrderController extends Controller
     {
         $supplierOrder = SupplierOrder::findOrFail($supplierOrderID);
 
-        // Handle "Receive" action from index.blade.php dropdown
+        // Handle "Receive" action
         if ($request->has('markAsReceived')) {
-            // Prevent receiving an already received or cancelled order
             if ($supplierOrder->receivedDate || $supplierOrder->cancelledDate) {
                 return redirect()->route('supplier_orders.index')->with('error', 'This order has already been received or cancelled.');
             }
@@ -168,17 +167,13 @@ class SupplierOrderController extends Controller
                 'updated_at' => now(),
             ]);
 
-            // Update receivedQuantity and product stock/price
+            // Update product stock and price (no partial receiving)
             foreach ($supplierOrder->details as $detail) {
-                // Set receivedQuantity to match quantity (no partial receiving)
-                $detail->update(['receivedQuantity' => $detail->quantity]);
-
-                // Update the product's stock and price
                 $product = Product::find($detail->productID);
                 if ($product) {
                     $product->update([
                         'stockQuantity' => $product->stockQuantity + $detail->quantity,
-                        'price' => $detail->unitCost, // Latest price from supplier order
+                        'price' => $detail->unitCost,
                     ]);
                 }
             }
@@ -186,20 +181,24 @@ class SupplierOrderController extends Controller
             return redirect()->route('supplier_orders.index')->with('success', 'Supplier order marked as received, stock and prices updated.');
         }
 
-        // Handle "Cancel" action from index.blade.php dropdown
+        // Handle "Cancel" action with remark
         if ($request->has('markAsCancelled')) {
-            // Prevent cancelling an already received or cancelled order
             if ($supplierOrder->receivedDate || $supplierOrder->cancelledDate) {
                 return redirect()->route('supplier_orders.index')->with('error', 'This order has already been received or cancelled.');
             }
 
+            $request->validate([
+                'cancellationRemark' => 'required|string|max:255',
+            ]);
+
             $supplierOrder->update([
                 'cancelledDate' => now(),
+                'cancellationRemark' => $request->cancellationRemark,
                 'updated_by' => auth()->id(),
                 'updated_at' => now(),
             ]);
 
-            return redirect()->route('supplier_orders.index')->with('success', 'Supplier order marked as cancelled.');
+            return redirect()->route('supplier_orders.index')->with('success', 'Supplier order marked as cancelled with remark.');
         }
 
         // Handle regular updates from edit.blade.php
@@ -212,7 +211,6 @@ class SupplierOrderController extends Controller
             'details.*.productID' => 'required|exists:products,productID',
             'details.*.quantity' => 'required|integer|min:1',
             'details.*.unitCost' => 'required|numeric|min:0',
-            'details.*.receivedQuantity' => 'required|integer|min:0|lte:details.*.quantity',
         ]);
 
         $totalCost = collect($request->details)->sum(function ($detail) {
@@ -228,7 +226,7 @@ class SupplierOrderController extends Controller
             'updated_at' => now(),
         ]);
 
-        // Sync order details (no stock/price updates here, only on receive)
+        // Sync order details
         $existingDetailIds = $supplierOrder->details->pluck('supplierOrderDetailID')->toArray();
         $submittedDetailIds = collect($request->details)->pluck('supplierOrderDetailID')->filter()->toArray();
 
@@ -244,7 +242,6 @@ class SupplierOrderController extends Controller
                     'productID' => $detail['productID'],
                     'quantity' => $detail['quantity'],
                     'unitCost' => $detail['unitCost'],
-                    'receivedQuantity' => $detail['receivedQuantity'],
                 ]
             );
         }

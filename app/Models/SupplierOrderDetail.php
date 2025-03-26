@@ -13,7 +13,6 @@ class SupplierOrderDetail extends Model
         'productID',
         'quantity',
         'unitCost',
-        'receivedQuantity',
     ];
 
     public function supplierOrder()

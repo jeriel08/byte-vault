@@ -65,10 +65,6 @@
                                                 <span class="text-muted d-block"><small>Unit Cost</small></span>
                                                 <span class="fw-semibold fs-5">₱{{ number_format($detail->unitCost, 2) }}</span>
                                             </div>
-                                            <div class="text-start" style="min-width: 100px;">
-                                                <span class="text-muted d-block"><small>Received Qty</small></span>
-                                                <span class="fw-semibold fs-5">{{ $detail->receivedQuantity }}</span>
-                                            </div>
                                         </div>
                                     </div>
                                     <div class="ms-5 d-flex gap-2">
@@ -80,7 +76,6 @@
                                     <input type="hidden" name="details[{{ $index }}][productID]" value="{{ $detail->productID }}">
                                     <input type="hidden" name="details[{{ $index }}][quantity]" value="{{ $detail->quantity }}">
                                     <input type="hidden" name="details[{{ $index }}][unitCost]" value="{{ $detail->unitCost }}">
-                                    <input type="hidden" name="details[{{ $index }}][receivedQuantity]" value="{{ $detail->receivedQuantity }}">
                                 </div>
                         
                                 <!-- Edit Product Modal -->
@@ -97,10 +92,6 @@
                                         <div class="row mb-3">
                                             <label class="form-label fw-semibold">Unit Cost</label>
                                             <input type="number" class="form-control edit-unitCost" value="{{ $detail->unitCost }}" step="0.01" min="0" required>
-                                        </div>
-                                        <div class="row mb-3">
-                                            <label class="form-label fw-semibold">Received Quantity</label>
-                                            <input type="number" class="form-control edit-receivedQuantity" value="{{ $detail->receivedQuantity }}" min="0" max="{{ $detail->quantity }}" required>
                                         </div>
                                     </div>
                                     <div class="modal-footer custom-modal-footer pb-0">
@@ -129,28 +120,14 @@
                 const card = document.querySelector(`.card[data-detail-id="${detailId}"]`);
                 const quantity = parseInt(modal.querySelector('.edit-quantity').value);
                 const unitCost = modal.querySelector('.edit-unitCost').value;
-                const receivedQuantity = parseInt(modal.querySelector('.edit-receivedQuantity').value);
-    
-                // Validate receivedQuantity
-                if (receivedQuantity < 0 || receivedQuantity > quantity) {
-                    alert('Received Quantity must be between 0 and the ordered Quantity.');
-                    return;
-                }
-    
-                // Auto-set status to Received if receivedQuantity equals quantity
-                if (receivedQuantity === quantity) {
-                    status = 'Received';
-                }
     
                 // Update card display
                 card.querySelector('.text-start:nth-child(1) .fw-semibold').textContent = quantity;
                 card.querySelector('.text-start:nth-child(2) .fw-semibold').textContent = `₱${parseFloat(unitCost).toFixed(2)}`;
-                card.querySelector('.text-start:nth-child(3) .fw-semibold').textContent = receivedQuantity;
     
                 // Update hidden inputs
                 card.querySelector('input[name$="[quantity]"]').value = quantity;
                 card.querySelector('input[name$="[unitCost]"]').value = unitCost;
-                card.querySelector('input[name$="[receivedQuantity]"]').value = receivedQuantity;
     
                 bootstrap.Modal.getInstance(modal).hide();
             }
