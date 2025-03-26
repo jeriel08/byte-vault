@@ -52,4 +52,26 @@ class SupplierOrder extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+
+    public function getStatusAttribute()
+    {
+        if ($this->receivedDate) {
+            return 'Received';
+        }
+        if ($this->cancelledDate) {
+            return 'Cancelled';
+        }
+        return 'Pending';
+    }
+
+    public function getStatusBadgeClassAttribute()
+    {
+        if ($this->receivedDate) {
+            return 'bg-success';
+        }
+        if ($this->cancelledDate) {
+            return 'bg-danger';
+        }
+        return 'bg-warning';
+    }
 }

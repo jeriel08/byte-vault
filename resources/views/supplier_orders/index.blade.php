@@ -35,13 +35,13 @@
                             <label class="form-label fw-semibold mb-2">Order Status</label>
                             <div class="btn-group d-flex flex-wrap gap-2 mb-3" role="group">
                                 <button type="button" class="btn category-filter-button flex-grow-1 {{ request('status') === 'Pending' ? 'btn-primary' : 'btn-outline-primary' }}" data-filter="status" data-value="Pending">
-                                    <span class="badge me-2">{{ $supplierOrders->where('status', 'Pending')->count() }}</span> Pending
+                                    <span class="badge me-2">{{ $pendingCount }}</span> Pending
                                 </button>
                                 <button type="button" class="btn category-filter-button flex-grow-1 {{ request('status') === 'Cancelled' ? 'btn-primary' : 'btn-outline-primary' }}" data-filter="status" data-value="Cancelled">
-                                    <span class="badge me-2">{{ $supplierOrders->where('status', 'Cancelled')->count() }}</span> Cancelled
+                                    <span class="badge me-2">{{ $cancelledCount }}</span> Cancelled
                                 </button>
                                 <button type="button" class="btn category-filter-button flex-grow-1 {{ request('status') === 'Received' ? 'btn-primary' : 'btn-outline-primary' }}" data-filter="status" data-value="Received">
-                                    <span class="badge me-2">{{ $supplierOrders->where('status', 'Received')->count() }}</span> Received
+                                    <span class="badge me-2">{{ $receivedCount }}</span> Received
                                 </button>
                             </div>
                         </div>
@@ -67,9 +67,7 @@
                             <small class="text-muted ms-1">To</small>
                             <input type="date" class="form-control" id="dateTo" name="date_to" value="{{ request('date_to') }}" placeholder="To">
                         </div>
-
                         <hr>
-
                         <!-- Sort By -->
                         <div class="mb-3">
                             <label for="sortBy" class="form-label fw-semibold mb-2">Sort By</label>
@@ -82,7 +80,6 @@
                         <div>
                             <button type="button" class="btn btn-outline-secondary w-100" id="clearFilters">Clear Filters</button>
                         </div>
-                        
                     </div>
                 </div>
             </div>

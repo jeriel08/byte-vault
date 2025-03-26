@@ -15,15 +15,32 @@ class SupplierOrderController extends Controller
      */
     public function index(Request $request)
     {
-        // This method likely already works with filters; just ensure it uses the new date fields instead of status
         $query = SupplierOrder::query();
+
+        // Filter by status (using date fields)
+        if ($request->has('status')) {
+            switch ($request->status) {
+                case 'Pending':
+                    $query->whereNotNull('orderPlacedDate')
+                        ->whereNull('receivedDate')
+                        ->whereNull('cancelledDate');
+                    break;
+                case 'Received':
+                    $query->whereNotNull('receivedDate');
+                    break;
+                case 'Cancelled':
+                    $query->whereNotNull('cancelledDate')
+                        ->whereNull('receivedDate');
+                    break;
+            }
+        }
 
         // Filter by supplier
         if ($request->has('supplier_id')) {
             $query->where('supplierID', $request->supplier_id);
         }
 
-        // Filter by date range
+        // Filter by date range (using orderDate)
         if ($request->has('date_from')) {
             $query->where('orderDate', '>=', $request->date_from);
         }
@@ -36,9 +53,19 @@ class SupplierOrderController extends Controller
         $query->orderBy('orderDate', $sortBy === 'date_asc' ? 'asc' : 'desc');
 
         $supplierOrders = $query->get();
-        $suppliers = Supplier::all(); // Assuming a Supplier model exists
+        $suppliers = Supplier::all();
 
-        return view('supplier_orders.index', compact('supplierOrders', 'suppliers'));
+        // Calculate total counts for each status (unfiltered)
+        $pendingCount = SupplierOrder::whereNotNull('orderPlacedDate')
+            ->whereNull('receivedDate')
+            ->whereNull('cancelledDate')
+            ->count();
+        $receivedCount = SupplierOrder::whereNotNull('receivedDate')->count();
+        $cancelledCount = SupplierOrder::whereNotNull('cancelledDate')
+            ->whereNull('receivedDate')
+            ->count();
+
+        return view('supplier_orders.index', compact('supplierOrders', 'suppliers', 'pendingCount', 'receivedCount', 'cancelledCount'));
     }
 
     /**
