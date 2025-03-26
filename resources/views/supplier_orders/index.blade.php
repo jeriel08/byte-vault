@@ -136,7 +136,7 @@
                                     
                                     {{-- Dropdown for order options --}}
                                     <div class="ms-5">
-                                        <div class="dropdown">
+                                        <div class="dropdown supplier-order-dropdown">
                                             <a class="btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <span class="material-icons-outlined fs-2">more_horiz</span>
                                             </a>
@@ -146,14 +146,7 @@
                                                         <span class="material-icons-outlined align-middle me-2">visibility</span> View
                                                     </a>
                                                 </li>
-                                                @if (!$supplierOrder->receivedDate)
-                                                    <li>
-                                                        <a class="dropdown-item" href="{{ route('supplier_orders.edit', $supplierOrder->supplierOrderID) }}">
-                                                            <span class="material-icons-outlined align-middle me-2">edit</span> Edit
-                                                        </a>
-                                                    </li>
-                                                @endif
-                                                @if ($supplierOrder->receivedDate)
+                                                @if ($supplierOrder->receivedDate || $supplierOrder->cancelledDate)
                                                     <li>
                                                         <a class="dropdown-item" href="{{ route('supplier_orders.create', ['reorder' => $supplierOrder->supplierOrderID]) }}">
                                                             <span class="material-icons-outlined align-middle me-2">replay</span> Reorder
@@ -161,6 +154,11 @@
                                                     </li>
                                                 @endif
                                                 @if (!$supplierOrder->receivedDate && !$supplierOrder->cancelledDate)
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('supplier_orders.edit', $supplierOrder->supplierOrderID) }}">
+                                                            <span class="material-icons-outlined align-middle me-2">edit</span> Edit
+                                                        </a>
+                                                    </li>
                                                     <li>
                                                         <form action="{{ route('supplier_orders.update', $supplierOrder->supplierOrderID) }}" method="POST" class="d-inline">
                                                             @csrf
