@@ -145,6 +145,13 @@
                         </x-nav-link>
                     </li> --}}
 
+                    <li class="nav-item">
+                        <x-nav-link :href="route('adjustments.index')" :active="request()->routeIs('adjustments.index')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
+                            <span class="material-icons-outlined"> widgets </span>
+                            Stock Adjustments
+                        </x-nav-link>
+                    </li>
+
                     @auth
                         @if (auth()->user()->role === 'Admin')
                             <hr>
