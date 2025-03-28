@@ -112,8 +112,8 @@
                 </div>
             </div>
         </div>
-        <div class="modal-footer custom-modal-footer pb-0">
-            <x-primary-button type="button" class="mb-4" id="addProductBtn">Add Product</x-primary-button>
+        <div class="modal-footer custom-modal-footer py-2">
+            <x-primary-button type="button" id="addProductBtn">Add Product</x-primary-button>
             <x-secondary-button type="button" data-bs-dismiss="modal">Close</x-secondary-button>
         </div>
     </x-modal>

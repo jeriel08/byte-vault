@@ -36,6 +36,14 @@
                         'supplier_orders.create' => 'Add Supplier Order',
                         'supplier_orders.edit' => 'Edit Supplier Order',
                         'supplier_orders.show' => 'Supplier Order Details',
+                        'adjustments.index' => 'Adjustments',
+                        'adjustments.create' => 'Add Adjustment',
+                        'adjustments.edit' => 'Edit Adjustment',
+                        'adjustments.show' => 'Adjustment Details',
+                        'returns.index' => 'Returns',
+                        'returns.create' => 'Add Return',
+                        'returns.edit' => 'Edit Return',
+                        'returns.show' => 'Return Details',
                         // Add more routes as needed
                     ];
                     $currentRoute = Route::currentRouteName();

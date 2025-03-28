@@ -93,6 +93,8 @@ class AdjustmentController extends Controller
     public function show(Adjustment $adjustment)
     {
         //
+        $adjustment->load('stockOut.details.product');
+        return view('adjustments.show', compact('adjustment'));
     }
 
     /**
