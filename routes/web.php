@@ -85,6 +85,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/adjustments', [AdjustmentController::class, 'index'])->name('adjustments.index');
     Route::get('/adjustments/create', [AdjustmentController::class, 'create'])->name('adjustments.create');
     Route::post('/adjustments', [AdjustmentController::class, 'store'])->name('adjustments.store');
+    Route::get('/adjustments/{adjustment}/edit', [AdjustmentController::class, 'edit'])->name('adjustments.edit');
+    Route::put('/adjustments/{adjustmentID}', [AdjustmentController::class, 'update'])->name('adjustments.update');
+    Route::get('/adjustments/{adjustment}', [AdjustmentController::class, 'show'])->name('adjustments.show');
 });
 
 require __DIR__ . '/auth.php';
