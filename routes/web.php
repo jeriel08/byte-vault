@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AccountManagerController;
 use App\Http\Controllers\SupplierController;
@@ -17,6 +18,9 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+// Dashboard
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
 // Profile
 Route::middleware('auth')->group(function () {

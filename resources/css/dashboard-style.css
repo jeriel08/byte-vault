@@ -1,0 +1,347 @@
+/* dashboard-style.css */
+
+/* General Container Styling */
+.container-fluid {
+    padding-top: 1.5rem; /* py-6 equivalent */
+    padding-bottom: 1.5rem;
+    position: relative;
+}
+
+/* Margins and Paddings for Sections */
+.mx-4 {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+.mb-5 {
+    margin-bottom: 1.25rem;
+}
+
+.mx-2 {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.p-6 {
+    padding: 1.5rem;
+}
+
+.p-3 {
+    padding: 0.75rem;
+}
+
+.p-4 {
+    padding: 1rem;
+}
+
+.py-12 {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+/* Color Palette */
+.bg-white {
+    background-color: #ffffff;
+}
+
+.dark\:bg-gray-800 {
+    background-color: #1f2937; /* Tailwind's gray-800 for dark mode */
+}
+
+.text-gray-900 {
+    color: #111827; /* Tailwind's gray-900 */
+}
+
+.dark\:text-gray-100 {
+    color: #f3f4f6; /* Tailwind's gray-100 for dark mode */
+}
+
+.text-muted {
+    color: #2a5055 !important; /* Moved from Blade, overriding Bootstrap */
+}
+
+.bg-danger {
+    background-color: #dc3545; /* Bootstrap's danger color */
+}
+
+.btn-outline-danger {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-outline-secondary {
+    color: #6c757d;
+    border-color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+/* Typography */
+.fw-semibold {
+    font-weight: 600;
+}
+
+.fw-bold {
+    font-weight: 700;
+}
+
+.fs-4 {
+    font-size: 1.25rem;
+}
+
+.fs-5 {
+    font-size: 1.125rem;
+}
+
+.fs-2 {
+    font-size: 2rem;
+}
+
+.text-xl {
+    font-size: 1.25rem;
+}
+
+.leading-tight {
+    line-height: 1.25;
+}
+
+/* Card Styling */
+.card {
+    border: none;
+    border-radius: 0.5rem; /* rounded-4 equivalent */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24); /* shadow-sm */
+    overflow: hidden;
+    background-color: #faf8f5; /* Moved from Blade */
+}
+
+.shadow-sm {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.rounded-4 {
+    border-radius: 0.5rem;
+}
+
+.account-manager-card {
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.filter-panel {
+    height: 100%;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.category-filter-button {
+    flex-grow: 1;
+    text-align: left;
+}
+
+/* Badge Styling */
+.badge {
+    padding: 0.25em 0.4em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 0.25rem;
+}
+
+/* Accordion Styling */
+.accordion-button {
+    font-weight: 600;
+    background-color: #fff;
+    border: none;
+}
+
+.accordion-button.collapsed {
+    background-color: #fff;
+}
+
+.accordion-item {
+    border: none;
+    border-radius: 0.25rem;
+}
+
+/* Form Elements */
+.form-check-input {
+    margin-top: 0.25rem;
+}
+
+.form-check-label {
+    font-size: 0.875rem;
+}
+
+/* Modal Styling */
+.custom-modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.custom-modal-body {
+    padding: 1rem;
+}
+
+.custom-modal-footer {
+    border-top: 1px solid #dee2e6;
+}
+
+.custom-btn-close {
+    background-color: #6c757d;
+    color: #fff;
+    border: none;
+}
+
+.custom-btn-close:hover {
+    background-color: #5a6268;
+}
+
+/* Miscellaneous */
+.vr {
+    width: 1px;
+    background-color: #dee2e6;
+    height: 100%;
+}
+
+.gap-1 {
+    gap: 0.25rem;
+}
+
+.gap-2 {
+    gap: 0.5rem;
+}
+
+.gap-3 {
+    gap: 0.75rem;
+}
+
+/* Canvas Styling (for Charts) */
+canvas {
+    max-height: 380px;
+}
+
+/* Responsive Adjustments */
+@media (min-width: 576px) {
+    .sm\:px-6 {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+
+    .sm\:rounded-lg {
+        border-radius: 0.5rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .lg\:px-8 {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+/* Dashboard-Specific Styling */
+.dashboard-container {
+    max-width: 1500px; /* Reduced from 900px for a more compact middle */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 10px; /* Increased from 100px for bigger side space */
+    padding-right: 10px; /* Increased from 100px for bigger side space */
+    color: #2a5055; /* Moved from Blade, applies to container and children */
+}
+
+.dashboard-container .card-title,
+.dashboard-container .card-body,
+.dashboard-container h3,
+.dashboard-container p,
+.logged-in-message {
+    color: #2a5055; /* Moved from Blade, specific elements */
+}
+
+/* Margin and Button-Like Styling for "You're logged in!" */
+.logged-in-message {
+    margin-top: 1px; /* Reduced top margin */
+    margin-bottom: 30px; /* Existing bottom margin */
+    background-color: #2a5055; /* Button-like background */
+    color: #ffffff; /* White text for contrast */
+    padding: 0.5rem 1rem; /* Button-like padding */
+    border-radius: 0.25rem; /* Rounded corners like a button */
+    display: inline-block; /* Keeps it from stretching full width */
+    font-weight: 600; /* Matches fw-semibold for consistency */
+}
+
+/* Responsive Adjustments for Dashboard */
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding-left: 30px; /* Slightly increased from 20px for mobile */
+        padding-right: 30px;
+    }
+}
+
+/* Icon Styling for Summary Cards */
+.icon-summary {
+    font-size: 48px;
+}
+
+.icon-summary.total-sales {
+    color: #4BC0C0;
+}
+
+.icon-summary.total-orders {
+    color: #36A2EB;
+}
+
+.icon-summary.products-in-stock {
+    color: #FFCE56;
+}
+
+.icon-summary.low-stock {
+    color: #FF6384;
+}
+
+/* Icon Styling for Section Titles */
+.icon-title {
+    font-size: 24px;
+}
+
+.icon-title.category-distribution {
+    color: #4BC0C0;
+}
+
+.icon-title.sales-overview {
+    color: #36A2EB;
+}
+
+.icon-title.sales-by-category {
+    color: #FFCE56;
+}
+
+.icon-title.top-sales {
+    color: #FF6384;
+}
