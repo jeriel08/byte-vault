@@ -14,16 +14,16 @@
                     @csrf
                     <h5 class="fw-semibold mb-3">Return Information</h5>
                     <div class="mb-3">
-                        <label for="supplierID" class="form-label fw-semibold">Supplier</label>
-                        <select name="supplierID" id="supplierID" class="form-select" required>
-                            <option value="">Select Supplier</option>
-                            @foreach ($suppliers as $supplier)
-                                <option value="{{ $supplier->supplierID }}" {{ $order && $order->supplierID === $supplier->supplierID ? 'selected' : '' }}>
-                                    {{ $supplier->supplierName }}
+                        <label for="supplierOrderID" class="form-label fw-semibold">Supplier Order</label>
+                        <select name="supplierOrderID" id="supplierOrderID" class="form-select" required>
+                            <option value="">Select Supplier Order</option>
+                            @foreach ($orders as $supplierOrder)
+                                <option value="{{ $supplierOrder->supplierOrderID }}" {{ $order && $order->supplierOrderID === $supplierOrder->supplierOrderID ? 'selected' : '' }} data-details="{{ $supplierOrder->details->toJson() }}">
+                                    Order #{{ $supplierOrder->supplierOrderID }} - {{ $supplierOrder->supplier->name }} ({{ $supplierOrder->orderDate->format('M d, Y') }})
                                 </option>
                             @endforeach
                         </select>
-                        @error('supplierID') <span class="text-danger">{{ $message }}</span> @enderror
+                        @error('supplierOrderID') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                     <div class="mb-3">
                         <label for="returnDate" class="form-label fw-semibold">Return Date</label>
@@ -38,13 +38,9 @@
                     <hr class="mb-4">
                     <div id="returnDetails" class="mb-3">
                         <h5 class="fw-semibold mb-3">Return Details</h5>
-                        <x-secondary-button type="button" class="mb-3" data-bs-toggle="modal" data-bs-target="#addProductModal">
-                            Add Product
-                        </x-secondary-button>
                         <div id="productList">
-                            <!-- Dynamically added product cards will appear here -->
                             @if ($order)
-                                @foreach ($order->details as $detail)
+                                @foreach ($order->details as $index => $detail)
                                     <div class="card account-manager-card p-3 d-flex flex-row align-items-center mb-3">
                                         <div class="flex-grow-1">
                                             <h5 class="mb-1 fw-semibold">{{ $detail->product->productName }}</h5>
@@ -54,7 +50,7 @@
                                             <div class="d-flex flex-row gap-3 align-items-start">
                                                 <div class="text-start" style="min-width: 80px;">
                                                     <span class="text-muted d-block"><small>Quantity</small></span>
-                                                    <span class="fw-semibold fs-5">{{ $detail->quantity }}</span>
+                                                    <input type="number" class="form-control quantity-input" name="details[{{ $index }}][quantity]" value="0" min="0" max="{{ $detail->quantity }}" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -63,10 +59,16 @@
                                                 <span class="material-icons-outlined danger-badge fs-1">delete</span>
                                             </button>
                                         </div>
-                                        <input type="hidden" name="details[0][productID]" value="{{ $detail->productID }}">
-                                        <input type="hidden" name="details[0][quantity]" value="{{ $detail->quantity }}">
+                                        <input type="hidden" name="details[{{ $index }}][productID]" value="{{ $detail->productID }}">
                                     </div>
                                 @endforeach
+                            @else
+                                <div class="card account-manager-card text-center p-5">
+                                    <h5 class="text-muted d-flex justify-content-center align-items-center gap-3">
+                                        Please select a supplier order to load products.
+                                        <span class="material-icons-outlined fs-2">inventory</span>
+                                    </h5>
+                                </div>
                             @endif
                         </div>
                     </div>
@@ -80,59 +82,44 @@
         </div>
     </div>
 
-    <!-- Modal for Adding Products -->
-    <x-modal name="addProductModal" maxWidth="lg">
-        <div class="modal-header custom-modal-header">
-            <h5 class="modal-title" id="addProductModal-label">Add Product to Return</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body custom-modal-body">
-            <div class="row d-flex justify-content-center align-content-center">
-                <div class="row mb-3">
-                    <label class="form-label fw-semibold">Product</label>
-                    <select id="productID" class="form-select" required>
-                        <option value="">Select Product</option>
-                        @foreach ($products as $product)
-                            <option value="{{ $product->productID }}">{{ $product->productName }} (Stock: {{ $product->stockQuantity }})</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="row mb-3">
-                    <label class="form-label fw-semibold">Quantity</label>
-                    <input type="number" id="quantity" class="form-control" min="1" required>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer custom-modal-footer py-2">
-            <x-primary-button type="button" id="addProductBtn">Add Product</x-primary-button>
-            <x-secondary-button type="button" data-bs-dismiss="modal">Close</x-secondary-button>
-        </div>
-    </x-modal>
-
     <!-- JavaScript for Managing Products -->
     <script>
         let index = {{ $order ? $order->details->count() : 0 }};
-        document.getElementById('addProductBtn').addEventListener('click', function() {
-            const productID = document.getElementById('productID').value;
-            const quantity = document.getElementById('quantity').value;
 
-            if (productID && quantity) {
-                const productOptionText = document.querySelector(`#productID option[value="${productID}"]`).text;
-                const productName = productOptionText.split(' (Stock:')[0]; // Extract only the name
-                const productList = document.getElementById('productList');
-                
+        // Load products when supplier order changes
+        document.getElementById('supplierOrderID').addEventListener('change', function() {
+            const productList = document.getElementById('productList');
+            productList.innerHTML = '';
+            index = 0;
+
+            const selectedOption = this.options[this.selectedIndex];
+            const details = JSON.parse(selectedOption.getAttribute('data-details') || '[]');
+
+            if (details.length === 0) {
+                productList.innerHTML = `
+                    <div class="card account-manager-card text-center p-5">
+                        <h5 class="text-muted d-flex justify-content-center align-items-center gap-3">
+                            Please select a supplier order to load products.
+                            <span class="material-icons-outlined fs-2">inventory</span>
+                        </h5>
+                    </div>
+                `;
+                return;
+            }
+
+            details.forEach(detail => {
                 const productCard = document.createElement('div');
                 productCard.className = 'card account-manager-card p-3 d-flex flex-row align-items-center mb-3';
                 productCard.innerHTML = `
                     <div class="flex-grow-1">
-                        <h5 class="mb-1 fw-semibold">${productName}</h5>
+                        <h5 class="mb-1 fw-semibold">${detail.product.productName}</h5>
                     </div>
                     <div class="d-flex align-items-center mx-3">
                         <span class="vr me-3"></span>
                         <div class="d-flex flex-row gap-3 align-items-start">
                             <div class="text-start" style="min-width: 80px;">
                                 <span class="text-muted d-block"><small>Quantity</small></span>
-                                <span class="fw-semibold fs-5">${quantity}</span>
+                                <input type="number" class="form-control quantity-input" name="details[${index}][quantity]" value="0" min="0" max="${detail.quantity}" required>
                             </div>
                         </div>
                     </div>
@@ -141,18 +128,14 @@
                             <span class="material-icons-outlined danger-badge fs-1">delete</span>
                         </button>
                     </div>
-                    <input type="hidden" name="details[${index}][productID]" value="${productID}">
-                    <input type="hidden" name="details[${index}][quantity]" value="${quantity}">
+                    <input type="hidden" name="details[${index}][productID]" value="${detail.productID}">
                 `;
                 productList.appendChild(productCard);
                 index++;
-
-                bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
-                document.getElementById('productID').value = '';
-                document.getElementById('quantity').value = '';
-            }
+            });
         });
 
+        // Remove product
         document.addEventListener('click', function(e) {
             if (e.target.closest('.remove-product')) {
                 e.target.closest('.card').remove();

@@ -96,6 +96,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/returns', [ReturnToSupplierController::class, 'index'])->name('returns.index');
     Route::get('/returns/create', [ReturnToSupplierController::class, 'create'])->name('returns.create');
     Route::post('/returns', [ReturnToSupplierController::class, 'store'])->name('returns.store');
+    Route::get('/returns/{returnSupplierID}', [ReturnToSupplierController::class, 'show'])->name('returns.show');
     Route::patch('/returns/{returnSupplierID}/complete', [ReturnToSupplierController::class, 'complete'])->name('returns.complete');
     Route::patch('/returns/{returnSupplierID}/reject', [ReturnToSupplierController::class, 'reject'])->name('returns.reject');
 });

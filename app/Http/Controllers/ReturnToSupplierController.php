@@ -27,11 +27,23 @@ class ReturnToSupplierController extends Controller
      */
     public function create(Request $request)
     {
-        //
-        $suppliers = Supplier::where('supplierStatus', 'Active')->get();
+        $orders = SupplierOrder::with(['supplier', 'details.product'])
+            ->whereNotNull('receivedDate')
+            ->whereNull('cancelledDate')
+            ->get();
         $products = Product::where('productStatus', 'Active')->get();
         $order = $request->has('order') ? SupplierOrder::with('details.product')->findOrFail($request->order) : null;
-        return view('returns.create', compact('suppliers', 'products', 'order'));
+
+        if ($order && !$order->receivedDate) {
+            return redirect()->route('returns.index')->with('error', 'Selected order has not been received.');
+        }
+
+        // Ensure relationships are included in JSON
+        $orders->each(function ($order) {
+            $order->setRelation('details', $order->details->load('product'));
+        });
+
+        return view('returns.create', compact('orders', 'products', 'order'));
     }
 
     /**
@@ -40,7 +52,7 @@ class ReturnToSupplierController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'supplierID' => 'required|exists:suppliers,supplierID',
+            'supplierOrderID' => 'required|exists:supplier_orders,supplierOrderID',
             'returnDate' => 'required|date',
             'returnSupplierReason' => 'required|string|max:255',
             'details' => 'required|array',
@@ -48,10 +60,12 @@ class ReturnToSupplierController extends Controller
             'details.*.quantity' => 'required|integer|min:1',
         ]);
 
+        $order = SupplierOrder::findOrFail($request->supplierOrderID);
         $totalQuantity = collect($request->details)->sum('quantity');
 
         $return = ReturnToSupplier::create([
-            'supplierID' => $request->supplierID,
+            'supplierID' => $order->supplierID,
+            'supplierOrderID' => $request->supplierOrderID,
             'returnDate' => $request->returnDate,
             'returnSupplierReason' => $request->returnSupplierReason,
             'status' => ReturnToSupplier::STATUS_PENDING,
@@ -77,7 +91,7 @@ class ReturnToSupplierController extends Controller
         return redirect()->route('returns.index')->with('success', 'Return recorded as Pending.');
     }
 
-    public function complete($returnSupplierID)
+    public function complete(Request $request, $returnSupplierID)
     {
         $return = ReturnToSupplier::findOrFail($returnSupplierID);
 
@@ -98,7 +112,7 @@ class ReturnToSupplierController extends Controller
         return redirect()->route('returns.index')->with('success', 'Return marked as Completed, stock updated.');
     }
 
-    public function reject($returnSupplierID)
+    public function reject(Request $request, $returnSupplierID)
     {
         $return = ReturnToSupplier::findOrFail($returnSupplierID);
 

@@ -10,12 +10,14 @@ class ReturnToSupplier extends Model
     protected $primaryKey = 'returnSupplierID';
     protected $fillable = [
         'supplierID',
+        'supplierOrderID',
         'returnDate',
         'returnSupplierReason',
         'status',
         'created_by',
         'updated_by',
     ];
+
     protected $casts = [
         'returnDate' => 'date',
         'created_at' => 'datetime',
@@ -29,6 +31,11 @@ class ReturnToSupplier extends Model
     public function supplier()
     {
         return $this->belongsTo(Supplier::class, 'supplierID', 'supplierID');
+    }
+
+    public function supplierOrder()
+    {
+        return $this->belongsTo(SupplierOrder::class, 'supplierOrderID', 'supplierOrderID');
     }
 
     public function stockOut()
