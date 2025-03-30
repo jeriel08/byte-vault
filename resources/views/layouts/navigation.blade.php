@@ -44,6 +44,7 @@
                         'returns.create' => 'Add Return',
                         'returns.edit' => 'Edit Return',
                         'returns.show' => 'Return Details',
+
                         // Add more routes as needed
                     ];
                     $currentRoute = Route::currentRouteName();
@@ -138,12 +139,12 @@
                         </x-nav-link>
                     </li>
 
-                    {{-- <li class="nav-item">
-                        <x-nav-link :href="route('returns')" :active="request()->routeIs('returns')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
+                    <li class="nav-item">
+                        <x-nav-link :href="route('returns.index')" :active="request()->routeIs('returns.index')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
                             <span class="material-icons-outlined"> assignment_return </span>
                             Returns
                         </x-nav-link>
-                    </li> --}}
+                    </li>
 
                     <li class="nav-item">
                         <x-nav-link :href="route('adjustments.index')" :active="request()->routeIs('adjustments.index')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">

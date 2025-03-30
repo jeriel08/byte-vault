@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SupplierOrderController;
 use App\Http\Controllers\AdjustmentController;
+use App\Http\Controllers\ReturnToSupplierController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -88,6 +89,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/adjustments/{adjustment}/edit', [AdjustmentController::class, 'edit'])->name('adjustments.edit');
     Route::put('/adjustments/{adjustmentID}', [AdjustmentController::class, 'update'])->name('adjustments.update');
     Route::get('/adjustments/{adjustment}', [AdjustmentController::class, 'show'])->name('adjustments.show');
+});
+
+// Return To Supplier
+Route::middleware('auth')->group(function () {
+    Route::get('/returns', [ReturnToSupplierController::class, 'index'])->name('returns.index');
+    Route::get('/returns/create', [ReturnToSupplierController::class, 'create'])->name('returns.create');
+    Route::post('/returns', [ReturnToSupplierController::class, 'store'])->name('returns.store');
+    Route::patch('/returns/{returnSupplierID}/complete', [ReturnToSupplierController::class, 'complete'])->name('returns.complete');
+    Route::patch('/returns/{returnSupplierID}/reject', [ReturnToSupplierController::class, 'reject'])->name('returns.reject');
 });
 
 require __DIR__ . '/auth.php';
