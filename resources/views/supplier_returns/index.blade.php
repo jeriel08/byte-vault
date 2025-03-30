@@ -96,7 +96,9 @@
                                                 <span class="fw-semibold text-truncate d-block">{{ $return->creator->full_name ?? 'Unknown' }}</span>
                                             </div>
                                             <div class="text-start me-4" style="width: 10rem;">
-                                                <span class="text-muted d-block"><small>Return Date</small></span>
+                                                <span class="text-muted d-block"><small>
+                                                    {{ $return->completionDate ? 'Date Returned' : ($return->cancellationDate ? 'Cancellation Date' : 'Return Date') }}
+                                                </small></span>
                                                 <span class="fw-semibold text-truncate d-block">
                                                     {{ \Carbon\Carbon::parse($return->returnDate)->format('M d, Y') }}
                                                 </span>

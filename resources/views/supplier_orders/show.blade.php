@@ -1,11 +1,17 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
-        <div class="d-flex justify-content-between align-items-center">
-            <h1 class="text-2xl font-bold mb-4">Order No. {{ $supplierOrder->supplierOrderID }}</h1>
-            <x-secondary-button href="{{ route('supplier_orders.index') }}">
-                <span class="material-icons-outlined">arrow_back</span>
-                Go back
-            </x-secondary-button>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-2xl font-bold m-0">Order No. {{ $supplierOrder->supplierOrderID }}</h2>
+            <div class="d-flex gap-2">
+                <x-primary-button href="{{ route('supplier_returns.create', ['order' => $supplierOrder->supplierOrderID]) }}">
+                    <span class="material-icons-outlined">undo</span>
+                    Return to Supplier
+                </x-primary-button>
+                <x-secondary-button href="{{ route('supplier_orders.index') }}">
+                    <span class="material-icons-outlined">arrow_back</span>
+                    Go back
+                </x-secondary-button>
+            </div>
         </div>
         
         <div class="card account-settings-card p-3">

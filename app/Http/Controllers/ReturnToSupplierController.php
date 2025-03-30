@@ -55,9 +55,9 @@ class ReturnToSupplierController extends Controller
             'supplierOrderID' => 'required|exists:supplier_orders,supplierOrderID',
             'returnDate' => 'required|date',
             'returnSupplierReason' => 'required|string|max:255',
-            'details' => 'present|array', // Changed from required to present
+            'details' => 'present|array', // Ensures details array is sent, even if empty
             'details.*.productID' => 'required|exists:products,productID',
-            'details.*.quantity' => 'nullable|integer|min:0', // Allow null/0
+            'details.*.quantity' => 'nullable|integer|min:0', // Allows 0 or null
         ]);
 
         $order = SupplierOrder::findOrFail($request->supplierOrderID);

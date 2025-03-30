@@ -50,7 +50,7 @@
                                             <div class="d-flex flex-row gap-3 align-items-start">
                                                 <div class="text-start" style="min-width: 80px;">
                                                     <span class="text-muted d-block"><small>Quantity</small></span>
-                                                    <input type="number" class="form-control quantity-input" name="details[{{ $index }}][quantity]" value="0" min="0" max="{{ $detail->quantity }}" required>
+                                                    <input type="number" class="form-control quantity-input" name="details[{{ $index }}][quantity]" value="0" min="0" max="{{ $detail->quantity }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -86,7 +86,6 @@
     <script>
         let index = {{ $order ? $order->details->count() : 0 }};
 
-        // Load products when supplier order changes
         document.getElementById('supplierOrderID').addEventListener('change', function() {
             const productList = document.getElementById('productList');
             productList.innerHTML = '';
@@ -119,7 +118,7 @@
                         <div class="d-flex flex-row gap-3 align-items-start">
                             <div class="text-start" style="min-width: 80px;">
                                 <span class="text-muted d-block"><small>Quantity</small></span>
-                                <input type="number" class="form-control quantity-input" name="details[${index}][quantity]" value="0" min="0" max="${detail.quantity}" required>
+                                <input type="number" class="form-control quantity-input" name="details[${index}][quantity]" value="0" min="0" max="${detail.quantity}">
                             </div>
                         </div>
                     </div>
@@ -135,7 +134,6 @@
             });
         });
 
-        // Remove product
         document.addEventListener('click', function(e) {
             if (e.target.closest('.remove-product')) {
                 e.target.closest('.card').remove();
