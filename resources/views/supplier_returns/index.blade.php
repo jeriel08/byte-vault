@@ -8,7 +8,7 @@
                     <span class="material-icons-outlined">search</span>
                 </button>
             </div>
-            <x-primary-button href="{{ route('returns.create') }}" class="py-2">
+            <x-primary-button href="{{ route('supplier_returns.create') }}" class="py-2">
                 <span class="material-icons-outlined">add</span>
                 New Return
             </x-primary-button>
@@ -106,41 +106,70 @@
                                                 <span class="fw-semibold text-truncate d-block">{{ $return->returnSupplierReason }}</span>
                                             </div>
                                             <div class="text-start" style="width: 8rem;">
-                                                <span class="text-muted d-block"><small>Quantity</small></span>
-                                                <span class="fw-semibold text-truncate d-block">{{ $return->stockOut->totalQuantity }}</span>
+                                                <span class="text-muted d-block"><small>Status</small></span>
+                                                <span class="badge {{ $return->status === 'Completed' ? 'bg-success' : ($return->status === 'Rejected' ? 'bg-danger' : 'bg-warning') }}">
+                                                    {{ $return->status }}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                     
                                     <!-- Dropdown and Status Actions -->
-                                    <div class="ms-5 d-flex align-items-center gap-2">
-                                        @if ($return->status === 'Pending')
-                                            <form action="{{ route('returns.complete', $return->returnSupplierID) }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="btn btn-sm btn-success">Complete</button>
-                                            </form>
-                                            <form action="{{ route('returns.reject', $return->returnSupplierID) }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('PATCH')
-                                                <button type="submit" class="btn btn-sm btn-danger">Reject</button>
-                                            </form>
-                                        @else
-                                            <span class="badge {{ $return->status === 'Completed' ? 'bg-success' : 'bg-danger' }}">{{ $return->status }}</span>
-                                        @endif
+                                    <div class="ms-5">
                                         <div class="dropdown supplier-order-dropdown">
                                             <a class="btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <span class="material-icons-outlined fs-2">more_horiz</span>
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <a class="dropdown-item" href="{{ route('returns.show', $return->returnSupplierID) }}">
+                                                    <a class="dropdown-item" href="{{ route('supplier_returns.show', $return->returnSupplierID) }}">
                                                         <span class="material-icons-outlined align-middle me-2">visibility</span> View
                                                     </a>
                                                 </li>
+                                                @if ($return->status === 'Pending')
+                                                    <li>
+                                                        <form action="{{ route('supplier_returns.complete', $return->returnSupplierID) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <button type="submit" class="dropdown-item">
+                                                                <span class="material-icons-outlined align-middle me-2">check_circle</span> Complete
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#rejectModal-{{ $return->returnSupplierID }}">
+                                                            <span class="material-icons-outlined align-middle me-2">cancel</span> Reject
+                                                        </button>
+                                                    </li>
+                                                @endif
                                             </ul>
                                         </div>
                                     </div>
+                                    
+                                    <!-- Reject Modal -->
+                                    <x-modal name="rejectModal-{{ $return->returnSupplierID }}" maxWidth="md">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="rejectModal-{{ $return->returnSupplierID }}-label">Reject Return #{{ $return->returnSupplierID }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form action="{{ route('supplier_returns.reject', $return->returnSupplierID) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label for="rejectionReason-{{ $return->returnSupplierID }}" class="form-label">Reason for Rejection</label>
+                                                    <textarea class="form-control" id="rejectionReason-{{ $return->returnSupplierID }}" name="rejectionReason" rows="3" required placeholder="Enter the reason for rejecting this return"></textarea>
+                                                    @error('rejectionReason')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <x-danger-button type="submit">Reject Return</x-danger-button>
+                                                <x-secondary-button type="button" data-bs-dismiss="modal">Close</x-secondary-button>
+                                            </div>
+                                        </form>
+                                    </x-modal>
                                 </div>
                             </div>
                         @endforeach

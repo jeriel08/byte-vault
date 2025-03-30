@@ -19,7 +19,7 @@ class ReturnToSupplierController extends Controller
     {
         //
         $returns = ReturnToSupplier::with('supplier', 'stockOut', 'creator')->get();
-        return view('returns.index', compact('returns'));
+        return view('supplier_returns.index', compact('returns'));
     }
 
     /**
@@ -35,7 +35,7 @@ class ReturnToSupplierController extends Controller
         $order = $request->has('order') ? SupplierOrder::with('details.product')->findOrFail($request->order) : null;
 
         if ($order && !$order->receivedDate) {
-            return redirect()->route('returns.index')->with('error', 'Selected order has not been received.');
+            return redirect()->route('supplier_returns.index')->with('error', 'Selected order has not been received.');
         }
 
         // Ensure relationships are included in JSON
@@ -43,7 +43,7 @@ class ReturnToSupplierController extends Controller
             $order->setRelation('details', $order->details->load('product'));
         });
 
-        return view('returns.create', compact('orders', 'products', 'order'));
+        return view('supplier_returns.create', compact('orders', 'products', 'order'));
     }
 
     /**
@@ -88,53 +88,50 @@ class ReturnToSupplierController extends Controller
             ]);
         }
 
-        return redirect()->route('returns.index')->with('success', 'Return recorded as Pending.');
+        return redirect()->route('supplier_returns.index')->with('success', 'Return recorded as Pending.');
     }
 
     public function complete(Request $request, $returnSupplierID)
     {
         $return = ReturnToSupplier::findOrFail($returnSupplierID);
-
-        if ($return->status !== ReturnToSupplier::STATUS_PENDING) {
-            return redirect()->route('returns.index')->with('error', 'Return cannot be completed from its current status.');
+        if ($return->status !== 'Pending') {
+            return redirect()->route('supplier_returns.index')->with('error', 'Return cannot be completed from its current status.');
         }
-
         $return->update([
-            'status' => ReturnToSupplier::STATUS_COMPLETED,
+            'status' => 'Completed',
             'updated_by' => auth()->id(),
             'updated_at' => now(),
         ]);
-
         foreach ($return->stockOut->details as $detail) {
             Product::find($detail->productID)->decrement('stockQuantity', $detail->quantity);
         }
-
-        return redirect()->route('returns.index')->with('success', 'Return marked as Completed, stock updated.');
+        return redirect()->route('supplier_returns.index')->with('success', 'Return marked as Completed, stock updated.');
     }
 
     public function reject(Request $request, $returnSupplierID)
     {
         $return = ReturnToSupplier::findOrFail($returnSupplierID);
-
-        if ($return->status !== ReturnToSupplier::STATUS_PENDING) {
-            return redirect()->route('returns.index')->with('error', 'Return cannot be rejected from its current status.');
+        if ($return->status !== 'Pending') {
+            return redirect()->route('supplier_returns.index')->with('error', 'Return cannot be rejected from its current status.');
         }
-
+        $request->validate(['rejectionReason' => 'required|string|max:255']);
         $return->update([
-            'status' => ReturnToSupplier::STATUS_REJECTED,
+            'status' => 'Rejected',
+            'rejectionReason' => $request->rejectionReason,
             'updated_by' => auth()->id(),
             'updated_at' => now(),
         ]);
-
-        return redirect()->route('returns.index')->with('success', 'Return marked as Rejected.');
+        return redirect()->route('supplier_returns.index')->with('success', 'Return marked as Rejected.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(ReturnToSupplier $returnToSupplier)
+    public function show($returnSupplierID)
     {
-        //
+        $return = ReturnToSupplier::with(['creator', 'supplierOrder.supplier', 'stockOut.details.product'])
+            ->findOrFail($returnSupplierID);
+        return view('supplier_returns.show', compact('return'));
     }
 
     /**

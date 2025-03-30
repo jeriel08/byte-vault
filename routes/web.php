@@ -93,12 +93,12 @@ Route::middleware('auth')->group(function () {
 
 // Return To Supplier
 Route::middleware('auth')->group(function () {
-    Route::get('/returns', [ReturnToSupplierController::class, 'index'])->name('returns.index');
-    Route::get('/returns/create', [ReturnToSupplierController::class, 'create'])->name('returns.create');
-    Route::post('/returns', [ReturnToSupplierController::class, 'store'])->name('returns.store');
-    Route::get('/returns/{returnSupplierID}', [ReturnToSupplierController::class, 'show'])->name('returns.show');
-    Route::patch('/returns/{returnSupplierID}/complete', [ReturnToSupplierController::class, 'complete'])->name('returns.complete');
-    Route::patch('/returns/{returnSupplierID}/reject', [ReturnToSupplierController::class, 'reject'])->name('returns.reject');
+    Route::get('/supplier_returns', [ReturnToSupplierController::class, 'index'])->name('supplier_returns.index');
+    Route::get('/supplier_returns/create', [ReturnToSupplierController::class, 'create'])->name('supplier_returns.create');
+    Route::post('/supplier_returns', [ReturnToSupplierController::class, 'store'])->name('supplier_returns.store');
+    Route::get('/supplier_returns/{returnSupplierID}', [ReturnToSupplierController::class, 'show'])->name('supplier_returns.show');
+    Route::patch('/supplier_returns/{returnSupplierID}/complete', [ReturnToSupplierController::class, 'complete'])->name('supplier_returns.complete');
+    Route::patch('/supplier_returns/{returnSupplierID}/reject', [ReturnToSupplierController::class, 'reject'])->name('supplier_returns.reject');
 });
 
 require __DIR__ . '/auth.php';

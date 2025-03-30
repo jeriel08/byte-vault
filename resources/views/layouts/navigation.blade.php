@@ -40,10 +40,10 @@
                         'adjustments.create' => 'Add Adjustment',
                         'adjustments.edit' => 'Edit Adjustment',
                         'adjustments.show' => 'Adjustment Details',
-                        'returns.index' => 'Returns',
-                        'returns.create' => 'Add Return',
-                        'returns.edit' => 'Edit Return',
-                        'returns.show' => 'Return Details',
+                        'supplier_returns.index' => 'Return to Supplier',
+                        'supplier_returns.create' => 'Add Return',
+                        'supplier_returns.edit' => 'Edit Return',
+                        'supplier_returns.show' => 'Return Details',
 
                         // Add more routes as needed
                     ];
@@ -140,9 +140,9 @@
                     </li>
 
                     <li class="nav-item">
-                        <x-nav-link :href="route('returns.index')" :active="request()->routeIs('returns.index')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
+                        <x-nav-link :href="route('supplier_returns.index')" :active="request()->routeIs('supplier_returns.index')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
                             <span class="material-icons-outlined"> assignment_return </span>
-                            Returns
+                            Return to Supplier
                         </x-nav-link>
                     </li>
 

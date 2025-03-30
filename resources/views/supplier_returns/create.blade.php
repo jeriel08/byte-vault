@@ -2,7 +2,7 @@
     <div class="container mx-auto px-4 py-6">
         <div class="d-flex justify-content-between align-items-center">
             <h1 class="text-2xl font-bold mb-4">Add Return to Supplier</h1>
-            <x-secondary-button href="{{ route('returns.index') }}">
+            <x-secondary-button href="{{ route('supplier_returns.index') }}">
                 <span class="material-icons-outlined">arrow_back</span>
                 Go back
             </x-secondary-button>
@@ -10,7 +10,7 @@
         
         <div class="card account-settings-card p-3">
             <div class="card-body">
-                <form action="{{ route('returns.store') }}" method="POST" id="returnForm">
+                <form action="{{ route('supplier_returns.store') }}" method="POST" id="returnForm">
                     @csrf
                     <h5 class="fw-semibold mb-3">Return Information</h5>
                     <div class="mb-3">
