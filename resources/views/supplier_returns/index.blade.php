@@ -107,8 +107,8 @@
                                             </div>
                                             <div class="text-start" style="width: 8rem;">
                                                 <span class="text-muted d-block"><small>Status</small></span>
-                                                <span class="badge {{ $return->status === 'Completed' ? 'bg-success' : ($return->status === 'Rejected' ? 'bg-danger' : 'bg-warning') }}">
-                                                    {{ $return->status }}
+                                                <span class="badge {{ $return->completionDate ? 'bg-success' : ($return->cancellationDate ? 'bg-danger' : 'bg-warning') }}">
+                                                    {{ $return->completionDate ? 'Completed' : ($return->cancellationDate ? 'Rejected' : 'Pending') }}
                                                 </span>
                                             </div>
                                         </div>
@@ -126,7 +126,7 @@
                                                         <span class="material-icons-outlined align-middle me-2">visibility</span> View
                                                     </a>
                                                 </li>
-                                                @if ($return->status === 'Pending')
+                                                @if (!$return->completionDate && !$return->cancellationDate)
                                                     <li>
                                                         <form action="{{ route('supplier_returns.complete', $return->returnSupplierID) }}" method="POST" class="d-inline">
                                                             @csrf

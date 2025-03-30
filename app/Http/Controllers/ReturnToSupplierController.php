@@ -55,20 +55,24 @@ class ReturnToSupplierController extends Controller
             'supplierOrderID' => 'required|exists:supplier_orders,supplierOrderID',
             'returnDate' => 'required|date',
             'returnSupplierReason' => 'required|string|max:255',
-            'details' => 'required|array',
+            'details' => 'present|array', // Changed from required to present
             'details.*.productID' => 'required|exists:products,productID',
-            'details.*.quantity' => 'required|integer|min:1',
+            'details.*.quantity' => 'nullable|integer|min:0', // Allow null/0
         ]);
 
         $order = SupplierOrder::findOrFail($request->supplierOrderID);
-        $totalQuantity = collect($request->details)->sum('quantity');
+        $details = array_filter($request->details, fn($detail) => !empty($detail['quantity']) && $detail['quantity'] > 0);
+        if (empty($details)) {
+            return back()->withErrors(['details' => 'At least one product with a quantity greater than 0 is required.']);
+        }
 
+        $totalQuantity = collect($details)->sum('quantity');
         $return = ReturnToSupplier::create([
             'supplierID' => $order->supplierID,
             'supplierOrderID' => $request->supplierOrderID,
             'returnDate' => $request->returnDate,
             'returnSupplierReason' => $request->returnSupplierReason,
-            'status' => ReturnToSupplier::STATUS_PENDING,
+            'adjustmentDatePlaced' => now(),
             'created_by' => auth()->id(),
         ]);
 
@@ -80,7 +84,7 @@ class ReturnToSupplierController extends Controller
             'created_by' => auth()->id(),
         ]);
 
-        foreach ($request->details as $detail) {
+        foreach ($details as $detail) {
             StockOutDetail::create([
                 'stockOutID' => $stockOut->stockOutID,
                 'productID' => $detail['productID'],
@@ -88,40 +92,38 @@ class ReturnToSupplierController extends Controller
             ]);
         }
 
-        return redirect()->route('supplier_returns.index')->with('success', 'Return recorded as Pending.');
+        return redirect()->route('supplier_returns.index')->with('success', 'Return recorded.');
     }
 
     public function complete(Request $request, $returnSupplierID)
     {
         $return = ReturnToSupplier::findOrFail($returnSupplierID);
-        if ($return->status !== 'Pending') {
-            return redirect()->route('supplier_returns.index')->with('error', 'Return cannot be completed from its current status.');
+        if ($return->completionDate || $return->cancellationDate) {
+            return redirect()->route('returns.index')->with('error', 'Return cannot be completed from its current state.');
         }
         $return->update([
-            'status' => 'Completed',
+            'completionDate' => now(),
             'updated_by' => auth()->id(),
-            'updated_at' => now(),
         ]);
         foreach ($return->stockOut->details as $detail) {
             Product::find($detail->productID)->decrement('stockQuantity', $detail->quantity);
         }
-        return redirect()->route('supplier_returns.index')->with('success', 'Return marked as Completed, stock updated.');
+        return redirect()->route('supplier_returns.index')->with('success', 'Return completed, stock updated.');
     }
 
     public function reject(Request $request, $returnSupplierID)
     {
         $return = ReturnToSupplier::findOrFail($returnSupplierID);
-        if ($return->status !== 'Pending') {
-            return redirect()->route('supplier_returns.index')->with('error', 'Return cannot be rejected from its current status.');
+        if ($return->completionDate || $return->cancellationDate) {
+            return redirect()->route('returns.index')->with('error', 'Return cannot be rejected from its current state.');
         }
         $request->validate(['rejectionReason' => 'required|string|max:255']);
         $return->update([
-            'status' => 'Rejected',
-            'rejectionReason' => $request->rejectionReason,
+            'cancellationDate' => now(),
+            'cancellationRemark' => $request->rejectionReason,
             'updated_by' => auth()->id(),
-            'updated_at' => now(),
         ]);
-        return redirect()->route('supplier_returns.index')->with('success', 'Return marked as Rejected.');
+        return redirect()->route('supplier_returns.index')->with('success', 'Return rejected.');
     }
 
     /**

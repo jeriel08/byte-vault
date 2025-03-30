@@ -25,21 +25,29 @@
                     </p>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Return Date:</label>
-                    <p class="form-control-plaintext">{{ \Carbon\Carbon::parse($return->returnDate)->format('M d, Y') }}</p>
-                </div>
-                <div class="mb-3">
                     <label class="form-label fw-semibold">Return Reason:</label>
                     <p class="form-control-plaintext">{{ $return->returnSupplierReason }}</p>
                 </div>
                 <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        {{ $return->completionDate ? 'Date Returned:' : ($return->cancellationDate ? 'Cancellation Date:' : 'Return Date:') }}
+                    </label>
+                    <p class="form-control-plaintext">{{ \Carbon\Carbon::parse($return->returnDate)->format('M d, Y') }}</p>
+                </div>
+                <div class="mb-3">
                     <label class="form-label fw-semibold">Status:</label>
                     <p class="form-control-plaintext">
-                        <span class="badge {{ $return->status === 'Completed' ? 'bg-success' : ($return->status === 'Rejected' ? 'bg-danger' : 'bg-warning') }}">
-                            {{ $return->status }}
+                        <span class="badge {{ $return->completionDate ? 'bg-success' : ($return->cancellationDate ? 'bg-danger' : 'bg-warning') }}">
+                            {{ $return->completionDate ? 'Completed' : ($return->cancellationDate ? 'Rejected' : 'Pending') }}
                         </span>
                     </p>
                 </div>
+                @if ($return->cancellationRemark)
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Cancellation Remark:</label>
+                        <p class="form-control-plaintext">{{ $return->cancellationRemark }}</p>
+                    </div>
+                @endif
                 <div class="mb-4">
                     <label class="form-label fw-semibold">Total Quantity Returned:</label>
                     <p class="form-control-plaintext">{{ $return->stockOut->totalQuantity }}</p>

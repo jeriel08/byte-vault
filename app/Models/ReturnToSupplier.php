@@ -13,7 +13,10 @@ class ReturnToSupplier extends Model
         'supplierOrderID',
         'returnDate',
         'returnSupplierReason',
-        'status',
+        'adjustmentDatePlaced',
+        'completionDate',
+        'cancellationDate',
+        'cancellationRemark',
         'created_by',
         'updated_by',
     ];
