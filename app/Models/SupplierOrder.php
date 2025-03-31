@@ -12,9 +12,14 @@ class SupplierOrder extends Model
         'supplierID',
         'orderDate',
         'expectedDeliveryDate',
-        'status',
         'totalCost',
+        'orderPlacedDate',
+        'receivedDate',
+        'cancelledDate',
+        'cancellationRemark',
+        'created_at',
         'created_by',
+        'updated_at',
         'updated_by',
     ];
 
@@ -22,6 +27,11 @@ class SupplierOrder extends Model
     protected $casts = [
         'orderDate' => 'date',
         'expectedDeliveryDate' => 'date',
+        'orderPlacedDate' => 'date',
+        'receivedDate' => 'date',
+        'cancelledDate' => 'date',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     public function supplier()
@@ -42,5 +52,27 @@ class SupplierOrder extends Model
     public function updater()
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function getStatusAttribute()
+    {
+        if ($this->receivedDate) {
+            return 'Received';
+        }
+        if ($this->cancelledDate) {
+            return 'Cancelled';
+        }
+        return 'Pending';
+    }
+
+    public function getStatusBadgeClassAttribute()
+    {
+        if ($this->receivedDate) {
+            return 'bg-success';
+        }
+        if ($this->cancelledDate) {
+            return 'bg-danger';
+        }
+        return 'bg-warning';
     }
 }

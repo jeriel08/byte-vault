@@ -7,11 +7,12 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SupplierOrderController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\AdjustmentController;
+use App\Http\Controllers\ReturnToSupplierController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('auth.login'); // Change 'welcome' to 'auth.login'
+    return view('auth.login');
 });
 
 Route::get('/dashboard', function () {
@@ -79,6 +80,27 @@ Route::middleware('auth')->group(function () {
     Route::put('/supplier-orders/{supplierOrderID}', [SupplierOrderController::class, 'update'])->name('supplier_orders.update');
     Route::get('/supplier-orders/{supplierOrder}', [SupplierOrderController::class, 'show'])->name('supplier_orders.show');
 });
+
+// Adjustments
+Route::middleware('auth')->group(function () {
+    Route::get('/adjustments', [AdjustmentController::class, 'index'])->name('adjustments.index');
+    Route::get('/adjustments/create', [AdjustmentController::class, 'create'])->name('adjustments.create');
+    Route::post('/adjustments', [AdjustmentController::class, 'store'])->name('adjustments.store');
+    Route::get('/adjustments/{adjustment}/edit', [AdjustmentController::class, 'edit'])->name('adjustments.edit');
+    Route::put('/adjustments/{adjustmentID}', [AdjustmentController::class, 'update'])->name('adjustments.update');
+    Route::get('/adjustments/{adjustment}', [AdjustmentController::class, 'show'])->name('adjustments.show');
+});
+
+// Return To Supplier
+Route::middleware('auth')->group(function () {
+    Route::get('/supplier_returns', [ReturnToSupplierController::class, 'index'])->name('supplier_returns.index');
+    Route::get('/supplier_returns/create', [ReturnToSupplierController::class, 'create'])->name('supplier_returns.create');
+    Route::post('/supplier_returns', [ReturnToSupplierController::class, 'store'])->name('supplier_returns.store');
+    Route::get('/supplier_returns/{returnSupplierID}', [ReturnToSupplierController::class, 'show'])->name('supplier_returns.show');
+    Route::patch('/supplier_returns/{returnSupplierID}/complete', [ReturnToSupplierController::class, 'complete'])->name('supplier_returns.complete');
+    Route::patch('/supplier_returns/{returnSupplierID}/reject', [ReturnToSupplierController::class, 'reject'])->name('supplier_returns.reject');
+});
+
 // Orders
 Route::middleware('auth')->group(function () {
     Route::resource('orders', \App\Http\Controllers\OrderController::class);
@@ -90,8 +112,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'destroy'])->name('orders.destroy');
     Route::get('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
 });
+
 Route::middleware('auth')->group(function () {
     // Existing routes...
     Route::get('/audit', [App\Http\Controllers\AuditLogController::class, 'index'])->name('audit.index');
 });
+
 require __DIR__ . '/auth.php';

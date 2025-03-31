@@ -39,7 +39,7 @@
                     <!-- Order Details Section -->
                     <div id="orderDetails" class="mb-3">
                         <h5 class="fw-semibold mb-3">Order Details</h5>
-                        <x-secondary-button type="button" class="btn btn-secondary mb-3" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                        <x-secondary-button type="button" class=" mb-3" data-bs-toggle="modal" data-bs-target="#addProductModal">
                             Add Product
                         </x-secondary-button>
                         <div id="productList">
@@ -112,8 +112,8 @@
                 </div>
             </div>
         </div>
-        <div class="modal-footer custom-modal-footer pb-0">
-            <x-primary-button type="button" class="btn btn-primary mb-4" id="addProductBtn">Add Product</x-primary-button>
+        <div class="modal-footer custom-modal-footer py-2">
+            <x-primary-button type="button" id="addProductBtn">Add Product</x-primary-button>
             <x-secondary-button type="button" data-bs-dismiss="modal">Close</x-secondary-button>
         </div>
     </x-modal>

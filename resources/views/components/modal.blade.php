@@ -24,7 +24,7 @@ $maxWidth = [
     @if($show) data-bs-backdrop="static" @endif
 >
     <div class="modal-dialog {{ $maxWidth }} modal-dialog-centered">
-        <div class="modal-content bg-white dark:bg-gray-800">
+        <div class="modal-content">
             {{ $slot }}
         </div>
     </div>

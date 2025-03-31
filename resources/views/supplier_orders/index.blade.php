@@ -35,13 +35,13 @@
                             <label class="form-label fw-semibold mb-2">Order Status</label>
                             <div class="btn-group d-flex flex-wrap gap-2 mb-3" role="group">
                                 <button type="button" class="btn category-filter-button flex-grow-1 {{ request('status') === 'Pending' ? 'btn-primary' : 'btn-outline-primary' }}" data-filter="status" data-value="Pending">
-                                    <span class="badge me-2">{{ $supplierOrders->where('status', 'Pending')->count() }}</span> Pending
+                                    <span class="badge me-2">{{ $pendingCount }}</span> Pending
                                 </button>
                                 <button type="button" class="btn category-filter-button flex-grow-1 {{ request('status') === 'Cancelled' ? 'btn-primary' : 'btn-outline-primary' }}" data-filter="status" data-value="Cancelled">
-                                    <span class="badge me-2">{{ $supplierOrders->where('status', 'Cancelled')->count() }}</span> Cancelled
+                                    <span class="badge me-2">{{ $cancelledCount }}</span> Cancelled
                                 </button>
                                 <button type="button" class="btn category-filter-button flex-grow-1 {{ request('status') === 'Received' ? 'btn-primary' : 'btn-outline-primary' }}" data-filter="status" data-value="Received">
-                                    <span class="badge me-2">{{ $supplierOrders->where('status', 'Received')->count() }}</span> Received
+                                    <span class="badge me-2">{{ $receivedCount }}</span> Received
                                 </button>
                             </div>
                         </div>
@@ -67,9 +67,7 @@
                             <small class="text-muted ms-1">To</small>
                             <input type="date" class="form-control" id="dateTo" name="date_to" value="{{ request('date_to') }}" placeholder="To">
                         </div>
-
                         <hr>
-
                         <!-- Sort By -->
                         <div class="mb-3">
                             <label for="sortBy" class="form-label fw-semibold mb-2">Sort By</label>
@@ -82,7 +80,6 @@
                         <div>
                             <button type="button" class="btn btn-outline-secondary w-100" id="clearFilters">Clear Filters</button>
                         </div>
-                        
                     </div>
                 </div>
             </div>
@@ -107,44 +104,106 @@
                                         <p class="mb-1 fw-semibold fs-5 me-4">Order No. {{ $supplierOrder->supplierOrderID }}</p>
                                     </div>
                     
-                                    <div class="d-flex align-items-center flex-grow-1">
+                                    <div class="d-flex align-items-center flex-grow-1 pe-0">
                                         <span class="vr me-4"></span>
-                                        <div class="d-flex flex-row gap-3 align-items-start">
+                                        <div class="d-flex flex-row gap-3 align-items-start ps-4">
                                             <div class="text-start me-4" style="width: 16rem;">
                                                 <span class="text-muted d-block"><small>Supplier</small></span>
                                                 <span class="fw-semibold text-truncate d-block">{{ $supplierOrder->supplier->supplierName }}</span>
                                             </div>
                                             <div class="text-start me-4" style="width: 7rem;">
-                                                <span class="text-muted d-block"><small>Ordered</small></span>
-                                                <span class="fw-semibold text-truncate d-block">{{ $supplierOrder->orderDate->format('M d, Y') }}</span>
+                                                <span class="text-muted d-block">
+                                                    <small>
+                                                        {{ $supplierOrder->receivedDate ? 'Date Received' : ($supplierOrder->cancelledDate ? 'Date Cancelled' : 'Order Placed') }}
+                                                    </small>
+                                                </span>
+                                                <span class="fw-semibold text-truncate d-block">
+                                                    {{ \Carbon\Carbon::parse($supplierOrder->receivedDate ?? $supplierOrder->cancelledDate ?? $supplierOrder->orderPlacedDate)->format('M d, Y') }}
+                                                </span>
                                             </div>
                                             <div class="text-start me-4" style="width: 5rem;">
                                                 <span class="text-muted d-block"><small>Status</small></span>
-                                                <span class="badge bg-{{ $supplierOrder->status === 'Pending' ? 'warning' : ($supplierOrder->status === 'Received' ? 'success' : 'danger') }}">
-                                                    {{ $supplierOrder->status }}
+                                                <span class="badge bg-{{ $supplierOrder->receivedDate ? 'success' : ($supplierOrder->cancelledDate ? 'danger' : 'warning') }}">
+                                                    {{ $supplierOrder->receivedDate ? 'Received' : ($supplierOrder->cancelledDate ? 'Cancelled' : 'Pending') }}
                                                 </span>
                                             </div>
-                                            <div class="text-start me-4" style="width: 8rem;">
+                                            <div class="text-start" style="width: 8rem;">
                                                 <span class="text-muted d-block"><small>Total Cost</small></span>
                                                 <span class="fw-semibold text-truncate d-block">₱{{ number_format($supplierOrder->totalCost, 2) }}</span>
                                             </div>
                                         </div>
                                     </div>
                                     
-                                    <div class="ms-5 d-flex flex-column gap-2">
-                                        <x-primary-button class="btn-sm" href="{{ route('supplier_orders.show', $supplierOrder->supplierOrderID) }}">
-                                            <span class="material-icons-outlined">visibility</span>
-                                        </x-primary-button>
-                                        @if ($supplierOrder->status != 'Received')
-                                            <x-primary-button href="{{ route('supplier_orders.edit', $supplierOrder->supplierOrderID) }}" class="btn-sm">
-                                                <span class="material-icons-outlined">edit</span>
-                                            </x-primary-button>
-                                        @else
-                                            <x-primary-button href="{{ route('supplier_orders.create', ['reorder' => $supplierOrder->supplierOrderID]) }}" class="btn-sm">
-                                                <span class="material-icons-outlined">replay</span>
-                                            </x-primary-button>
-                                        @endif
+                                    {{-- Dropdown for order options --}}
+                                    <div class="ms-5">
+                                        <div class="dropdown supplier-order-dropdown">
+                                            <a class="btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <span class="material-icons-outlined fs-2">more_horiz</span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item" href="{{ route('supplier_orders.show', $supplierOrder->supplierOrderID) }}">
+                                                        <span class="material-icons-outlined align-middle me-2">visibility</span> View
+                                                    </a>
+                                                </li>
+                                                @if ($supplierOrder->receivedDate || $supplierOrder->cancelledDate)
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('supplier_orders.create', ['reorder' => $supplierOrder->supplierOrderID]) }}">
+                                                            <span class="material-icons-outlined align-middle me-2">replay</span> Reorder
+                                                        </a>
+                                                    </li>
+                                                @endif
+                                                @if (!$supplierOrder->receivedDate && !$supplierOrder->cancelledDate)
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('supplier_orders.edit', $supplierOrder->supplierOrderID) }}">
+                                                            <span class="material-icons-outlined align-middle me-2">edit</span> Edit
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <form action="{{ route('supplier_orders.update', $supplierOrder->supplierOrderID) }}" method="POST" class="d-inline">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <input type="hidden" name="markAsReceived" value="1">
+                                                            <button type="submit" class="dropdown-item">
+                                                                <span class="material-icons-outlined align-middle me-2">check_circle</span> Receive
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#cancelModal-{{ $supplierOrder->supplierOrderID }}">
+                                                            <span class="material-icons-outlined align-middle me-2">cancel</span> Cancel
+                                                        </button>
+                                                    </li>
+                                                @endif
+                                            </ul>
+                                        </div>
                                     </div>
+
+                                    {{-- Cancel Modal using Blade Component --}}
+                                    <x-modal name="cancelModal-{{ $supplierOrder->supplierOrderID }}" maxWidth="md">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="cancelModal-{{ $supplierOrder->supplierOrderID }}-label">Cancel Order #{{ $supplierOrder->supplierOrderID }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form action="{{ route('supplier_orders.update', $supplierOrder->supplierOrderID) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="modal-body">
+                                                <input type="hidden" name="markAsCancelled" value="1">
+                                                <div class="mb-3">
+                                                    <label for="cancellationRemark-{{ $supplierOrder->supplierOrderID }}" class="form-label">Reason for Cancellation</label>
+                                                    <textarea class="form-control" id="cancellationRemark-{{ $supplierOrder->supplierOrderID }}" name="cancellationRemark" rows="3" required placeholder="Enter the reason for cancelling this order"></textarea>
+                                                    @error('cancellationRemark')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <x-danger-button type="submit">Cancel Order</x-danger-button>
+                                                <x-secondary-button type="button" data-bs-dismiss="modal" >Close</x-secondary-button>
+                                            </div>
+                                        </form>
+                                    </x-modal>
                                 </div>
                             </div>
                         @endforeach

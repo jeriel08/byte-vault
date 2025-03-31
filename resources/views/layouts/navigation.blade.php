@@ -14,33 +14,43 @@
             </button>
 
             <a class="navbar-brand fw-semibold">
-            @php
-                $routeTitles = [
-                    'dashboard' => 'Dashboard',
-                    'profile.edit' => 'Account Settings',
-                    'account.manager' => 'Account Manager',
-                    'account.add' => 'Add Account',
-                    'account.edit' => 'Edit Account',
-                    'suppliers.index' => 'Suppliers',
-                    'suppliers.create' => 'Add Supplier',
-                    'suppliers.edit' => 'Edit Supplier',
-                    'brands.index' => 'Brands',
-                    'brands.create' => 'Add Brand',
-                    'brands.edit' => 'Edit Brand',
-                    'categories.index' => 'Categories',
-                    'categories.create' => 'Add Category',
-                    'categories.edit' => 'Edit Category',
-                    'products.index' => 'Products',
-                    'products.create' => 'Add Product',
-                    'products.edit' => 'Edit Product',
-                    'supplier_orders.index' => 'Supplier Orders',
-                    'supplier_orders.create' => 'Add Supplier Order',
-                    'supplier_orders.edit' => 'Edit Supplier Order',
-                    'orders.index' => 'Orders',
-                ];
-                $currentRoute = Route::currentRouteName();
-                echo strtoupper($routeTitles[$currentRoute] ?? str_replace('.', ' ', $currentRoute));
-            @endphp
+                @php
+                    $routeTitles = [
+                        'dashboard' => 'Dashboard',
+                        'profile.edit' => 'Account Settings',
+                        'account.manager' => 'Account Manager',
+                        'account.add' => 'Add Account',
+                        'account.edit' => 'Edit Account',
+                        'suppliers.index' => 'Suppliers',
+                        'suppliers.create' => 'Add Supplier',
+                        'suppliers.edit' => 'Edit Supplier',
+                        'brands.index' => 'Brands',
+                        'brands.create' => 'Add Brand',
+                        'brands.edit' => 'Edit Brand',
+                        'categories.index' => 'Categories',
+                        'categories.create' => 'Add Category',
+                        'categories.edit' => 'Edit Category',
+                        'products.index' => 'Products',
+                        'products.create' => 'Add Product',
+                        'products.edit' => 'Edit Product',
+                        'supplier_orders.index' => 'Supplier Orders',
+                        'supplier_orders.create' => 'Add Supplier Order',
+                        'supplier_orders.edit' => 'Edit Supplier Order',
+                        'supplier_orders.show' => 'Supplier Order Details',
+                        'adjustments.index' => 'Adjustments',
+                        'adjustments.create' => 'Add Adjustment',
+                        'adjustments.edit' => 'Edit Adjustment',
+                        'adjustments.show' => 'Adjustment Details',
+                        'supplier_returns.index' => 'Return to Supplier',
+                        'supplier_returns.create' => 'Add Return',
+                        'supplier_returns.edit' => 'Edit Return',
+                        'supplier_returns.show' => 'Return Details',
+
+                        // Add more routes as needed
+                    ];
+                    $currentRoute = Route::currentRouteName();
+                    echo strtoupper($routeTitles[$currentRoute] ?? str_replace('.', ' ', $currentRoute));
+                @endphp
             </a>
         </div>
 
@@ -64,13 +74,15 @@
                 </x-slot>
 
                 <x-slot name="content">
-                    <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                    <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('profile.edit') }}">
+                        <span class="material-icons-outlined">settings</span>
                         Account Settings
                     </a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <a class="dropdown-item" href="{{ route('logout') }}"
+                        <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('logout') }}"
                         onclick="event.preventDefault(); this.closest('form').submit();">
+                            <span class="material-icons-outlined">logout</span>
                             Logout
                         </a>
                     </form>
@@ -117,6 +129,21 @@
                             Supplier Orders
                         </x-nav-link>
                     </li>
+
+                    <li class="nav-item">
+                        <x-nav-link :href="route('supplier_returns.index')" :active="request()->routeIs('supplier_returns.index')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
+                            <span class="material-icons-outlined"> assignment_return </span>
+                            Return to Supplier
+                        </x-nav-link>
+                    </li>
+
+                    <li class="nav-item">
+                        <x-nav-link :href="route('adjustments.index')" :active="request()->routeIs('adjustments.index')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
+                            <span class="material-icons-outlined"> widgets </span>
+                            Stock Adjustments
+                        </x-nav-link>
+                    </li>
+
                     @auth
                         @if (auth()->user()->role === 'Admin')
                             <hr>
