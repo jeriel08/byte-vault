@@ -42,4 +42,8 @@ class Product extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

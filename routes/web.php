@@ -7,6 +7,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SupplierOrderController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -78,5 +79,19 @@ Route::middleware('auth')->group(function () {
     Route::put('/supplier-orders/{supplierOrderID}', [SupplierOrderController::class, 'update'])->name('supplier_orders.update');
     Route::get('/supplier-orders/{supplierOrder}', [SupplierOrderController::class, 'show'])->name('supplier_orders.show');
 });
-
+// Orders
+Route::middleware('auth')->group(function () {
+    Route::resource('orders', \App\Http\Controllers\OrderController::class);
+    Route::get('/orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/create', [\App\Http\Controllers\OrderController::class, 'create'])->name('orders.create');
+    Route::post('/orders', [\App\Http\Controllers\OrderController::class, 'store'])->name('orders.store');
+    Route::get('/orders/{order}/edit', [\App\Http\Controllers\OrderController::class, 'edit'])->name('orders.edit');
+    Route::put('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'update'])->name('orders.update');
+    Route::delete('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'destroy'])->name('orders.destroy');
+    Route::get('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
+});
+Route::middleware('auth')->group(function () {
+    // Existing routes...
+    Route::get('/audit', [App\Http\Controllers\AuditLogController::class, 'index'])->name('audit.index');
+});
 require __DIR__ . '/auth.php';

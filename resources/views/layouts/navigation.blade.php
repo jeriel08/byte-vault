@@ -1,3 +1,4 @@
+<!-- resources/views/layouts/navigation.blade.php -->
 <nav class="navbar fixed-top shadow-sm">
     <div class="container-fluid">
         <!-- Left side: Button and Header -->
@@ -13,33 +14,33 @@
             </button>
 
             <a class="navbar-brand fw-semibold">
-                @php
-                    $routeTitles = [
-                        'dashboard' => 'Dashboard',
-                        'profile.edit' => 'Account Settings',
-                        'account.manager' => 'Account Manager',
-                        'account.add' => 'Add Account',
-                        'account.edit' => 'Edit Account',
-                        'suppliers.index' => 'Suppliers',
-                        'suppliers.create' => 'Add Supplier',
-                        'suppliers.edit' => 'Edit Supplier',
-                        'brands.index' => 'Brands',
-                        'brands.create' => 'Add Brand',
-                        'brands.edit' => 'Edit Brand',
-                        'categories.index' => 'Categories',
-                        'categories.create' => 'Add Category',
-                        'categories.edit' => 'Edit Category',
-                        'products.index' => 'Products',
-                        'products.create' => 'Add Product',
-                        'products.edit' => 'Edit Product',
-                        'supplier_orders.index' => 'Supplier Orders',
-                        'supplier_orders.create' => 'Add Supplier Order',
-                        'supplier_orders.edit' => 'Edit Supplier Order',
-                        // Add more routes as needed
-                    ];
-                    $currentRoute = Route::currentRouteName();
-                    echo strtoupper($routeTitles[$currentRoute] ?? str_replace('.', ' ', $currentRoute));
-                @endphp
+            @php
+                $routeTitles = [
+                    'dashboard' => 'Dashboard',
+                    'profile.edit' => 'Account Settings',
+                    'account.manager' => 'Account Manager',
+                    'account.add' => 'Add Account',
+                    'account.edit' => 'Edit Account',
+                    'suppliers.index' => 'Suppliers',
+                    'suppliers.create' => 'Add Supplier',
+                    'suppliers.edit' => 'Edit Supplier',
+                    'brands.index' => 'Brands',
+                    'brands.create' => 'Add Brand',
+                    'brands.edit' => 'Edit Brand',
+                    'categories.index' => 'Categories',
+                    'categories.create' => 'Add Category',
+                    'categories.edit' => 'Edit Category',
+                    'products.index' => 'Products',
+                    'products.create' => 'Add Product',
+                    'products.edit' => 'Edit Product',
+                    'supplier_orders.index' => 'Supplier Orders',
+                    'supplier_orders.create' => 'Add Supplier Order',
+                    'supplier_orders.edit' => 'Edit Supplier Order',
+                    'orders.index' => 'Orders',
+                ];
+                $currentRoute = Route::currentRouteName();
+                echo strtoupper($routeTitles[$currentRoute] ?? str_replace('.', ' ', $currentRoute));
+            @endphp
             </a>
         </div>
 
@@ -76,19 +77,12 @@
                 </x-slot>
             </x-dropdown>
         </div>
-
+<
         <!-- Offcanvas Menu -->
-        <div
-            class="offcanvas offcanvas-start"
-            tabindex="-1"
-            id="offcanvasNavbar"
-            aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
             <div class="offcanvas-header d-flex align-items-center mt-4">
                 <div class="col-10 mx-auto">
-                    <img
-                        src="{{ asset('images/logo-cropped.png') }}"
-                        alt="SmartStock Inventory Logo"
-                        class="img-fluid" />
+                    <img src="{{ asset('images/logo-cropped.png') }}" alt="SmartStock Inventory Logo" class="img-fluid" />
                 </div>
             </div>
             <div class="offcanvas-body">
@@ -105,35 +99,24 @@
                             Products
                         </x-nav-link>
                     </li>
-
-                    {{-- <li class="nav-item">
-                        <x-nav-link :href="route('orders')" :active="request()->routeIs('orders')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
+                    <li class="nav-item">
+                        <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.index')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
                             <span class="material-icons-outlined"> shopping_cart </span>
-                            Customer Orders
+                            Orders
                         </x-nav-link>
-                    </li> --}}
-                   
+                    </li>
                     <li class="nav-item">
                         <x-nav-link :href="route('suppliers.index')" :active="request()->routeIs('suppliers.index')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
                             <span class="material-icons-outlined"> inventory </span>
                             Suppliers
                         </x-nav-link>
                     </li>
-
                     <li class="nav-item">
                         <x-nav-link :href="route('supplier_orders.index')" :active="request()->routeIs('supplier_orders.index')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
                             <span class="material-icons-outlined"> local_shipping </span>
                             Supplier Orders
                         </x-nav-link>
                     </li>
-
-                    {{-- <li class="nav-item">
-                        <x-nav-link :href="route('returns')" :active="request()->routeIs('returns')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
-                            <span class="material-icons-outlined"> assignment_return </span>
-                            Returns
-                        </x-nav-link>
-                    </li> --}}
-
                     @auth
                         @if (auth()->user()->role === 'Admin')
                             <hr>
@@ -146,6 +129,12 @@
                                     {{ __('Account Manager') }}
                                 </x-nav-link>
                             </li>
+                            <li class="nav-item">
+    <x-nav-link :href="route('audit.index')" :active="request()->routeIs('audit.index')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
+        <span class="material-icons-outlined">history</span>
+        Audit Log
+    </x-nav-link>
+</li>
                         @endif
                     @endauth
                 </ul>
