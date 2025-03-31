@@ -4,16 +4,16 @@
         <div class="d-flex justify-content-between align-items-center mx-1 mb-4">
             <form action="{{ route('orders.index') }}" method="GET" class="d-flex align-items-center">
                 <div class="input-group" style="width: 280px;">
-                    <input type="text" class="form-control" name="search" placeholder="Search orders..." value="{{ $search ?? '' }}" style="border-radius: 0.5rem 0 0 0.5rem; border-right: none;" aria-label="Search orders">
-                    <button class="btn btn-outline-secondary" type="submit" style="border-radius: 0 0.5rem 0.5rem 0; padding: 0.5rem 0.75rem;">
+                    <input type="text" class="search-input" name="search" placeholder="Search orders..." value="{{ $search ?? '' }}" aria-label="Search orders">
+                    <button class="btn btn-outline-secondary" type="submit">
                         <span class="material-icons-outlined" style="font-size: 20px;">search</span>
                     </button>
                 </div>
             </form>
             <x-primary-button href="{{ route('orders.create') }}" class="py-2">
-    <span class="material-icons-outlined">add</span>
-    Add Order
-</x-primary-button>
+                <span class="material-icons-outlined">add</span>
+                Add Order
+            </x-primary-button>
         </div>
 
         <!-- Success Message -->

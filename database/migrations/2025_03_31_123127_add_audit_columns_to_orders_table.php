@@ -12,9 +12,9 @@ return new class extends Migration
             // Assuming orders uses orderID as PK
             $table->unsignedBigInteger('created_by')->nullable()->after('status');
             $table->unsignedBigInteger('updated_by')->nullable()->after('created_by');
-            
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
-            $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null');
+
+            $table->foreign('created_by')->references('employeeID')->on('employees')->onDelete('set null');
+            $table->foreign('updated_by')->references('employeeID')->on('employees')->onDelete('set null');
         });
     }
 
