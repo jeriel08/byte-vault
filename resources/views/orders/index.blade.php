@@ -1,18 +1,16 @@
 <x-app-layout>
     <div class="container-fluid mx-auto px-4 py-6 position-relative">
-        <!-- Header with Search and Add Order (No Sticky) -->
+        <!-- Header with Search and Add Supplier Order-->
         <div class="d-flex justify-content-between align-items-center mx-1 mb-4">
-            <form action="{{ route('orders.index') }}" method="GET" class="d-flex align-items-center">
-                <div class="input-group" style="width: 280px;">
-                    <input type="text" class="search-input" name="search" placeholder="Search orders..." value="{{ $search ?? '' }}" aria-label="Search orders">
-                    <button class="btn btn-outline-secondary" type="submit">
-                        <span class="material-icons-outlined" style="font-size: 20px;">search</span>
-                    </button>
-                </div>
-            </form>
+            <div class="input-group w-50">
+                <input type="text" class="search-input" placeholder="Search by order ID" aria-label="Search orderID">
+                <button class="search-button d-flex align-items-center justify-content-center" type="button">
+                    <span class="material-icons-outlined">search</span>
+                </button>
+            </div>
             <x-primary-button href="{{ route('orders.create') }}" class="py-2">
                 <span class="material-icons-outlined">add</span>
-                Add Order
+                Add Customer Order
             </x-primary-button>
         </div>
 

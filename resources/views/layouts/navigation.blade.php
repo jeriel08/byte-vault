@@ -45,6 +45,14 @@
                         'supplier_returns.create' => 'Add Return',
                         'supplier_returns.edit' => 'Edit Return',
                         'supplier_returns.show' => 'Return Details',
+                        'orders.index' => 'Customer Orders',
+                        'orders.create' => 'Add Customer Order',
+                        'orders.edit' => 'Edit Customer Order',
+                        'orders.show' => 'Customer Order Details',
+                        'audit.index' => 'Audit Log',
+                        'audit.show' => 'Audit Log Details',
+                        'audit.create' => 'Create Audit Log',
+                        'audit.edit' => 'Edit Audit Log',
 
                         // Add more routes as needed
                     ];
@@ -114,7 +122,7 @@
                     <li class="nav-item">
                         <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.index')" class="btn btn-outline-dark d-flex align-items-center gap-2 my-3 py-2 px-4">
                             <span class="material-icons-outlined"> shopping_cart </span>
-                            Orders
+                            Customer Orders
                         </x-nav-link>
                     </li>
                     <li class="nav-item">
