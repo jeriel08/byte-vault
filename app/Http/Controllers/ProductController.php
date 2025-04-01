@@ -9,10 +9,56 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('brand', 'category')->get();
-        return view('products.index', compact('products'));
+        // Get all products for counts
+        $allProducts = cache()->remember('all_products_counts', 3600, function () {
+            return Product::with('brand', 'category')->get();
+        });
+
+        // Start with query for filtered products
+        $query = Product::with('brand', 'category');
+
+        // Filter by product status
+        if ($request->has('productStatus')) {
+            $status = $request->input('productStatus');
+            if ($status !== 'All') {
+                $query->where('productStatus', $status);
+            }
+        }
+
+        // Filter by categories
+        if ($request->has('category') && !empty($request->input('category'))) {
+            $query->whereIn('categoryID', $request->input('category'));
+        }
+
+        // Filter by brands
+        if ($request->has('brand') && !empty($request->input('brand'))) {
+            $query->whereIn('brandID', $request->input('brand'));
+        }
+
+        // Handle sorting
+        if ($request->has('sortBy')) {
+            switch ($request->input('sortBy')) {
+                case 'price_asc':
+                    $query->orderBy('price', 'asc');
+                    break;
+                case 'price_desc':
+                    $query->orderBy('price', 'desc');
+                    break;
+                case 'name_asc':
+                    $query->orderBy('productName', 'asc');
+                    break;
+                case 'name_desc':
+                    $query->orderBy('productName', 'desc');
+                    break;
+            }
+        }
+
+        // Get filtered products
+        $products = $query->get();
+
+        return view('products.index', compact('products', 'allProducts'));
     }
 
     public function create()
