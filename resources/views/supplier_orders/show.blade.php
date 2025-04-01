@@ -57,7 +57,7 @@
                                             <span class="text-muted d-block"><small>Quantity</small></span>
                                             <span class="fw-semibold fs-5">{{ $detail->quantity }}</span>
                                         </div>
-                                        <div class="text-start me-4" style="min-width: 100px;">
+                                        <div class="text-start me-4" style="min-width: 10em;">
                                             <span class="text-muted d-block"><small>Unit Cost</small></span>
                                             <span class="fw-semibold fs-5">₱{{ number_format($detail->unitCost, 2) }}</span>
                                         </div>

@@ -1,6 +1,12 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
-        <h1 class="text-2xl font-bold mb-4">Add New Product</h1>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-2xl font-bold">Add New Product</h2>
+            <x-secondary-button href="{{ route('products.index') }}">
+                <span class="material-icons-outlined">arrow_back</span>
+                Go back
+            </x-secondary-button>
+        </div>
         <div class="card account-settings-card">
             <div class="card-body">
                 <form action="{{ route('products.store') }}" method="POST">
