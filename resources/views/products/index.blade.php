@@ -2,12 +2,16 @@
     <div class="container-fluid py-6 position-relative">
         <!-- Header with Search and Add Product -->
         <div class="d-flex justify-content-between align-items-center mx-4 mb-4">
-            <div class="input-group w-50">
-                <input type="text" class="search-input" placeholder="Search by product name" aria-label="Search products">
-                <button class="search-button d-flex align-items-center justify-content-center" type="button">
-                    <span class="material-icons-outlined">search</span>
-                </button>
-            </div>
+            <form method="GET" action="{{ route('products.index') }}" id="searchForm" class="w-50">
+                <div class="input-group">
+                    <input type="text" class="search-input" name="search" 
+                           placeholder="Search by product name" aria-label="Search products"
+                           value="{{ request('search') }}">
+                    <button class="search-button d-flex align-items-center justify-content-center" type="submit">
+                        <span class="material-icons-outlined">search</span>
+                    </button>
+                </div>
+            </form>
             <x-primary-button href="{{ route('products.create') }}" class="py-2">
                 <span class="material-icons-outlined">add</span>
                 Add Product
@@ -254,8 +258,79 @@
                             </div>
                         @endforeach
                     </div>
+
+                    <div class="d-flex justify-content-center">
+                        <ul class="pagination">
+                            <!-- Previous Page Link -->
+                            @if ($products->onFirstPage())
+                                <li class="page-item disabled">
+                                    <span class="page-link">Previous</span>
+                                </li>
+                            @else
+                                <li class="page-item">
+                                    <a class="page-link d-flex justify-content-center align-items-center" href="{{ $products->previousPageUrl() }}&{{ http_build_query(request()->except('page')) }}" rel="prev">
+                                        <span class="material-icons-outlined">
+                                            navigate_before
+                                        </span>
+                                    </a>
+                                </li>
+                            @endif
+                    
+                            <!-- Page Numbers -->
+                            @for ($i = 1; $i <= $products->lastPage(); $i++)
+                                <li class="page-item {{ $products->currentPage() === $i ? 'active' : '' }}">
+                                    @if ($products->currentPage() === $i)
+                                        <span class="page-link">{{ $i }}</span>
+                                    @else
+                                        <a class="page-link" href="{{ $products->url($i) }}&{{ http_build_query(request()->except('page')) }}">{{ $i }}</a>
+                                    @endif
+                                </li>
+                            @endfor
+                    
+                            <!-- Next Page Link -->
+                            @if ($products->hasMorePages())
+                                <li class="page-item">
+                                    <a class="page-link d-flex justify-content-center align-items-center" href="{{ $products->nextPageUrl() }}&{{ http_build_query(request()->except('page')) }}" rel="next">
+                                        <span class="material-icons-outlined">
+                                            navigate_next
+                                        </span>
+                                    </a>
+                                </li>
+                            @else
+                                <li class="page-item disabled">
+                                    <span class="material-icons-outlined page-link">
+                                        navigate_next
+                                    </span>
+                                </li>
+                            @endif
+                        </ul>
+                    </div>
                 @endif
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.querySelector('.search-input');
+            const searchForm = document.getElementById('searchForm');
+        
+            // Submit on Enter key
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    searchForm.submit();
+                }
+            });
+        
+            // Debounced search on typing
+            let timeout;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    searchForm.submit();
+                }, 500); // 500ms delay after typing stops
+            });
+        });
+    </script>
 </x-app-layout>

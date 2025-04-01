@@ -19,6 +19,11 @@ class ProductController extends Controller
         // Start with query for filtered products
         $query = Product::with('brand', 'category');
 
+        // Search by product name
+        if ($request->has('search') && !empty($request->input('search'))) {
+            $query->whereRaw('LOWER(productName) LIKE ?', ['%' . strtolower($request->input('search')) . '%']);
+        }
+
         // Filter by product status
         if ($request->has('productStatus')) {
             $status = $request->input('productStatus');
@@ -55,8 +60,8 @@ class ProductController extends Controller
             }
         }
 
-        // Get filtered products
-        $products = $query->get();
+        // Get paginated filtered products (15 per page)
+        $products = $query->paginate(15)->appends($request->query());
 
         return view('products.index', compact('products', 'allProducts'));
     }

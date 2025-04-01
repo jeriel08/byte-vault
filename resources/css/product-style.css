@@ -297,3 +297,57 @@
     vertical-align: middle !important;
     color: #ffff !important;
 }
+
+/* Pagination container */
+.pagination {
+    margin-top: 20px;
+}
+
+/* Default page link styles */
+.page-link {
+    color: var(--color-2); /* Dark teal for text */
+    background-color: var(--color-6); /* Off-white background */
+    border: 1px solid var(--color-3); /* Gray-green border */
+    transition: all 0.3s ease;
+}
+
+/* Hover state */
+.page-link:hover {
+    color: var(--color-5); /* Warm orange on hover */
+    background-color: var(--color-1); /* Light beige background */
+    border-color: var(--color-5); /* Warm orange border */
+}
+
+/* Active state */
+.page-item.active .page-link {
+    color: var(--color-6); /* Off-white text */
+    background-color: var(--color-2); /* Dark teal background */
+    border-color: var(--color-2); /* Dark teal border */
+}
+
+/* Disabled state */
+.page-item.disabled .page-link {
+    color: var(--color-3); /* Gray-green text */
+    background-color: var(--color-4); /* Light peach background */
+    border-color: var(--color-3); /* Gray-green border */
+    opacity: 0.65;
+}
+
+/* Optional: Adjust spacing and size */
+.page-item .page-link {
+    padding: 0.5rem 1rem;
+    margin: 0 0.25rem;
+    border-radius: 4px;
+}
+
+/* Focus styles */
+.page-link:focus {
+    outline: none; /* Remove default browser outline */
+    box-shadow: 0 0 0 0.2rem rgba(210, 144, 102, 0.5); /* Warm orange (--color-5) with transparency */
+}
+
+/* For accessibility: keep focus visible for keyboard navigation */
+.page-link:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(210, 144, 102, 0.5); /* Same as above */
+}
