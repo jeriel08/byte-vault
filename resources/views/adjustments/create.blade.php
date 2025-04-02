@@ -27,7 +27,7 @@
                     <div id="adjustmentDetails" class="mb-3">
                         <h5 class="fw-semibold mb-3">Adjustment Details</h5>
                         <x-secondary-button type="button" class="mb-3" data-bs-toggle="modal" data-bs-target="#addProductModal">
-                            Add Product
+                            Select Product
                         </x-secondary-button>
                         <div id="productList">
                             <!-- Dynamically added product cards will appear here -->

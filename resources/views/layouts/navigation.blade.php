@@ -53,7 +53,7 @@
                         'audit.show' => 'Audit Log Details',
                         'audit.create' => 'Create Audit Log',
                         'audit.edit' => 'Edit Audit Log',
-
+                        'reports.inventory' => 'Inventory Report',
                         // Add more routes as needed
                     ];
                     $currentRoute = Route::currentRouteName();

@@ -1,17 +1,16 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
-
-
     <div class="container">
         <div class="py-12">
             <div class="dashboard-container mx-auto">
                 <div class="overflow-hidden">
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
-                        <div class="logged-in-message">{{ __("You're logged in!") }}</div>
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mx-1 mb-4">
+                            <h2>Hello, <strong>{{ Auth::user()->firstName }} {{ Auth::user()->lastName }}</strong>!</h2>
+                            <x-primary-button href="{{ route('reports.inventory') }}" class="py-2">
+                                <span class="material-icons-outlined">summarize</span>
+                                Generate Inventory Report
+                            </x-primary-button>
+                        </div>
     
                         <!-- Row for summary cards -->
                         <div class="row mt-4">

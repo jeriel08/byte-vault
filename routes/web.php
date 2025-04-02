@@ -10,6 +10,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SupplierOrderController;
 use App\Http\Controllers\AdjustmentController;
 use App\Http\Controllers\ReturnToSupplierController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -117,9 +118,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
 });
 
+// Audit Logs
 Route::middleware('auth')->group(function () {
     // Existing routes...
     Route::get('/audit', [App\Http\Controllers\AuditLogController::class, 'index'])->name('audit.index');
 });
+
+// Inventory Report
+Route::get('/reports/inventory', [ReportController::class, 'inventoryReport'])->name('reports.inventory');
 
 require __DIR__ . '/auth.php';

@@ -25,6 +25,7 @@
         'resources/css/account-manager-style.css',
         'resources/css/product-style.css',
         'resources/css/dashboard-style.css',
+        'resources/css/inventory-report-style.css',
     ])
 </head>
 
