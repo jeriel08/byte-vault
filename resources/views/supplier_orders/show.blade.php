@@ -3,10 +3,12 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="text-2xl font-bold m-0">Order No. {{ $supplierOrder->supplierOrderID }}</h2>
             <div class="d-flex gap-2">
-                <x-primary-button href="{{ route('supplier_returns.create', ['order' => $supplierOrder->supplierOrderID]) }}">
-                    <span class="material-icons-outlined">undo</span>
-                    Return to Supplier
-                </x-primary-button>
+                @if ($supplierOrder->receivedDate)
+                    <x-primary-button href="{{ route('supplier_returns.create', ['order' => $supplierOrder->supplierOrderID]) }}">
+                        <span class="material-icons-outlined">undo</span>
+                        Return to Supplier
+                    </x-primary-button>
+                @endif
                 <x-secondary-button href="{{ route('supplier_orders.index') }}">
                     <span class="material-icons-outlined">arrow_back</span>
                     Go back
