@@ -17,6 +17,11 @@ class SupplierOrderController extends Controller
     {
         $query = SupplierOrder::query();
 
+        // Search by supplierOrderID (case-insensitive)
+        if ($request->has('search') && !empty($request->input('search'))) {
+            $query->whereRaw('LOWER(supplierOrderID) LIKE ?', ['%' . strtolower($request->input('search')) . '%']);
+        }
+
         // Filter by status (using date fields)
         if ($request->has('status')) {
             switch ($request->status) {
@@ -52,8 +57,8 @@ class SupplierOrderController extends Controller
         $sortBy = $request->input('sort_by', 'date_desc');
         $query->orderBy('orderDate', $sortBy === 'date_asc' ? 'asc' : 'desc');
 
-        $supplierOrders = $query->get();
-        $suppliers = Supplier::all();
+        // Paginate results (15 per page) and append query params
+        $supplierOrders = $query->paginate(15)->appends($request->query());
 
         // Calculate total counts for each status (unfiltered)
         $pendingCount = SupplierOrder::whereNotNull('orderPlacedDate')
@@ -64,6 +69,8 @@ class SupplierOrderController extends Controller
         $cancelledCount = SupplierOrder::whereNotNull('cancelledDate')
             ->whereNull('receivedDate')
             ->count();
+
+        $suppliers = Supplier::all();
 
         return view('supplier_orders.index', compact('supplierOrders', 'suppliers', 'pendingCount', 'receivedCount', 'cancelledCount'));
     }

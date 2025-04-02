@@ -1,14 +1,13 @@
 <x-app-layout>
     <div class="container-fluid mx-auto px-4 py-6 position-relative">
-
-        <!-- Header with Search and Add Supplier Order-->
+        <!-- Header with Search and Add Supplier Order -->
         <div class="d-flex justify-content-between align-items-center mx-1 mb-4">
-            <div class="input-group w-50">
-                <input type="text" class="search-input" placeholder="Search by order ID" aria-label="Search orderID">
-                <button class="search-button d-flex align-items-center justify-content-center" type="button">
+            <form id="searchForm" class="input-group w-50">
+                <input type="text" name="search" class="search-input" placeholder="Search by order ID" aria-label="Search orderID" value="{{ request('search') }}">
+                <button class="search-button d-flex align-items-center justify-content-center" type="submit">
                     <span class="material-icons-outlined">search</span>
                 </button>
-            </div>
+            </form>
             <x-primary-button href="{{ route('supplier_orders.create') }}" class="py-2">
                 <span class="material-icons-outlined">add</span>
                 Add Order
@@ -24,12 +23,11 @@
         @endif
 
         <div class="row">
-            <!-- Filter Panel -->
+            <!-- Filter Panel (unchanged) -->
             <div class="col-lg-3 col-md-4 col-sm-12">
                 <div class="card filter-panel">
                     <div class="card-body p-3">
                         <h5 class="fw-semibold">Filters</h5>
-                        
                         <!-- Order Status -->
                         <div class="mb-3">
                             <label class="form-label fw-semibold mb-2">Order Status</label>
@@ -90,20 +88,18 @@
                     <div class="card account-manager-card text-center p-5">
                         <h5 class="text-muted d-flex justify-content-center align-items-center gap-3">
                             No supplier orders yet. 
-                            <span class="material-icons-outlined fs-2">
-                                local_shipping
-                            </span>
+                            <span class="material-icons-outlined fs-2">local_shipping</span>
                         </h5>
                     </div>
                 @else
                     <div class="row">
                         @foreach ($supplierOrders as $supplierOrder)
+                            <!-- Your existing card content unchanged -->
                             <div class="col-12 mb-4">
                                 <div class="card account-manager-card p-3 d-flex flex-row align-items-center">
                                     <div class="flex-grow-1">
                                         <p class="mb-1 fw-semibold fs-5 me-4">Order No. {{ $supplierOrder->supplierOrderID }}</p>
                                     </div>
-                    
                                     <div class="d-flex align-items-center flex-grow-1 pe-0">
                                         <span class="vr me-4"></span>
                                         <div class="d-flex flex-row gap-3 align-items-start ps-4">
@@ -133,53 +129,31 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
-                                    {{-- Dropdown for order options --}}
                                     <div class="ms-5">
                                         <div class="dropdown supplier-order-dropdown">
                                             <a class="btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                 <span class="material-icons-outlined fs-2">more_horiz</span>
                                             </a>
                                             <ul class="dropdown-menu">
-                                                <li>
-                                                    <a class="dropdown-item" href="{{ route('supplier_orders.show', $supplierOrder->supplierOrderID) }}">
-                                                        <span class="material-icons-outlined align-middle me-2">visibility</span> View
-                                                    </a>
-                                                </li>
+                                                <li><a class="dropdown-item" href="{{ route('supplier_orders.show', $supplierOrder->supplierOrderID) }}"><span class="material-icons-outlined align-middle me-2">visibility</span> View</a></li>
                                                 @if ($supplierOrder->receivedDate || $supplierOrder->cancelledDate)
-                                                    <li>
-                                                        <a class="dropdown-item" href="{{ route('supplier_orders.create', ['reorder' => $supplierOrder->supplierOrderID]) }}">
-                                                            <span class="material-icons-outlined align-middle me-2">replay</span> Reorder
-                                                        </a>
-                                                    </li>
+                                                    <li><a class="dropdown-item" href="{{ route('supplier_orders.create', ['reorder' => $supplierOrder->supplierOrderID]) }}"><span class="material-icons-outlined align-middle me-2">replay</span> Reorder</a></li>
                                                 @endif
                                                 @if (!$supplierOrder->receivedDate && !$supplierOrder->cancelledDate)
-                                                    <li>
-                                                        <a class="dropdown-item" href="{{ route('supplier_orders.edit', $supplierOrder->supplierOrderID) }}">
-                                                            <span class="material-icons-outlined align-middle me-2">edit</span> Edit
-                                                        </a>
-                                                    </li>
+                                                    <li><a class="dropdown-item" href="{{ route('supplier_orders.edit', $supplierOrder->supplierOrderID) }}"><span class="material-icons-outlined align-middle me-2">edit</span> Edit</a></li>
                                                     <li>
                                                         <form action="{{ route('supplier_orders.update', $supplierOrder->supplierOrderID) }}" method="POST" class="d-inline">
                                                             @csrf
                                                             @method('PUT')
                                                             <input type="hidden" name="markAsReceived" value="1">
-                                                            <button type="submit" class="dropdown-item">
-                                                                <span class="material-icons-outlined align-middle me-2">check_circle</span> Receive
-                                                            </button>
+                                                            <button type="submit" class="dropdown-item"><span class="material-icons-outlined align-middle me-2">check_circle</span> Receive</button>
                                                         </form>
                                                     </li>
-                                                    <li>
-                                                        <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#cancelModal-{{ $supplierOrder->supplierOrderID }}">
-                                                            <span class="material-icons-outlined align-middle me-2">cancel</span> Cancel
-                                                        </button>
-                                                    </li>
+                                                    <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#cancelModal-{{ $supplierOrder->supplierOrderID }}"><span class="material-icons-outlined align-middle me-2">cancel</span> Cancel</button></li>
                                                 @endif
                                             </ul>
                                         </div>
                                     </div>
-
-                                    {{-- Cancel Modal using Blade Component --}}
                                     <x-modal name="cancelModal-{{ $supplierOrder->supplierOrderID }}" maxWidth="md">
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="cancelModal-{{ $supplierOrder->supplierOrderID }}-label">Cancel Order #{{ $supplierOrder->supplierOrderID }}</h5>
@@ -200,7 +174,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <x-danger-button type="submit">Cancel Order</x-danger-button>
-                                                <x-secondary-button type="button" data-bs-dismiss="modal" >Close</x-secondary-button>
+                                                <x-secondary-button type="button" data-bs-dismiss="modal">Close</x-secondary-button>
                                             </div>
                                         </form>
                                     </x-modal>
@@ -208,12 +182,60 @@
                             </div>
                         @endforeach
                     </div>
+
+                    <!-- Pagination Links -->
+                    <div class="d-flex justify-content-center">
+                        <ul class="pagination">
+                            <!-- Previous Page Link -->
+                            @if ($supplierOrders->onFirstPage())
+                                <li class="page-item disabled">
+                                    <span class="page-link">Previous</span>
+                                </li>
+                            @else
+                                <li class="page-item">
+                                    <a class="page-link d-flex justify-content-center align-items-center" href="{{ $supplierOrders->previousPageUrl() }}&{{ http_build_query(request()->except('page')) }}" rel="prev">
+                                        <span class="material-icons-outlined">
+                                            navigate_before
+                                        </span>
+                                    </a>
+                                </li>
+                            @endif
+                    
+                            <!-- Page Numbers -->
+                            @for ($i = 1; $i <= $supplierOrders->lastPage(); $i++)
+                                <li class="page-item {{ $supplierOrders->currentPage() === $i ? 'active' : '' }}">
+                                    @if ($supplierOrders->currentPage() === $i)
+                                        <span class="page-link">{{ $i }}</span>
+                                    @else
+                                        <a class="page-link" href="{{ $supplierOrders->url($i) }}&{{ http_build_query(request()->except('page')) }}">{{ $i }}</a>
+                                    @endif
+                                </li>
+                            @endfor
+                    
+                            <!-- Next Page Link -->
+                            @if ($supplierOrders->hasMorePages())
+                                <li class="page-item">
+                                    <a class="page-link d-flex justify-content-center align-items-center" href="{{ $supplierOrders->nextPageUrl() }}&{{ http_build_query(request()->except('page')) }}" rel="next">
+                                        <span class="material-icons-outlined">
+                                            navigate_next
+                                        </span>
+                                    </a>
+                                </li>
+                            @else
+                                <li class="page-item disabled">
+                                    <span class="material-icons-outlined page-link">
+                                        navigate_next
+                                    </span>
+                                </li>
+                            @endif
+                        </ul>
+                    </div>
                 @endif
             </div>
         </div>
     </div>
 
-    <!-- JavaScript for Filter Interactivity -->
+    <!-- JavaScript for Filter and Search Interactivity -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const filterButtons = document.querySelectorAll('.category-filter-button');
@@ -222,6 +244,10 @@
             const dateTo = document.getElementById('dateTo');
             const sortBy = document.getElementById('sortBy');
             const clearFiltersBtn = document.getElementById('clearFilters');
+            const searchInput = document.querySelector('.search-input');
+            const searchForm = document.getElementById('searchForm');
+
+            let debounceTimer;
 
             function applyFilters() {
                 const params = new URLSearchParams(window.location.search);
@@ -256,6 +282,13 @@
                 // Sort by
                 params.set('sort_by', sortBy.value);
 
+                // Search
+                if (searchInput.value) {
+                    params.set('search', searchInput.value);
+                } else {
+                    params.delete('search');
+                }
+
                 window.location.href = `${window.location.pathname}?${params.toString()}`;
             }
 
@@ -277,6 +310,20 @@
                 element.addEventListener('change', applyFilters);
             });
 
+            // Debounced search
+            searchInput.addEventListener('input', function() {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    applyFilters();
+                }, 500); // 500ms delay after typing stops
+            });
+
+            // Prevent form submission on Enter (optional, if you want pure JS handling)
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                applyFilters();
+            });
+
             // Clear filters
             clearFiltersBtn.addEventListener('click', function() {
                 filterButtons.forEach(btn => {
@@ -286,8 +333,9 @@
                 supplierFilter.value = '';
                 dateFrom.value = '';
                 dateTo.value = '';
-                sortBy.value = 'date_desc'; // Default sort
-                window.location.href = window.location.pathname; // Reset to base URL
+                sortBy.value = 'date_desc';
+                searchInput.value = '';
+                window.location.href = window.location.pathname;
             });
         });
     </script>
