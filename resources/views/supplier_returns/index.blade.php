@@ -28,42 +28,60 @@
                 <div class="card filter-panel">
                     <div class="card-body p-3">
                         <h5 class="fw-semibold">Filters</h5>
-                        
-                        <!-- Status Filter -->
+                        <!-- Status -->
                         <div class="mb-3">
                             <label class="form-label fw-semibold mb-2">Status</label>
-                            <div class="btn-group d-flex flex-wrap gap-2 mb-3" role="group">
-                                <button type="button" class="btn category-filter-button flex-grow-1 {{ request('status') === 'Pending' ? 'btn-primary' : 'btn-outline-primary' }}" data-filter="status" data-value="Pending">
-                                    <span class="badge me-2">0</span> Pending
-                                </button>
-                                <button type="button" class="btn category-filter-button flex-grow-1 {{ request('status') === 'Completed' ? 'btn-primary' : 'btn-outline-primary' }}" data-filter="status" data-value="Completed">
-                                    <span class="badge me-2">0</span> Completed
-                                </button>
-                                <button type="button" class="btn category-filter-button flex-grow-1 {{ request('status') === 'Rejected' ? 'btn-primary' : 'btn-outline-primary' }}" data-filter="status" data-value="Rejected">
-                                    <span class="badge me-2">0</span> Rejected
-                                </button>
+                            <div class="btn-group d-flex flex-wrap gap-2">
+                                @foreach(['Pending', 'Completed', 'Rejected'] as $status)
+                                    <button type="button" 
+                                            class="btn category-filter-button flex-grow-1 {{ request('status') === $status ? 'btn-primary' : 'btn-outline-primary' }}"
+                                            data-filter="status" 
+                                            data-value="{{ $status }}">
+                                        <span class="badge me-2">{{ $statusCounts[$status] }}</span> {{ $status }}
+                                    </button>
+                                @endforeach
                             </div>
+                        </div>
+                        <hr>
+                        <!-- Supplier -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold mb-2">Supplier</label>
+                            <select class="form-select" id="supplierFilter" name="supplierID">
+                                <option value="">All Suppliers</option>
+                                @foreach($suppliers as $supplier)
+                                    <option value="{{ $supplier->supplierID }}" {{ request('supplierID') == $supplier->supplierID ? 'selected' : '' }}>
+                                        {{ $supplier->supplierName }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                         <hr>
                         <!-- Date Range -->
                         <div class="mb-3">
                             <label class="form-label fw-semibold mb-2">Date Range</label>
-                            <!-- Add your date picker here -->
+                            <small class="text-muted ms-1">From</small>
+                            <input type="date" class="form-control mb-2" id="dateFrom" name="date_from" value="{{ request('date_from') }}">
+                            <small class="text-muted ms-1">To</small>
+                            <input type="date" class="form-control" id="dateTo" name="date_to" value="{{ request('date_to') }}">
                         </div>
                         <hr>
                         <!-- Sort By -->
                         <div class="mb-3">
-                            <label for="sortBy" class="form-label fw-semibold mb-2">Sort By</label>
+                            <label class="form-label fw-semibold mb-2">Sort By</label>
                             <select class="form-select" id="sortBy" name="sort_by">
-                                <option value="returnDate">Return Date</option>
-                                <option value="totalQuantity">Total Quantity</option>
-                                <option value="created_by">Created By</option>
+                                <option value="adjustmentDatePlaced" {{ request('sort_by') === 'adjustmentDatePlaced' ? 'selected' : '' }}>Placed Date</option>
+                                <option value="completionDate" {{ request('sort_by') === 'completionDate' ? 'selected' : '' }}>Completion Date</option>
+                                <option value="cancellationDate" {{ request('sort_by') === 'cancellationDate' ? 'selected' : '' }}>Cancellation Date</option>
+                                <option value="total_quantity" {{ request('sort_by') === 'total_quantity' ? 'selected' : '' }}>Total Quantity</option>
+                                <option value="created_by" {{ request('sort_by') === 'created_by' ? 'selected' : '' }}>Created By</option>
+                            </select>
+                            <select class="form-select mt-2" id="sortDirection" name="sort_direction">
+                                <option value="asc" {{ request('sort_direction') === 'asc' ? 'selected' : '' }}>Ascending</option>
+                                <option value="desc" {{ request('sort_direction') === 'desc' ? 'selected' : '' }}>Descending</option>
                             </select>
                         </div>
                         <hr>
-                        <div>
-                            <button type="button" class="btn btn-outline-secondary w-100" id="clearFilters">Clear Filters</button>
-                        </div>
+                        <button type="button" class="btn btn-outline-secondary w-100" id="clearFilters">Clear Filters</button>
                     </div>
                 </div>
             </div>
@@ -180,4 +198,52 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const updateFilters = () => {
+                const params = new URLSearchParams();
+                const status = document.querySelector('.category-filter-button.btn-primary')?.dataset.value || '';
+                const supplierId = document.getElementById('supplierFilter').value;
+                const dateFrom = document.getElementById('dateFrom').value;
+                const dateTo = document.getElementById('dateTo').value;
+                const sortBy = document.getElementById('sortBy').value;
+                const sortDirection = document.getElementById('sortDirection').value;
+
+                if (status) params.set('status', status);
+                if (supplierId) params.set('supplierID', supplierId);
+                if (dateFrom) params.set('date_from', dateFrom);
+                if (dateTo) params.set('date_to', dateTo);
+                if (sortBy) params.set('sort_by', sortBy);
+                if (sortDirection) params.set('sort_direction', sortDirection);
+
+                window.location.href = `${window.location.pathname}?${params.toString()}`;
+            };
+
+            // Status buttons
+            document.querySelectorAll('.category-filter-button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.category-filter-button').forEach(b => b.classList.replace('btn-primary', 'btn-outline-primary'));
+                    btn.classList.replace('btn-outline-primary', 'btn-primary');
+                    updateFilters();
+                });
+            });
+
+            // Other filters
+            ['supplierFilter', 'dateFrom', 'dateTo', 'sortBy', 'sortDirection'].forEach(id => {
+                document.getElementById(id).addEventListener('change', updateFilters);
+            });
+
+            // Clear filters
+            document.getElementById('clearFilters').addEventListener('click', () => {
+                document.querySelectorAll('.category-filter-button').forEach(b => b.classList.replace('btn-primary', 'btn-outline-primary'));
+                document.getElementById('supplierFilter').value = '';
+                document.getElementById('dateFrom').value = '';
+                document.getElementById('dateTo').value = '';
+                document.getElementById('sortBy').value = 'adjustmentDatePlaced';
+                document.getElementById('sortDirection').value = 'asc';
+                window.location.href = window.location.pathname;
+            });
+        });
+    </script>
 </x-app-layout>

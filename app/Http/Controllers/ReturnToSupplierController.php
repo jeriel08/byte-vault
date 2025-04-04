@@ -15,11 +15,65 @@ class ReturnToSupplierController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $returns = ReturnToSupplier::with('supplier', 'stockOut', 'creator')->get();
-        return view('supplier_returns.index', compact('returns'));
+        $query = ReturnToSupplier::with('supplier', 'stockOut', 'creator');
+
+        // Status Filter
+        if ($request->has('status')) {
+            switch ($request->input('status')) {
+                case 'Pending':
+                    $query->whereNotNull('adjustmentDatePlaced')
+                        ->whereNull('completionDate')
+                        ->whereNull('cancellationDate');
+                    break;
+                case 'Completed':
+                    $query->whereNotNull('completionDate');
+                    break;
+                case 'Rejected':
+                    $query->whereNotNull('cancellationDate');
+                    break;
+            }
+        }
+
+        // Supplier Filter
+        if ($request->has('supplierID') && $request->input('supplierID') !== '') {
+            $supplierID = $request->input('supplierID');
+            if (Supplier::where('supplierID', $supplierID)->exists()) {
+                $query->where('supplierID', $supplierID);
+            }
+        }
+
+        // Date Range Filter
+        if ($request->has('date_from')) {
+            $query->where('adjustmentDatePlaced', '>=', $request->input('date_from'));
+        }
+        if ($request->has('date_to')) {
+            $query->where('adjustmentDatePlaced', '<=', $request->input('date_to'));
+        }
+
+        // Sorting
+        if ($request->has('sort_by')) {
+            $direction = $request->input('sort_direction', 'asc');
+            $query->orderBy($request->input('sort_by'), $direction);
+        }
+
+        // Paginate results
+        $returns = $query->paginate(15)->appends($request->query());
+
+        // Status Counts
+        $statusCounts = [
+            'Pending' => ReturnToSupplier::whereNotNull('adjustmentDatePlaced')
+                ->whereNull('completionDate')
+                ->whereNull('cancellationDate')
+                ->count(),
+            'Completed' => ReturnToSupplier::whereNotNull('completionDate')->count(),
+            'Rejected' => ReturnToSupplier::whereNotNull('cancellationDate')->count(),
+        ];
+
+        $suppliers = Supplier::all();
+
+        return view('supplier_returns.index', compact('returns', 'statusCounts', 'suppliers'));
     }
 
     /**
