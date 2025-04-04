@@ -11,6 +11,7 @@ use App\Http\Controllers\SupplierOrderController;
 use App\Http\Controllers\AdjustmentController;
 use App\Http\Controllers\ReturnToSupplierController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\PointOfSaleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -127,8 +128,10 @@ Route::middleware('auth')->group(function () {
 // Inventory Report
 Route::get('/reports/inventory', [ReportController::class, 'inventoryReport'])->name('reports.inventory');
 
-Route::get('/pos', function () {
-    return view('point_of_sale.products');
+// POS Section
+Route::middleware('auth')->group(function () {
+    Route::get('/pos', [PointOfSaleController::class, 'products'])->name('pos.products');
+    Route::get('/pos/sales', [PointOfSaleController::class, 'sales'])->name('pos.sales');
 });
 
 require __DIR__ . '/auth.php';

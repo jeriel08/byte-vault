@@ -1,0 +1,135 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+:root {
+    --color-1: #eae4da;
+    --color-2: #2a5055;
+    --color-3: #828e84;
+    --color-4: #eed6ce;
+    --color-5: #d49066;
+    --color-6: #faf8f5;
+}
+
+* {
+    font-family: "Poppins", sans-serif;
+    color: var(--color-2);
+}
+
+.pos-navbar {
+    background-color: var(--color-2);
+    padding: 1rem 1.5rem; /* More breathing room */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.pos-navbar .navbar-brand {
+    color: var(--color-1);
+    font-weight: bold;
+    font-size: 1.5rem; /* Slightly larger for emphasis */
+    transition: color 0.3s ease;
+}
+
+.pos-navbar .navbar-brand img {
+    height: 50px;
+}
+
+.pos-navbar .navbar-brand:hover {
+    color: var(--color-5); /* Warm orange on hover */
+}
+
+.pos-navbar .navbar-nav .nav-link {
+    color: var(--color-1);
+    font-weight: 500;
+    padding: 0.5rem 1rem; /* More clickable area */
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.pos-navbar .navbar-nav .nav-link:hover {
+    color: var(--color-6); /* Off-white */
+    background-color: var(--color-3); /* Muted green-gray background */
+    border-radius: 4px;
+}
+
+.pos-navbar .navbar-nav .nav-link.active {
+    color: var(--color-5); /* Warm orange for active link */
+    background-color: var(--color-4); /* Soft peach background */
+    border-radius: 4px;
+}
+
+.pos-navbar .navbar-toggler {
+    border-color: var(--color-1);
+}
+
+.pos-navbar .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%232a5055' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"); /* Custom icon color matching --color-2 */
+}
+
+/* Account Section */
+
+.pos-navbar .account-section {
+    color: var(--color-1); /* Ensure base color is light beige */
+}
+
+.pos-navbar .account-section .material-icons-outlined {
+    color: var(--color-1); /* Light beige for icons */
+    transition: color 0.3s ease;
+}
+
+.pos-navbar .account-section p {
+    color: var(--color-1); /* Light beige for user name */
+    font-size: 1rem;
+}
+
+.pos-navbar .account-section small {
+    color: var(--color-4); /* Soft peach for role - still works on dark bg */
+    font-size: 0.85rem;
+}
+
+.pos-navbar .account-section .btn {
+    color: var(--color-1); /* Light beige for dropdown trigger */
+}
+
+.pos-navbar .account-section .btn:hover .material-icons-outlined {
+    color: var(--color-5); /* Warm orange on hover */
+}
+
+/* Dropdown menu */
+.pos-navbar .dropdown-menu {
+    background-color: var(--color-6); /* Off-white */
+    border: 1px solid var(--color-3);
+}
+
+.pos-navbar .dropdown-item {
+    color: var(--color-2); /* Dark teal text */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.pos-navbar .dropdown-item span {
+    color: inherit !important;
+}
+
+.pos-navbar .dropdown-item:hover {
+    background-color: var(--color-4); /* Soft peach */
+    color: var(--color-5); /* Warm orange */
+}
+
+.pos-navbar .dropdown-toggle::after {
+    display: none !important;
+}
+
+@media (max-width: 991px) {
+    .pos-navbar .navbar-collapse {
+        background-color: var(--color-2); /* Match navbar bg on mobile */
+        padding: 1rem;
+    }
+    .pos-navbar .navbar-nav .nav-link {
+        padding: 0.75rem 1rem; /* More spacing in collapsed menu */
+    }
+    .pos-navbar .account-section {
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+        border-top: 1px solid var(--color-3);
+    }
+    .pos-navbar .dropdown-menu {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+}
