@@ -127,4 +127,8 @@ Route::middleware('auth')->group(function () {
 // Inventory Report
 Route::get('/reports/inventory', [ReportController::class, 'inventoryReport'])->name('reports.inventory');
 
+Route::get('/pos', function () {
+    return view('point_of_sale.products');
+});
+
 require __DIR__ . '/auth.php';
