@@ -72,7 +72,7 @@ class SupplierOrderController extends Controller
 
         $suppliers = Supplier::all();
 
-        return view('supplier_orders.index', compact('supplierOrders', 'suppliers', 'pendingCount', 'receivedCount', 'cancelledCount'));
+        return view('admin.supplier_orders.index', compact('supplierOrders', 'suppliers', 'pendingCount', 'receivedCount', 'cancelledCount'));
     }
 
     /**
@@ -88,7 +88,7 @@ class SupplierOrderController extends Controller
             $reorderOrder = SupplierOrder::with('details.product')->findOrFail($request->reorder);
         }
 
-        return view('supplier_orders.create', compact('suppliers', 'products', 'reorderOrder'));
+        return view('admin.supplier_orders.create', compact('suppliers', 'products', 'reorderOrder'));
     }
 
     /**
@@ -140,7 +140,7 @@ class SupplierOrderController extends Controller
     {
         //
         $supplierOrder->load('supplier', 'details.product');
-        return view('supplier_orders.show', compact('supplierOrder'));
+        return view('admin.supplier_orders.show', compact('supplierOrder'));
     }
 
     /**
@@ -152,7 +152,7 @@ class SupplierOrderController extends Controller
         $suppliers = Supplier::where('supplierStatus', 'Active')->get();
         $products = Product::where('productStatus', 'Active')->get();
         $supplierOrder->load('details.product', 'supplier');
-        return view('supplier_orders.edit', compact('supplierOrder', 'suppliers', 'products'));
+        return view('admin.supplier_orders.edit', compact('supplierOrder', 'suppliers', 'products'));
     }
 
     /**

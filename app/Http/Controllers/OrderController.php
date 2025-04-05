@@ -14,51 +14,51 @@ class OrderController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-{
-    $search = $request->input('search');
-    $status = $request->input('status');
-    $productId = $request->input('product_id');
-    $dateFrom = $request->input('date_from');
-    $dateTo = $request->input('date_to');
-    $sortBy = $request->input('sort_by', 'date_desc');
+    {
+        $search = $request->input('search');
+        $status = $request->input('status');
+        $productId = $request->input('product_id');
+        $dateFrom = $request->input('date_from');
+        $dateTo = $request->input('date_to');
+        $sortBy = $request->input('sort_by', 'date_desc');
 
-    $orders = Order::with('product', 'customer')
-        ->when($search, function ($query, $search) {
-            return $query->where('order_id', 'like', "%{$search}%")
-                ->orWhereHas('customer', function ($q) use ($search) {
-                    $q->where('name', 'like', "%{$search}%");
-                })
-                ->orWhereHas('product', function ($q) use ($search) {
-                    $q->where('productName', 'like', "%{$search}%");
-                });
-        })
-        ->when($status, function ($query, $status) {
-            return $query->where('status', $status);
-        })
-        ->when($productId, function ($query, $productId) {
-            return $query->where('product_id', $productId);
-        })
-        ->when($dateFrom, function ($query, $dateFrom) {
-            return $query->whereDate('created_at', '>=', $dateFrom);
-        })
-        ->when($dateTo, function ($query, $dateTo) {
-            return $query->whereDate('created_at', '<=', $dateTo);
-        })
-        ->when($sortBy, function ($query, $sortBy) {
-            if ($sortBy === 'date_asc') {
-                return $query->orderBy('created_at', 'asc');
-            } elseif ($sortBy === 'amount_desc') {
-                return $query->orderBy('amount', 'desc');
-            } elseif ($sortBy === 'amount_asc') {
-                return $query->orderBy('amount', 'asc');
-            } else {
-                return $query->orderBy('created_at', 'desc');
-            }
-        })
-        ->paginate(15);
+        $orders = Order::with('product', 'customer')
+            ->when($search, function ($query, $search) {
+                return $query->where('order_id', 'like', "%{$search}%")
+                    ->orWhereHas('customer', function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('product', function ($q) use ($search) {
+                        $q->where('productName', 'like', "%{$search}%");
+                    });
+            })
+            ->when($status, function ($query, $status) {
+                return $query->where('status', $status);
+            })
+            ->when($productId, function ($query, $productId) {
+                return $query->where('product_id', $productId);
+            })
+            ->when($dateFrom, function ($query, $dateFrom) {
+                return $query->whereDate('created_at', '>=', $dateFrom);
+            })
+            ->when($dateTo, function ($query, $dateTo) {
+                return $query->whereDate('created_at', '<=', $dateTo);
+            })
+            ->when($sortBy, function ($query, $sortBy) {
+                if ($sortBy === 'date_asc') {
+                    return $query->orderBy('created_at', 'asc');
+                } elseif ($sortBy === 'amount_desc') {
+                    return $query->orderBy('amount', 'desc');
+                } elseif ($sortBy === 'amount_asc') {
+                    return $query->orderBy('amount', 'asc');
+                } else {
+                    return $query->orderBy('created_at', 'desc');
+                }
+            })
+            ->paginate(15);
 
-    return view('orders.index', compact('orders', 'search'));
-}
+        return view('admin.orders.index', compact('orders', 'search'));
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -66,13 +66,13 @@ class OrderController extends Controller
     public function create()
     {
         // Placeholder for POS system redirect or logic
-        return view('orders.create');
-    }   
+        return view('admin.orders.create');
+    }
 
     public function store(Request $request)
-{
-    // Comment out until POS system is ready
-    /*
+    {
+        // Comment out until POS system is ready
+        /*
     $validated = $request->validate([
         'customerID' => 'required|exists:customers,customerID',
         'product_id' => 'required|exists:products,productID',
@@ -87,15 +87,15 @@ class OrderController extends Controller
 
     return redirect()->route('orders.index')->with('success', 'Order created successfully.');
     */
-    return redirect()->route('orders.index')->with('message', 'POS system not yet implemented.');
-}   
+        return redirect()->route('orders.index')->with('message', 'POS system not yet implemented.');
+    }
 
     /**
      * Display the specified resource.
      */
     public function show(Order $order)
     {
-        return view('orders.show', compact('order'));
+        return view('admin.orders.show', compact('order'));
     }
 
     /**
@@ -104,7 +104,7 @@ class OrderController extends Controller
     public function edit(Order $order)
     {
         $products = Product::all();
-        return view('orders.edit', compact('order', 'products'));
+        return view('admin.orders.edit', compact('order', 'products'));
     }
 
     /**

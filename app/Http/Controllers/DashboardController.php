@@ -54,7 +54,7 @@ class DashboardController extends Controller
         }, $salesByCategory);
 
         // Pass data to the view
-        return view('dashboard', [
+        return view('admin.dashboard', [
             'totalSales' => $formattedTotalSales,
             'totalOrders' => $totalOrders,
             'totalProductsInStock' => $totalProductsInStock,

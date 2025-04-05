@@ -13,6 +13,6 @@ class AuditLogController extends Controller
             ->orderBy('updated_at', 'desc')
             ->paginate(15);
 
-        return view('audit.index', compact('orders'));
+        return view('admin.audit.index', compact('orders'));
     }
 }

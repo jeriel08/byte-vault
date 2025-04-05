@@ -12,12 +12,12 @@ class PointOfSaleController extends Controller
     public function products()
     {
         $products = Product::all(); // Fetch all products to display
-        return view('point_of_sale.products', compact('products'));
+        return view('employee.products', compact('products'));
     }
 
     public function sales()
     {
         $orders = PointOfSale::with('orderLines.product')->get(); // Fetch orders for sales history
-        return view('point_of_sale.sales', compact('orders'));
+        return view('employee.sales', compact('orders'));
     }
 }

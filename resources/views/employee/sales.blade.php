@@ -1,4 +1,4 @@
-@extends('point_of_sale.main')
+@extends('employee.main')
 
 @section('content')
 <h1>This is sales section</h1>

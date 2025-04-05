@@ -20,7 +20,7 @@ class AdjustmentController extends Controller
     {
         $adjustments = Adjustment::with('stockOut.details.product')->get();
         Log::info('Adjustments loaded', ['first_stockOut' => $adjustments->first()->stockOut ? $adjustments->first()->stockOut->toArray() : null]);
-        return view('adjustments.index', compact('adjustments'));
+        return view('admin.adjustments.index', compact('adjustments'));
     }
 
     /**
@@ -33,7 +33,7 @@ class AdjustmentController extends Controller
         if ($products->isEmpty()) {
             $products = collect(); // Fallback to empty collection if no data
         }
-        return view('adjustments.create', compact('products'));
+        return view('admin.adjustments.create', compact('products'));
     }
 
     /**
@@ -94,7 +94,7 @@ class AdjustmentController extends Controller
     {
         //
         $adjustment->load('stockOut.details.product');
-        return view('adjustments.show', compact('adjustment'));
+        return view('admin.adjustments.show', compact('adjustment'));
     }
 
     /**

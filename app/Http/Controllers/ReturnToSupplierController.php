@@ -73,7 +73,7 @@ class ReturnToSupplierController extends Controller
 
         $suppliers = Supplier::all();
 
-        return view('supplier_returns.index', compact('returns', 'statusCounts', 'suppliers'));
+        return view('admin.supplier_returns.index', compact('returns', 'statusCounts', 'suppliers'));
     }
 
     /**
@@ -97,7 +97,7 @@ class ReturnToSupplierController extends Controller
             $order->setRelation('details', $order->details->load('product'));
         });
 
-        return view('supplier_returns.create', compact('orders', 'products', 'order'));
+        return view('admin.supplier_returns.create', compact('orders', 'products', 'order'));
     }
 
     /**
@@ -187,7 +187,7 @@ class ReturnToSupplierController extends Controller
     {
         $return = ReturnToSupplier::with(['creator', 'supplierOrder.supplier', 'stockOut.details.product'])
             ->findOrFail($returnSupplierID);
-        return view('supplier_returns.show', compact('return'));
+        return view('admin.supplier_returns.show', compact('return'));
     }
 
     /**

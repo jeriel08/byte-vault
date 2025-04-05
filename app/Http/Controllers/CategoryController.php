@@ -25,7 +25,7 @@ class CategoryController extends Controller
             return $category->children->isEmpty();
         });
 
-        return view('categories.index', compact('parentCategories', 'standaloneCategories'));
+        return view('admin.products.categories.index', compact('parentCategories', 'standaloneCategories'));
     }
 
     /**
@@ -35,7 +35,7 @@ class CategoryController extends Controller
     {
         //
         $categories = Category::whereNull('parentCategoryID')->get();
-        return view('categories.create', compact('categories'));
+        return view('admin.products.categories.create', compact('categories'));
     }
 
     /**
@@ -81,7 +81,7 @@ class CategoryController extends Controller
             return redirect()->route('categories.index')->with('error', 'Category not found.');
         }
         $categories = Category::whereNull('parentCategoryID')->where('categoryID', '!=', $categoryID)->get();
-        return view('categories.edit', compact('category', 'categories'));
+        return view('admin.products.categories.edit', compact('category', 'categories'));
     }
 
     /**

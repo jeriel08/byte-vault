@@ -63,14 +63,14 @@ class ProductController extends Controller
         // Get paginated filtered products (15 per page)
         $products = $query->paginate(15)->appends($request->query());
 
-        return view('products.index', compact('products', 'allProducts'));
+        return view('admin.products.index', compact('products', 'allProducts'));
     }
 
     public function create()
     {
         $brands = Brand::where('brandStatus', 'Active')->get();
         $categories = Category::where('categoryStatus', 'Active')->get();
-        return view('products.create', compact('brands', 'categories'));
+        return view('admin.products.create', compact('brands', 'categories'));
     }
 
     public function store(Request $request)
@@ -106,7 +106,7 @@ class ProductController extends Controller
     {
         $brands = Brand::where('brandStatus', 'Active')->get();
         $categories = Category::where('categoryStatus', 'Active')->get();
-        return view('products.edit', compact('product', 'brands', 'categories'));
+        return view('admin.products.edit', compact('product', 'brands', 'categories'));
     }
 
     public function update(Request $request, $productID)

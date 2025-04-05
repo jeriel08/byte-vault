@@ -21,6 +21,6 @@ class ReportController extends Controller
         $lowStockCount = $products->where('stockQuantity', '<', 5)->count();
 
         // Pass data to the view
-        return view('reports.inventory', compact('products', 'totalProducts', 'totalValue', 'lowStockCount'));
+        return view('admin.reports.inventory', compact('products', 'totalProducts', 'totalValue', 'lowStockCount'));
     }
 }

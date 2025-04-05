@@ -26,7 +26,7 @@
 
 <body>
     <div>
-        @include('point_of_sale.pos-navigation')
+        @include('employee.pos-navigation')
 
         <!-- Page Content -->
         <main>

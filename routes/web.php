@@ -14,16 +14,15 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\PointOfSaleController;
 use Illuminate\Support\Facades\Route;
 
+// Public Route
 Route::get('/', function () {
     return view('auth.login');
+})->name('login');
+
+// Dashboard (Admin)
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/inventory/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-// Dashboard
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
 
 // Profile
 Route::middleware('auth')->group(function () {
@@ -32,103 +31,103 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Account Manager
+// Account Manager (Admin)
 Route::middleware('auth')->group(function () {
-    Route::get('/account-manager', [AccountManagerController::class, 'index'])->name('account.manager');
-    Route::get('/account-manager/add', [AccountManagerController::class, 'add'])->name('account.add');
-    Route::post('/account-manager/store', [AccountManagerController::class, 'store'])->name('account.store');
-    Route::get('/account-manager/edit/{employeeID}', [AccountManagerController::class, 'edit'])->name('account.edit');
-    Route::patch('/account-manager/update/{employeeID}', [AccountManagerController::class, 'update'])->name('account.update');
+    Route::get('/admin/account-manager', [AccountManagerController::class, 'index'])->name('account.manager');
+    Route::get('/admin/account-manager/add', [AccountManagerController::class, 'add'])->name('account.add');
+    Route::post('/admin/account-manager/store', [AccountManagerController::class, 'store'])->name('account.store');
+    Route::get('/admin/account-manager/edit/{employeeID}', [AccountManagerController::class, 'edit'])->name('account.edit');
+    Route::patch('/admin/account-manager/update/{employeeID}', [AccountManagerController::class, 'update'])->name('account.update');
 });
 
-// Suppliers
+// Suppliers (Admin)
 Route::middleware('auth')->group(function () {
-    Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
-    Route::get('/suppliers/add', [SupplierController::class, 'create'])->name('suppliers.create');
-    Route::post('/suppliers/store', [SupplierController::class, 'store'])->name('suppliers.store');
-    Route::get('/suppliers/edit/{supplier}', [SupplierController::class, 'edit'])->name('suppliers.edit');
-    Route::patch('/suppliers/update/{supplierID}', [SupplierController::class, 'update'])->name('suppliers.update');
+    Route::get('/inventory/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
+    Route::get('/inventory/suppliers/add', [SupplierController::class, 'create'])->name('suppliers.create');
+    Route::post('/inventory/suppliers/store', [SupplierController::class, 'store'])->name('suppliers.store');
+    Route::get('/inventory/suppliers/edit/{supplier}', [SupplierController::class, 'edit'])->name('suppliers.edit');
+    Route::patch('/inventory/suppliers/update/{supplierID}', [SupplierController::class, 'update'])->name('suppliers.update');
 });
 
-// Brands
+// Brands (Admin, under products)
 Route::middleware('auth')->group(function () {
-    Route::get('/brands', [BrandController::class, 'index'])->name('brands.index');
-    Route::get('/brands/create', [BrandController::class, 'create'])->name('brands.create');
-    Route::post('/brands', [BrandController::class, 'store'])->name('brands.store');
-    Route::get('/brands/{brandID}/edit', [BrandController::class, 'edit'])->name('brands.edit');
-    Route::put('/brands/{brandID}', [BrandController::class, 'update'])->name('brands.update');
+    Route::get('/inventory/products/brands', [BrandController::class, 'index'])->name('brands.index');
+    Route::get('/inventory/products/brands/create', [BrandController::class, 'create'])->name('brands.create');
+    Route::post('/inventory/products/brands', [BrandController::class, 'store'])->name('brands.store');
+    Route::get('/inventory/products/brands/{brandID}/edit', [BrandController::class, 'edit'])->name('brands.edit');
+    Route::put('/inventory/products/brands/{brandID}', [BrandController::class, 'update'])->name('brands.update');
 });
 
-// Categories
+// Categories (Admin, under products)
 Route::middleware('auth')->group(function () {
-    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
-    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
-    Route::get('/categories/{categoryID}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
-    Route::put('/categories/{categoryID}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::get('/inventory/products/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('/inventory/products/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    Route::post('/inventory/products/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::get('/inventory/products/categories/{categoryID}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('/inventory/products/categories/{categoryID}', [CategoryController::class, 'update'])->name('categories.update');
 });
 
-// Products
+// Products (Admin)
 Route::middleware('auth')->group(function () {
-    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
-    Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-    Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
-    Route::put('/products/{productID}', [ProductController::class, 'update'])->name('products.update');
+    Route::get('/inventory/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/inventory/products/create', [ProductController::class, 'create'])->name('products.create');
+    Route::post('/inventory/products', [ProductController::class, 'store'])->name('products.store');
+    Route::get('/inventory/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('/inventory/products/{productID}', [ProductController::class, 'update'])->name('products.update');
 });
 
-// Supplier Orders
+// Supplier Orders (Admin)
 Route::middleware('auth')->group(function () {
-    Route::get('/supplier-orders', [SupplierOrderController::class, 'index'])->name('supplier_orders.index');
-    Route::get('/supplier-orders/create', [SupplierOrderController::class, 'create'])->name('supplier_orders.create');
-    Route::post('/supplier-orders', [SupplierOrderController::class, 'store'])->name('supplier_orders.store');
-    Route::get('/supplier-orders/{supplierOrder}/edit', [SupplierOrderController::class, 'edit'])->name('supplier_orders.edit');
-    Route::put('/supplier-orders/{supplierOrderID}', [SupplierOrderController::class, 'update'])->name('supplier_orders.update');
-    Route::get('/supplier-orders/{supplierOrder}', [SupplierOrderController::class, 'show'])->name('supplier_orders.show');
+    Route::get('/inventory/supplier-orders', [SupplierOrderController::class, 'index'])->name('supplier_orders.index');
+    Route::get('/inventory/supplier-orders/create', [SupplierOrderController::class, 'create'])->name('supplier_orders.create');
+    Route::post('/inventory/supplier-orders', [SupplierOrderController::class, 'store'])->name('supplier_orders.store');
+    Route::get('/inventory/supplier-orders/{supplierOrder}/edit', [SupplierOrderController::class, 'edit'])->name('supplier_orders.edit');
+    Route::put('/inventory/supplier-orders/{supplierOrderID}', [SupplierOrderController::class, 'update'])->name('supplier_orders.update');
+    Route::get('/inventory/supplier-orders/{supplierOrder}', [SupplierOrderController::class, 'show'])->name('supplier_orders.show');
 });
 
-// Adjustments
+// Adjustments (Admin)
 Route::middleware('auth')->group(function () {
-    Route::get('/adjustments', [AdjustmentController::class, 'index'])->name('adjustments.index');
-    Route::get('/adjustments/create', [AdjustmentController::class, 'create'])->name('adjustments.create');
-    Route::post('/adjustments', [AdjustmentController::class, 'store'])->name('adjustments.store');
-    Route::get('/adjustments/{adjustment}/edit', [AdjustmentController::class, 'edit'])->name('adjustments.edit');
-    Route::put('/adjustments/{adjustmentID}', [AdjustmentController::class, 'update'])->name('adjustments.update');
-    Route::get('/adjustments/{adjustment}', [AdjustmentController::class, 'show'])->name('adjustments.show');
+    Route::get('/inventory/adjustments', [AdjustmentController::class, 'index'])->name('adjustments.index');
+    Route::get('/inventory/adjustments/create', [AdjustmentController::class, 'create'])->name('adjustments.create');
+    Route::post('/inventory/adjustments', [AdjustmentController::class, 'store'])->name('adjustments.store');
+    Route::get('/inventory/adjustments/{adjustment}/edit', [AdjustmentController::class, 'edit'])->name('adjustments.edit');
+    Route::put('/inventory/adjustments/{adjustmentID}', [AdjustmentController::class, 'update'])->name('adjustments.update');
+    Route::get('/inventory/adjustments/{adjustment}', [AdjustmentController::class, 'show'])->name('adjustments.show');
 });
 
-// Return To Supplier
+// Return To Supplier (Admin)
 Route::middleware('auth')->group(function () {
-    Route::get('/supplier_returns', [ReturnToSupplierController::class, 'index'])->name('supplier_returns.index');
-    Route::get('/supplier_returns/create', [ReturnToSupplierController::class, 'create'])->name('supplier_returns.create');
-    Route::post('/supplier_returns', [ReturnToSupplierController::class, 'store'])->name('supplier_returns.store');
-    Route::get('/supplier_returns/{returnSupplierID}', [ReturnToSupplierController::class, 'show'])->name('supplier_returns.show');
-    Route::patch('/supplier_returns/{returnSupplierID}/complete', [ReturnToSupplierController::class, 'complete'])->name('supplier_returns.complete');
-    Route::patch('/supplier_returns/{returnSupplierID}/reject', [ReturnToSupplierController::class, 'reject'])->name('supplier_returns.reject');
+    Route::get('/inventory/supplier_returns', [ReturnToSupplierController::class, 'index'])->name('supplier_returns.index');
+    Route::get('/inventory/supplier_returns/create', [ReturnToSupplierController::class, 'create'])->name('supplier_returns.create');
+    Route::post('/inventory/supplier_returns', [ReturnToSupplierController::class, 'store'])->name('supplier_returns.store');
+    Route::get('/inventory/supplier_returns/{returnSupplierID}', [ReturnToSupplierController::class, 'show'])->name('supplier_returns.show');
+    Route::patch('/inventory/supplier_returns/{returnSupplierID}/complete', [ReturnToSupplierController::class, 'complete'])->name('supplier_returns.complete');
+    Route::patch('/inventory/supplier_returns/{returnSupplierID}/reject', [ReturnToSupplierController::class, 'reject'])->name('supplier_returns.reject');
 });
 
-// Orders
+// Orders (Admin)
 Route::middleware('auth')->group(function () {
     Route::resource('orders', \App\Http\Controllers\OrderController::class);
-    Route::get('/orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
-    Route::get('/orders/create', [\App\Http\Controllers\OrderController::class, 'create'])->name('orders.create');
-    Route::post('/orders', [\App\Http\Controllers\OrderController::class, 'store'])->name('orders.store');
-    Route::get('/orders/{order}/edit', [\App\Http\Controllers\OrderController::class, 'edit'])->name('orders.edit');
-    Route::put('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'update'])->name('orders.update');
-    Route::delete('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'destroy'])->name('orders.destroy');
-    Route::get('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
+    Route::get('/inventory/orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
+    Route::get('/inventory/orders/create', [\App\Http\Controllers\OrderController::class, 'create'])->name('orders.create');
+    Route::post('/inventory/orders', [\App\Http\Controllers\OrderController::class, 'store'])->name('orders.store');
+    Route::get('/inventory/orders/{order}/edit', [\App\Http\Controllers\OrderController::class, 'edit'])->name('orders.edit');
+    Route::put('/inventory/orders/{order}', [\App\Http\Controllers\OrderController::class, 'update'])->name('orders.update');
+    Route::delete('/inventory/orders/{order}', [\App\Http\Controllers\OrderController::class, 'destroy'])->name('orders.destroy');
+    Route::get('/inventory/orders/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
 });
 
-// Audit Logs
+// Audit Logs (Admin)
 Route::middleware('auth')->group(function () {
     // Existing routes...
-    Route::get('/audit', [App\Http\Controllers\AuditLogController::class, 'index'])->name('audit.index');
+    Route::get('/admin/audit', [App\Http\Controllers\AuditLogController::class, 'index'])->name('audit.index');
 });
 
-// Inventory Report
+// Inventory Report (Admin)
 Route::get('/reports/inventory', [ReportController::class, 'inventoryReport'])->name('reports.inventory');
 
-// POS Section
+// POS Section (Employee)
 Route::middleware('auth')->group(function () {
     Route::get('/pos', [PointOfSaleController::class, 'products'])->name('pos.products');
     Route::get('/pos/sales', [PointOfSaleController::class, 'sales'])->name('pos.sales');

@@ -24,12 +24,12 @@ class AccountManagerController extends BaseController
     public function index()
     {
         $employees = User::where('employeeID', '!=', auth()->user()->employeeID)->get();
-        return view('accounts.account-manager', compact('employees'));
+        return view('admin.accounts.account-manager', compact('employees'));
     }
 
     public function add()
     {
-        return view('accounts.add-account');
+        return view('admin.accounts.add-account');
     }
 
     public function update(Request $request, $employeeID)
@@ -94,6 +94,6 @@ class AccountManagerController extends BaseController
     public function edit($employeeID)
     {
         $employee = User::findOrFail($employeeID);
-        return view('accounts.edit-account', compact('employee'));
+        return view('admin.accounts.edit-account', compact('employee'));
     }
 }
