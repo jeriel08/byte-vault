@@ -42,7 +42,7 @@ class AccountManagerController extends BaseController
             'email' => 'required|email|max:255|unique:employees,email,' . $employee->employeeID . ',employeeID',
             'phoneNumber' => 'required|string|max:255',
             'password' => 'nullable|string|min:8|confirmed',
-            'role' => 'required|in:Employee,Admin',
+            'role' => 'required|in:Employee,Manager,Admin',
             'status' => 'required|in:Active,Inactive',
         ]);
 
@@ -70,7 +70,7 @@ class AccountManagerController extends BaseController
             'email' => 'required|email|max:255|unique:employees,email',
             'phoneNumber' => 'required|string|max:255',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:Employee,Admin',
+            'role' => 'required|in:Employee,Manager,Admin',
             'status' => 'required|in:Active,Inactive',
         ]);
 

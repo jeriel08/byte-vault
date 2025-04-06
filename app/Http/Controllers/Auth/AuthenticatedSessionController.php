@@ -34,11 +34,11 @@ class AuthenticatedSessionController extends Controller
         $role = Auth::user()->role; // Get role (e.g., "Admin" or "Employee")
         switch (strtolower($role)) { // Normalize to lowercase for case-insensitivity
             case 'employee':
-                return redirect()->intended('/pos');
+                return redirect()->intended(route('pos.products'));
             case 'admin':
-                return redirect()->intended('/inventory/dashboard');
+                return redirect()->intended(route('dashboard'));
             default:
-                return redirect()->intended('/dashboard'); // Fallback for unexpected roles
+                return redirect()->intended(route('dashboard')); // Fallback for unexpected roles
         }
     }
 

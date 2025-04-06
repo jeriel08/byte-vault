@@ -51,6 +51,7 @@
                         <label for="role" class="form-label">Role</label>
                         <select name="role" id="role" class="form-select" required>
                             <option value="Employee" {{ old('role', $employee->role) == 'Employee' ? 'selected' : '' }}>Employee</option>
+                            <option value="Manager" {{ old('role', $employee->role) == 'Manager' ? 'selected' : '' }}>Manager</option>
                             <option value="Admin" {{ old('role', $employee->role) == 'Admin' ? 'selected' : '' }}>Admin</option>
                         </select>
                     </div>
