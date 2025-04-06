@@ -9,12 +9,22 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <!-- Left-side navigation -->
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
+              <li class="nav-item me-2">
                   <a class="nav-link {{ request()->routeIs('pos.products') ? 'active' : '' }}" href="{{ route('pos.products') }}">POS</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item me-2">
                   <a class="nav-link {{ request()->routeIs('pos.sales') ? 'active' : '' }}" href="{{ route('pos.sales') }}">Sales</a>
               </li>
+              <!-- Switch to Inventory for Admin and Manager -->
+                @auth
+                    @if (in_array(auth()->user()->role, ['Admin', 'Manager']))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('dashboard') }}">
+                                Switch to Inventory
+                            </a>
+                        </li>
+                    @endif
+                @endauth
           </ul>
 
             <!-- Right-side account section -->

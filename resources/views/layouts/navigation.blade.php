@@ -169,6 +169,17 @@
                                 </x-nav-link>
                             </li>
                         @endif
+
+                        <!-- Switch to POS for Admin and Manager -->
+                        @if (in_array(auth()->user()->role, ['Admin', 'Manager']))
+                            <hr>
+                            <li class="nav-item mt-2">
+                                <x-nav-link :href="route('pos.products')" class="btn btn-outline-dark d-flex align-items-center gap-2 py-2 px-4">
+                                    <span class="material-icons-outlined">point_of_sale</span>
+                                    Switch to POS
+                                </x-nav-link>
+                            </li>
+                        @endif
                     @endauth
                 </ul>
             </div>
