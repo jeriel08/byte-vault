@@ -136,9 +136,8 @@ Route::middleware('auth')->group(function () {
         ->name('reports.inventory.download.pdf');
 
     // Future route for Excel download would go here too
-    // Route::get('/reports/inventory/download/excel', [ReportController::class, 'downloadInventoryExcel'])
-    //      ->name('reports.inventory.download.excel');
-
+    Route::get('/reports/inventory/download/excel', [ReportController::class, 'downloadInventoryExcel'])
+        ->name('reports.inventory.download.excel');
 });
 
 // POS Section (Employee)

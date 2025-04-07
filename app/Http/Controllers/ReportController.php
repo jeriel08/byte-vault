@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\InventoryReportExport;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -53,5 +55,14 @@ class ReportController extends Controller
 
         // Option 2: Force download
         return $pdf->download('inventory-report-' . date('Y-m-d') . '.pdf');
+    }
+
+    public function downloadInventoryExcel()
+    {
+        // Define a filename for the downloaded file
+        $fileName = 'inventory-report-' . date('Y-m-d') . '.xlsx';
+
+        // Trigger the download using the Excel facade and your export class
+        return Excel::download(new InventoryReportExport(), $fileName);
     }
 }

@@ -3,7 +3,10 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Inventory report as of {{ \Carbon\Carbon::now()->format('F j, Y') }}</h2>
             <div class="d-flex gap-2">
-                <x-primary-button href="{{ route('reports.inventory.download.pdf') }}" class="btn btn-danger me-2">
+                <x-primary-button href="{{ route('reports.inventory.download.excel') }}" class="me-2">
+                    <i class="fa-solid fa-file-excel"></i> Download Excel
+                </x-primary-button> 
+                <x-primary-button href="{{ route('reports.inventory.download.pdf') }}" class="me-2">
                     <i class="fa-solid fa-file-pdf"></i> Download PDF
                 </x-primary-button> 
                 <x-primary-button href="{{ route('dashboard') }}">
