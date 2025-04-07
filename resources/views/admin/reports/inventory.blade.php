@@ -42,8 +42,8 @@
                         <td class="text-center">{{ $product->productID }}</td>
                         <td>{{ $product->productName }}</td>
                         <td class="text-end">{{ $product->stockQuantity }}</td>
-                        <td class="text-end">${{ number_format($product->price, 2) }}</td>
-                        <td class="text-end">${{ number_format($product->stockQuantity * $product->price, 2) }}</td>
+                        <td class="text-end">₱{{ number_format($product->price, 2) }}</td>
+                        <td class="text-end">₱{{ number_format($product->stockQuantity * $product->price, 2) }}</td>
                     </tr>
                 @endforeach
             </tbody>
