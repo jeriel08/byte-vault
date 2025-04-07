@@ -2,7 +2,16 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Inventory report as of {{ \Carbon\Carbon::now()->format('F j, Y') }}</h2>
-            <x-primary-button href="{{ route('dashboard') }}" class="btn btn-secondary">Back to Dashboard</x-primary-button>
+            <div class="d-flex gap-2">
+                <x-primary-button href="{{ route('reports.inventory.download.pdf') }}" class="btn btn-danger me-2">
+                    <i class="fa-solid fa-file-pdf"></i> Download PDF
+                </x-primary-button> 
+                <x-primary-button href="{{ route('dashboard') }}">
+                    <span class="material-icons-outlined">
+                        arrow_back
+                    </span>Go back
+                </x-primary-button>
+            </div>
         </div>
         <hr class="mb-4">
         

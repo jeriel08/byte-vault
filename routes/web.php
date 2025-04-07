@@ -125,7 +125,21 @@ Route::middleware('auth')->group(function () {
 });
 
 // Inventory Report (Admin)
-Route::get('/reports/inventory', [ReportController::class, 'inventoryReport'])->name('reports.inventory');
+Route::middleware('auth')->group(function () {
+
+    // Route to display the inventory report page
+    Route::get('/reports/inventory', [ReportController::class, 'inventoryReport'])
+        ->name('reports.inventory'); // Use '.index' for consistency if you like
+
+    // Route to download the inventory report as PDF
+    Route::get('/reports/inventory/download/pdf', [ReportController::class, 'downloadInventoryPdf'])
+        ->name('reports.inventory.download.pdf');
+
+    // Future route for Excel download would go here too
+    // Route::get('/reports/inventory/download/excel', [ReportController::class, 'downloadInventoryExcel'])
+    //      ->name('reports.inventory.download.excel');
+
+});
 
 // POS Section (Employee)
 Route::middleware('auth')->group(function () {

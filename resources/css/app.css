@@ -70,7 +70,8 @@ ul {
     opacity: 0.7; /* Slightly faded */
 }
 
-.primary-button .material-icons-outlined {
+.primary-button .material-icons-outlined,
+.primary-button i {
     color: inherit !important;
 }
 
