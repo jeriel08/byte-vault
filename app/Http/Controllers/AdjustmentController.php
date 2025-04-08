@@ -16,11 +16,73 @@ class AdjustmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request) // [cite: 281]
     {
-        $adjustments = Adjustment::with('stockOut.details.product')->get();
-        Log::info('Adjustments loaded', ['first_stockOut' => $adjustments->first()->stockOut ? $adjustments->first()->stockOut->toArray() : null]);
-        return view('admin.adjustments.index', compact('adjustments'));
+        // Start query builder, eager load relationships needed for display/sorting
+        $query = Adjustment::query()->with(['stockOut', 'createdBy']); // [cite: 281, 261, 268]
+
+        // Search by adjustmentID (case-insensitive example)
+        if ($request->filled('search')) { // [cite: 236, 419]
+            $query->whereRaw('LOWER(adjustmentID) LIKE ?', ['%' . strtolower($request->input('search')) . '%']); // [cite: 419]
+        }
+
+        // Filter by Adjustment Reason
+        if ($request->filled('reason')) { //
+            $query->where('adjustmentReason', $request->input('reason')); //
+        }
+
+        // Filter by Date Range (adjustmentDate)
+        if ($request->filled('date_from')) { // [cite: 248, 319-320]
+            $query->where('adjustmentDate', '>=', $request->input('date_from')); // [cite: 248, 319-320]
+        }
+        if ($request->filled('date_to')) { // [cite: 248, 319-320]
+            $query->where('adjustmentDate', '<=', $request->input('date_to')); // [cite: 248, 319-320]
+        }
+
+        // Sorting
+        $sortBy = $request->input('sort_by', 'adjustmentDate_desc'); // Default sort
+        switch ($sortBy) {
+            case 'adjustmentDate_asc':
+                $query->orderBy('adjustmentDate', 'asc');
+                break;
+            case 'totalQuantity_asc':
+            case 'totalQuantity_desc':
+                // Sorting by totalQuantity requires joining the stock_outs table
+                // Ensure 'stock_outs.stockOutID' is unique per adjustment if using direct join
+                // Or use a subquery if needed
+                $query->join('stock_outs', function ($join) {
+                    $join->on('adjustments.adjustmentID', '=', 'stock_outs.referenceID')
+                        ->where('stock_outs.referenceTable', '=', 'adjustments'); // Ensure correct join for adjustments
+                })
+                    ->orderBy('stock_outs.totalQuantity', $sortBy === 'totalQuantity_asc' ? 'asc' : 'desc')
+                    ->select('adjustments.*'); // Select only adjustment columns to avoid conflicts
+                break;
+            case 'created_by_asc':
+            case 'created_by_desc':
+                // Sorting by created_by name requires joining the users/employees table
+                $query->join('employees', 'adjustments.created_by', '=', 'employees.employeeID') // Adjust table/column names if different
+                    ->orderBy('employees.full_name', $sortBy === 'created_by_asc' ? 'asc' : 'desc')
+                    ->select('adjustments.*'); // Select only adjustment columns
+                break;
+            case 'adjustmentDate_desc': // Default case
+            default:
+                $query->orderBy('adjustmentDate', 'desc');
+                break;
+        }
+
+        // Paginate results and append query parameters to pagination links
+        $adjustments = $query->paginate(15)->appends($request->query());
+
+        // Optionally: Calculate counts for filter buttons (like in supplier orders)
+        $reasonCounts = [
+            'Damaged' => Adjustment::where('adjustmentReason', 'Damaged')->count(),
+            'Lost' => Adjustment::where('adjustmentReason', 'Lost')->count(),
+            'Other' => Adjustment::where('adjustmentReason', 'Other')->count(),
+        ];
+
+
+        // Pass paginated data and counts to the view
+        return view('admin.adjustments.index', compact('adjustments', 'reasonCounts')); // [cite: 282, 431]
     }
 
     /**

@@ -194,6 +194,54 @@
                             </div>
                         @endforeach
                     </div>
+
+                    <!-- Pagination Links -->
+                    <div class="d-flex justify-content-center">
+                        <ul class="pagination">
+                            <!-- Previous Page Link -->
+                            @if ($returns->onFirstPage())
+                                <li class="page-item disabled">
+                                    <span class="page-link">Previous</span>
+                                </li>
+                            @else
+                                <li class="page-item">
+                                    <a class="page-link d-flex justify-content-center align-items-center" href="{{ $returns->previousPageUrl() }}&{{ http_build_query(request()->except('page')) }}" rel="prev">
+                                        <span class="material-icons-outlined">
+                                            navigate_before
+                                        </span>
+                                    </a>
+                                </li>
+                            @endif
+                    
+                            <!-- Page Numbers -->
+                            @for ($i = 1; $i <= $returns->lastPage(); $i++)
+                                <li class="page-item {{ $returns->currentPage() === $i ? 'active' : '' }}">
+                                    @if ($returns->currentPage() === $i)
+                                        <span class="page-link">{{ $i }}</span>
+                                    @else
+                                        <a class="page-link" href="{{ $returns->url($i) }}&{{ http_build_query(request()->except('page')) }}">{{ $i }}</a>
+                                    @endif
+                                </li>
+                            @endfor
+                    
+                            <!-- Next Page Link -->
+                            @if ($returns->hasMorePages())
+                                <li class="page-item">
+                                    <a class="page-link d-flex justify-content-center align-items-center" href="{{ $returns->nextPageUrl() }}&{{ http_build_query(request()->except('page')) }}" rel="next">
+                                        <span class="material-icons-outlined">
+                                            navigate_next
+                                        </span>
+                                    </a>
+                                </li>
+                            @else
+                                <li class="page-item disabled">
+                                    <span class="material-icons-outlined page-link">
+                                        navigate_next
+                                    </span>
+                                </li>
+                            @endif
+                        </ul>
+                    </div>
                 @endif
             </div>
         </div>
