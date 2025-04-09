@@ -56,7 +56,7 @@
                         </select>
                     </div>
                     <div class="d-flex gap-2 mt-4">
-                        <x-primary-button type="submit" class="mb-4">
+                        <x-primary-button type="submit">
                             Save Account
                         </x-primary-button>
                         <x-secondary-button href="{{ route('account.manager') }}">

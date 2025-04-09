@@ -33,29 +33,8 @@
                     <div class="card filter-panel">
                         <div class="card-body p-3">
                             <h5 class="fw-semibold">Filters</h5>
-            
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold mb-2">Adjustment Reason</label>
-                                <div class="btn-group d-flex flex-wrap gap-2 mb-3" role="group">
-                                    {{-- Damaged Button --}}
-                                    <button type="button" class="btn category-filter-button flex-grow-1 {{ request('reason') === 'Damaged' ? 'btn-primary' : 'btn-outline-primary' }}" data-filter="reason" data-value="Damaged">
-                                        {{-- Use $reasonCounts passed from controller --}}
-                                        <span class="badge bg-secondary me-2">{{ $reasonCounts['Damaged'] ?? 0 }}</span> Damaged
-                                    </button>
-                                    {{-- Lost Button --}}
-                                    <button type="button" class="btn category-filter-button flex-grow-1 {{ request('reason') === 'Lost' ? 'btn-primary' : 'btn-outline-primary' }}" data-filter="reason" data-value="Lost">
-                                        {{-- Use $reasonCounts passed from controller --}}
-                                        <span class="badge bg-secondary me-2">{{ $reasonCounts['Lost'] ?? 0 }}</span> Lost
-                                    </button>
-                                    {{-- Other Button --}}
-                                    <button type="button" class="btn category-filter-button flex-grow-1 {{ request('reason') === 'Other' ? 'btn-primary' : 'btn-outline-primary' }}" data-filter="reason" data-value="Other">
-                                        {{-- Use $reasonCounts passed from controller --}}
-                                        <span class="badge bg-secondary me-2">{{ $reasonCounts['Other'] ?? 0 }}</span> Other
-                                    </button>
-                                </div>
-                            </div>
                             <hr>
-                            <div class="mb-3">
+                            <div class="mb-4">
                                 <label class="form-label fw-semibold mb-2">Date Range</label>
                                 <div>
                                     <label for="date_from" class="form-label fs-6 text-muted"><small>From</small></label>
@@ -67,7 +46,7 @@
                                 </div>
                             </div>
                             <hr>
-                            <div class="mb-3">
+                            <div class="mb-4">
                                 <label for="sortBy" class="form-label fw-semibold mb-2">Sort By</label>
                                 {{-- Update option values and add selected logic --}}
                                 <select class="form-select form-select-sm" id="sortBy" name="sort_by"> {{-- Use form-select-sm for consistency --}}

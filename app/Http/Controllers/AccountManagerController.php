@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AccountManagerController extends BaseController
@@ -21,9 +22,33 @@ class AccountManagerController extends BaseController
         });
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $employees = User::where('employeeID', '!=', auth()->user()->employeeID)->get();
+
+        $query = User::query();
+
+
+        $query->where('employeeID', '!=', Auth::user()->employeeID);
+
+
+        $selectedRoles = $request->input('roles', []);
+        $selectedStatus = $request->input('status');
+
+        if (!empty($selectedRoles)) {
+
+            if (!is_array($selectedRoles)) {
+                $selectedRoles = [$selectedRoles];
+            }
+
+            $query->whereIn('role', $selectedRoles);
+        }
+
+        if (!empty($selectedStatus)) {
+            $query->where('status', $selectedStatus);
+        }
+
+        $employees = $query->get();
+
         return view('admin.accounts.account-manager', compact('employees'));
     }
 
