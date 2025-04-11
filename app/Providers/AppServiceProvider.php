@@ -10,6 +10,10 @@ use App\Models\Brand;
 use App\Observers\BrandObserver;
 use App\Models\Supplier;
 use App\Observers\SupplierObserver;
+use App\Models\SupplierOrder;
+use App\Observers\SupplierOrderObserver;
+use App\Models\SupplierOrderDetail;
+use App\Observers\SupplierOrderDetailObserver;
 use App\Listeners\AuthAuditListener;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
@@ -42,6 +46,9 @@ class AppServiceProvider extends ServiceProvider
         Category::observe(CategoryObserver::class);
         Brand::observe(BrandObserver::class);
         Supplier::observe(SupplierObserver::class);
+        SupplierOrder::observe(SupplierOrderObserver::class);
+        SupplierOrderDetail::observe(SupplierOrderDetailObserver::class);
+
 
         // Register authentication event listeners
         Event::listen(Login::class, [AuthAuditListener::class, 'handle']);
