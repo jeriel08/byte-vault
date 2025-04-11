@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Models\Product;
 use App\Observers\ProductObserver;
+use App\Models\Category;
+use App\Observers\CategoryObserver;
 use App\Listeners\AuthAuditListener;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
@@ -33,6 +35,7 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         Product::observe(ProductObserver::class);
+        Category::observe(CategoryObserver::class);
 
         // Register authentication event listeners
         Event::listen(Login::class, [AuthAuditListener::class, 'handle']);
