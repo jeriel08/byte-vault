@@ -16,7 +16,7 @@ trait LogsAudit
             'columnName' => $columnName,
             'oldValue' => $oldValue,
             'newValue' => $newValue,
-            'employeeID' => Auth::id(), // Assumes authenticated user
+            'employeeID' => Auth::id() ?? $model->employeeID ?? $model->getKey(), // Assumes authenticated user
         ]);
     }
 }
