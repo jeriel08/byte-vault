@@ -17,7 +17,7 @@ class ProductObserver
      */
     public function created(Product $product): void
     {
-        $this->logAudit($product, 'create', 'created', null, json_encode($product->toArray()));
+        $this->logAudit($product, 'create');
     }
 
     /**
@@ -25,12 +25,17 @@ class ProductObserver
      */
     public function updated(Product $product): void
     {
-        //
-        // Log each changed column
+        $changes = [];
         foreach ($product->getChanges() as $key => $value) {
-            if ($key !== 'updated_at' && $key !== 'created_at') { // Skip timestamp changes
-                $this->logAudit($product, 'update', $key, $product->getOriginal($key), $value);
+            if (!in_array($key, ['updated_at', 'created_at'])) {
+                $changes[$key] = [
+                    'old' => $product->getOriginal($key),
+                    'new' => $value,
+                ];
             }
+        }
+        if (!empty($changes)) {
+            $this->logAudit($product, 'update', $changes);
         }
     }
 
@@ -39,8 +44,7 @@ class ProductObserver
      */
     public function deleted(Product $product): void
     {
-        //
-        $this->logAudit($product, 'delete', 'deleted', json_encode($product->toArray()), null);
+        $this->logAudit($product, 'delete');
     }
 
     /**

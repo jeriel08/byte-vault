@@ -41,4 +41,9 @@ class AuditLog extends Model
         }
         return null;
     }
+
+    public function details()
+    {
+        return $this->hasMany(AuditLogDetail::class, 'logID', 'logID');
+    }
 }

@@ -40,10 +40,7 @@ class AuthAuditListener
         try {
             $this->logAudit(
                 model: $user,
-                actionType: $actionType,
-                columnName: null, // No specific column for login/logout
-                oldValue: null,   // No old value
-                newValue: null    // No new value
+                actionType: $actionType
             );
         } catch (\Exception $e) {
             Log::error("Failed to log auth action: {$actionType} for user ID {$user->employeeID}", ['error' => $e->getMessage()]);
