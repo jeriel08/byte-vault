@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\User;
+use App\Models\AuditLog;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 
@@ -22,10 +23,19 @@ class AuditLogController extends Controller
 
     public function index()
     {
-        $orders = Order::with(['createdBy', 'updatedBy'])
-            ->orderBy('updated_at', 'desc')
-            ->paginate(15);
+        $auditLogs = AuditLog::with(['employee', 'details'])
+            ->orderBy('timestamp', 'desc')
+            ->paginate(10);
 
-        return view('admin.audit.index', compact('orders'));
+        $tableNames = [
+            'products' => 'Product',
+            'orders' => 'Order',
+            'adjustments' => 'Adjustment',
+            'stock_out_details' => 'Stock Out Detail',
+            'employees' => 'Employee',
+            // Add more as needed
+        ];
+
+        return view('admin.audit.index', compact('auditLogs', 'tableNames'));
     }
 }

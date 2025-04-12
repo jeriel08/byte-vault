@@ -34,14 +34,6 @@ class AuditLog extends Model
         return $this->belongsTo(User::class, 'employeeID', 'employeeID');
     }
 
-    public function subject()
-    {
-        if (class_exists($this->tableName)) {
-            return $this->belongsTo($this->tableName, 'recordID');
-        }
-        return null;
-    }
-
     public function details()
     {
         return $this->hasMany(AuditLogDetail::class, 'logID', 'logID');
