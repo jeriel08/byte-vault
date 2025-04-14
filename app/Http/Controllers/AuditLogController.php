@@ -24,7 +24,7 @@ class AuditLogController extends Controller
     public function index()
     {
         $auditLogs = AuditLog::with(['employee', 'details'])
-            ->orderBy('timestamp', 'desc')
+            ->orderBy('logID', 'desc')
             ->paginate(10);
 
         $tableNames = [
@@ -32,8 +32,14 @@ class AuditLogController extends Controller
             'orders' => 'Order',
             'adjustments' => 'Adjustment',
             'stock_out_details' => 'Stock Out Detail',
-            'employees' => 'Employee',
-            // Add more as needed
+            'stock_outs' => 'Stock Out',
+            'return_to_suppliers' => 'Return to Supplier',
+            'suppliers' => 'Supplier',
+            'categories' => 'Category',
+            'brands' => 'Brand',
+            'supplier_orders' => 'Supplier Order',
+            'supplier_order_details' => 'Supplier Order Detail',
+            // Add other mappings as needed
         ];
 
         return view('admin.audit.index', compact('auditLogs', 'tableNames'));

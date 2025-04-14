@@ -11,10 +11,10 @@
 
         <!-- Audit Table -->
         <div class="card p-4 mx-1">
-            <table class="table table-striped">
-                <thead>
+            <table class="table table-striped inventory-table">
+                <thead class="inventory-table-header">
                     <tr>
-                        <th>Record ID</th>
+                        <th>Log ID</th>
                         <th>Employee</th>
                         <th>Action</th>
                         <th>Record</th>
@@ -22,23 +22,23 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="inventory-table-body table-group-divider">
                     @forelse ($auditLogs as $log)
                         <tr>
-                            <td>{{ $log->logID }}</td>
-                            <td>
+                            <td class="align-middle">{{ $log->logID }}</td>
+                            <td class="align-middle">
                                 {{ $log->employee ? $log->employee->firstName . ' ' . $log->employee->lastName : 'System' }}
                             </td>
-                            <td>{{ ucfirst($log->actionType) }}</td>
-                            <td>
+                            <td class="align-middle">{{ ucfirst($log->actionType) }}</td>
+                            <td class="align-middle">
                                 {{ $tableNames[$log->tableName] ?? ucfirst(str_replace('_', ' ', $log->tableName)) }}
                             </td>
-                            <td>{{ $log->timestamp->format('F j, Y') }}</td>
-                            <td>
+                            <td class="align-middle">{{ $log->timestamp->format('F j, Y') }}</td>
+                            <td class="align-middle">
                                 @if ($log->details->isNotEmpty())
-                                    <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#detailsModal{{ $log->log_id }}">
+                                    <x-primary-button class="btn-sm" data-bs-toggle="modal" data-bs-target="#detailsModal{{ $log->logID }}">
                                         View Details
-                                    </button>
+                                    </x-primary-button>
                                 @else
                                     N/A
                                 @endif
@@ -58,7 +58,9 @@
                     <!-- Previous Page Link -->
                     @if ($auditLogs->onFirstPage())
                         <li class="page-item disabled">
-                            <span class="page-link">Previous</span>
+                            <span class="material-icons-outlined page-link">
+                                navigate_before
+                            </span>
                         </li>
                     @else
                         <li class="page-item">
@@ -102,38 +104,94 @@
             
             <!-- Modal for Details -->
             @foreach ($auditLogs as $log)
-                <div class="modal fade" id="detailsModal{{ $log->log_id }}" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
+                <div class="modal fade" id="detailsModal{{ $log->logID }}" tabindex="-1" aria-labelledby="detailsModalLabel{{ $log->logID }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="detailsModalLabel">Details for Record ID: {{ $log->record_id }}</h5>
+                                <h5 class="modal-title" id="detailsModalLabel{{ $log->logID }}">Audit Log Details</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                @if ($log->details->isNotEmpty())
-                                    <ul>
-                                        @foreach ($log->details as $detail)
-                                            <li>
-                                                <strong>{{ $detail->column_name }}:</strong>
-                                                {{ $detail->old_value ?? 'N/A' }} → {{ $detail->new_value ?? 'N/A' }}
-                                            </li>
-
-
-                                        @endforeach
-                                    </ul>
-                                @else
-                                    <p>No additional details available.</p>
-                                @endif
+                                <div class="mb-3">
+                                    <p><strong>Performed By:</strong> {{ $log->employee ? $log->employee->firstName . ' ' . $log->employee->lastName : 'System' }}</p>
+                                    <p><strong>Date:</strong> {{ $log->timestamp->format('F j, Y \a\t H:i') }}</p>
+                                    <p><strong>Entity Affected:</strong> 
+                                        @php
+                                            $friendlyName = $tableNames[$log->tableName] ?? ucwords(str_replace('_', ' ', $log->tableName));
+                                            $routeName = $routeMap[$log->tableName] ?? null;
+                                            $modelClass = '\App\Models\\' . str_replace(' ', '', ucwords(str_replace('_', ' ', $log->tableName)));
+                                        @endphp
+                                        @if ($routeName && in_array($log->actionType, ['create', 'update']) && class_exists($modelClass) && $modelClass::find($log->recordID))
+                                            <a href="{{ route($routeName, $log->recordID) }}">{{ $friendlyName }}</a> (ID: {{ $log->recordID }})
+                                        @else
+                                            {{ $friendlyName }} (ID: {{ $log->recordID }})
+                                        @endif
+                                    </p>
+                                </div>
+                                <hr>
+                                <div>
+                                    <h6 class="@if ($log->actionType === 'create') text-success @elseif ($log->actionType === 'delete') text-danger @else text-primary @endif">
+                                        @if ($log->actionType === 'create')
+                                            <span class="material-icons-outlined align-middle">add</span> Created Data
+                                        @elseif ($log->actionType === 'delete')
+                                            <span class="material-icons-outlined align-middle">delete</span> Deleted Data
+                                        @else
+                                            <span class="material-icons-outlined align-middle">edit</span> Changes
+                                        @endif
+                                    </h6>
+                                    @if ($log->details->isNotEmpty())
+                                        <ul class="list-unstyled">
+                                            @foreach ($log->details as $detail)
+                                                <li class="@if ($log->actionType === 'create') text-success @elseif ($log->actionType === 'delete') text-danger @else text-primary @endif">
+                                                    @if ($log->actionType === 'update')
+                                                        <strong>{{ ucwords(str_replace('_', ' ', $detail->columnName)) }}:</strong>
+                                                        {{ $detail->oldValue ?? 'N/A' }} → {{ $detail->newValue ?? 'N/A' }}
+                                                    @elseif ($log->actionType === 'create' && in_array($detail->columnName, ['created', 'created_record']))
+                                                        @php
+                                                            $data = json_decode($detail->newValue, true);
+                                                            if (is_array($data)) {
+                                                                foreach ($data as $key => $value) {
+                                                                    if (strpos($key, 'Date') !== false || strpos($key, '_at') !== false) {
+                                                                        $date = \Carbon\Carbon::parse($value);
+                                                                        echo '<li><strong>' . ucwords(str_replace('_', ' ', $key)) . ':</strong> ' . $date->format('F j, Y \a\t H:i') . '</li>';
+                                                                    } else {
+                                                                        echo '<li><strong>' . ucwords(str_replace('_', ' ', $key)) . ':</strong> ' . e($value) . '</li>';
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                echo '<li>' . ($detail->newValue ?? 'N/A') . '</li>';
+                                                            }
+                                                        @endphp
+                                                    @elseif ($log->actionType === 'delete' && in_array($detail->columnName, ['deleted', 'deleted_record']))
+                                                        @php
+                                                            $data = json_decode($detail->oldValue, true);
+                                                            $excludeFields = ['created_at', 'updated_at'];
+                                                            if (is_array($data)) {
+                                                                foreach ($data as $key => $value) {
+                                                                    if (!in_array($key, $excludeFields)) {
+                                                                        echo '<li><strong>' . ucwords(str_replace('_', ' ', $key)) . ':</strong> ' . e($value) . '</li>';
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                echo '<li>' . ($detail->oldValue ?? 'N/A') . '</li>';
+                                                            }
+                                                        @endphp
+                                                    @else
+                                                        <strong>{{ ucwords(str_replace('_', ' ', $detail->columnName)) }}:</strong>
+                                                        {{ $log->actionType === 'create' ? ($detail->newValue ?? 'N/A') : ($detail->oldValue ?? 'N/A') }}
+                                                    @endif
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @else
+                                        <p>No field changes recorded.</p>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             @endforeach
-
-            <!-- Pagination -->
-            {{-- <div class="mt-4">
-                {{ $auditLogs->links() }}
-            </div> --}}
         </div>
     </div>
 </x-app-layout>
