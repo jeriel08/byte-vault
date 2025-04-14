@@ -1,11 +1,10 @@
 <x-app-layout>
     <div class="container-fluid mx-auto px-4 py-6 position-relative">
         <!-- Header -->
-        <div class="d-flex justify-content-between align-items-center mx-1 mb-4">
-            <h1 class="h3 fw-semibold mb-0">Audit Log</h1>
-            <x-secondary-button href="{{ route('orders.index') }}">
-                <span class="material-icons-outlined">arrow_back</span>
-                Back to Orders
+        <div class="d-flex justify-content-end align-items-center mx-1 mb-4">
+            <x-secondary-button type="button" data-bs-toggle="modal" data-bs-target="#filterAuditLogsModal">
+                <span class="material-icons-outlined">filter_list</span>
+                Filter Audit Logs
             </x-secondary-button>
         </div>
 
@@ -194,4 +193,87 @@
             @endforeach
         </div>
     </div>
+
+    <!-- Updated Filter Modal -->
+    <x-modal name="filterAuditLogsModal" maxWidth="lg">
+        <div class="modal-header">
+            <h5 class="modal-title" id="filterAuditLogsModal-label">Filter Audit Logs</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form id="auditLogFilterForm" action="{{ route('audit.index') }}" method="GET">
+                <!-- User Name (Searchable Dropdown) -->
+                <div class="mb-3">
+                    <label for="user_id" class="form-label">User</label>
+                    <select name="user_id[]" id="user_id" class="form-select select2" multiple>
+                        <option value="">Select User(s)</option>
+                        @foreach(\App\Models\User::all() as $user)
+                            <option value="{{ $user->employeeID }}" {{ in_array($user->employeeID, request()->input('user_id', [])) ? 'selected' : '' }}>
+                                {{ $user->fullName }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Date Range Picker -->
+                <div class="mb-3">
+                    <label for="date_range" class="form-label">Date Range</label>
+                    <input type="text" name="date_range" id="date_range" class="form-control flatpickr" value="{{ request()->input('date_range') }}" placeholder="Select date range">
+                </div>
+
+                <!-- Action Types (Multi-Select) -->
+                <div class="mb-3">
+                    <label for="action_type" class="form-label">Action Type</label>
+                    <select name="action_type[]" id="action_type" class="form-select select2" multiple>
+                        <option value="login" {{ in_array('login', request()->input('action_type', [])) ? 'selected' : '' }}>Login</option>
+                        <option value="logout" {{ in_array('logout', request()->input('action_type', [])) ? 'selected' : '' }}>Logout</option>
+                        <option value="create" {{ in_array('create', request()->input('action_type', [])) ? 'selected' : '' }}>Create</option>
+                        <option value="update" {{ in_array('update', request()->input('action_type', [])) ? 'selected' : '' }}>Update</option>
+                    </select>
+                </div>
+
+                <!-- Table Names (Multi-Select) -->
+                <div class="mb-3">
+                    <label for="table_name" class="form-label">Table Name</label>
+                    <select name="table_name[]" id="table_name" class="form-select select2" multiple>
+                        @foreach($tableNames as $key => $label)
+                            <option value="{{ $key }}" {{ in_array($key, request()->input('table_name', [])) ? 'selected' : '' }}>
+                                {{ $label }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="resetFilters()">Reset</button>
+            <button type="button" class="btn btn-primary" onclick="document.getElementById('auditLogFilterForm').submit()">Apply Filters</button>
+        </div>
+    </x-modal>
+
+<script>
+    // Initialize Select2
+    $(document).ready(function() {
+        $('.select2').select2({
+            placeholder: "Select an option",
+            allowClear: true,
+            width: '100%'
+        });
+    });
+
+    // Initialize Flatpickr for Date Range
+    flatpickr('#date_range', {
+        mode: 'range',
+        dateFormat: 'Y-m-d',
+        defaultDate: '{{ request()->input('date_range') }}'
+    });
+
+    // Reset Filters
+    function resetFilters() {
+        document.getElementById('auditLogFilterForm').reset();
+        $('.select2').val(null).trigger('change'); // Clear Select2 selections
+        flatpickr('#date_range').clear(); // Clear Flatpickr
+        window.location = '{{ route('audit.index') }}'; // Redirect to clear query params
+    }
+</script>
 </x-app-layout>
