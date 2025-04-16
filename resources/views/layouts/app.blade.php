@@ -11,6 +11,10 @@
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 
+    {{-- Select2 CDN Requirements --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
+
     <!-- Google Font Icon Links -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Round"
         rel="stylesheet" />
@@ -36,15 +40,6 @@
     <div>
         @include('layouts.navigation')
 
-        {{-- <!-- Page Heading -->
-        @isset($header)
-        <header class="bg-white shadow-sm">
-            <div class="container mx-auto py-4 px-4">
-                {{ $header }}
-            </div>
-        </header>
-        @endisset --}}
-
         <!-- Page Content -->
         <main>
             {{ $slot }}
@@ -52,14 +47,21 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     <!-- Bootstrap JavaScript CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
 
-    <!-- Mga kuan sa Dashboard -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jQuery CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+    <!-- Chart.js for Dashboard -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
+    <!-- Select2 Script CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    @stack('scripts')
 </body>
 
 </html>
