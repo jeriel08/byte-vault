@@ -274,7 +274,9 @@
                             <!-- Previous Page Link -->
                             @if ($products->onFirstPage())
                                 <li class="page-item disabled">
-                                    <span class="page-link">Previous</span>
+                                    <span class="material-icons-outlined page-link">
+                                        navigate_before
+                                    </span>
                                 </li>
                             @else
                                 <li class="page-item">

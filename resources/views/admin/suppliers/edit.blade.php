@@ -1,6 +1,13 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
-        <h1 class="text-2xl mb-4">Edit Supplier: <strong> {{ $supplier->supplierName }} </strong> </h1>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-2xl">Edit Supplier: <strong> {{ $supplier->supplierName }} </strong> </h2>
+            <x-secondary-button href="{{ route('suppliers.index') }}">
+                <span class="material-icons-outlined">arrow_back</span>
+                Go back
+            </x-secondary-button>
+        </div>
+        
         <div class="card account-settings-card">
             <div class="card-body">
                 <form action="{{ route('suppliers.update', $supplier->supplierID) }}" method="POST" enctype="multipart/form-data">

@@ -1,14 +1,24 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
-
-        <div class="d-flex justify-content-end mb-1">
-            {{-- Add Supplier Button --}}
-            <x-primary-button href="{{ route('suppliers.create') }}" class="mb-4 py-2">
-                <span class="material-icons-outlined">add</span>
-                Add New Supplier
-            </x-primary-button>
+        <div class="row d-flex justify-content-between align-items-center mb-4">
+            <!-- Search Form -->
+            <div class="col-5">
+                <form action="{{ route('suppliers.index') }}" method="GET" class="d-flex gap-2">
+                    <input type="text" name="search" class="form-control" placeholder="Search suppliers..." value="{{ request('search') }}">
+                    <x-primary-button type="submit" class="py-2">
+                        <span class="material-icons-outlined">search</span>
+                        Search
+                    </x-primary-button>
+                </form>
+            </div>
+            <div class="col-auto d-flex justify-content-center">
+                <x-primary-button href="{{ route('suppliers.create') }}">
+                    <span class="material-icons-outlined">add</span>
+                    Add New Supplier
+                </x-primary-button>
+            </div>
         </div>
-        
+
         <!-- Success Message -->
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
@@ -25,7 +35,7 @@
                         <h5 class="text-muted d-flex justify-content-center align-items-center gap-3">
                             There's no supplier yet. 
                             <span class="material-icons-outlined fs-2">
-                                inventory_2 <!-- Supplier icon -->
+                                inventory_2
                             </span>
                         </h5>
                     </div>
@@ -54,14 +64,12 @@
     
                             <!-- Buttons -->
                             <div class="d-flex flex-column gap-2">
-                                <!-- Contact Button -->
                                 <a href="tel:{{ $supplier->supplierPhoneNumber }}"
                                     class="primary-button d-flex justify-content-center align-items-center gap-2 px-5"> 
                                     <span class="material-icons-outlined">phone</span>
                                     Contact
                                 </a>
     
-                                <!-- Edit Button -->
                                 <x-primary-button href="{{ route('suppliers.edit', $supplier->supplierID) }}" >
                                     <span class="material-icons-outlined">edit</span>
                                     Edit
@@ -70,7 +78,62 @@
                         </div>
                     </div>
                 @endforeach
+
+                <div class="d-flex justify-content-center">
+                    <ul class="pagination">
+                        <!-- Previous Page Link -->
+                        @if ($suppliers->onFirstPage())
+                            <li class="page-item disabled">
+                                <span class="material-icons-outlined page-link">
+                                    navigate_before
+                                </span>
+                            </li>
+                        @else
+                            <li class="page-item">
+                                <a class="page-link d-flex justify-content-center align-items-center" href="{{ $suppliers->previousPageUrl() }}&{{ http_build_query(request()->except('page')) }}" rel="prev">
+                                    <span class="material-icons-outlined">
+                                        navigate_before
+                                    </span>
+                                </a>
+                            </li>
+                        @endif
+                
+                        <!-- Page Numbers -->
+                        @for ($i = 1; $i <= $suppliers->lastPage(); $i++)
+                            <li class="page-item {{ $suppliers->currentPage() === $i ? 'active' : '' }}">
+                                @if ($suppliers->currentPage() === $i)
+                                    <span class="page-link">{{ $i }}</span>
+                                @else
+                                    <a class="page-link" href="{{ $suppliers->url($i) }}&{{ http_build_query(request()->except('page')) }}">{{ $i }}</a>
+                                @endif
+                            </li>
+                        @endfor
+                
+                        <!-- Next Page Link -->
+                        @if ($suppliers->hasMorePages())
+                            <li class="page-item">
+                                <a class="page-link d-flex justify-content-center align-items-center" href="{{ $suppliers->nextPageUrl() }}&{{ http_build_query(request()->except('page')) }}" rel="next">
+                                    <span class="material-icons-outlined">
+                                        navigate_next
+                                    </span>
+                                </a>
+                            </li>
+                        @else
+                            <li class="page-item disabled">
+                                <span class="material-icons-outlined page-link">
+                                    navigate_next
+                                </span>
+                            </li>
+                        @endif
+                    </ul>
+                </div>
+
             @endif
+        </div>
+
+        <!-- Pagination Links -->
+        <div class="mt-4">
+            {{ $suppliers->links() }}
         </div>
     </div>
 </x-app-layout>
