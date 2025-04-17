@@ -20,11 +20,11 @@ class PointOfSaleController extends Controller
             ->join('brands', 'products.brandID', '=', 'brands.brandID')
             ->join('categories', 'products.categoryID', '=', 'categories.categoryID')
             ->where('products.productStatus', 'Active')
+            ->where('products.price', '>', 0)
             ->select('products.productID', 'products.productName', 'products.productDescription', 'products.price', 'products.brandID', 'products.categoryID', 'brands.brandName', 'categories.categoryName')
             ->get();
 
-        // Pass the authenticated employee ID for created_by
-        $employee = Auth::user(); // Assuming employees use Laravel authentication
+        $employee = Auth::user();
 
         return view('employee.products', compact('categories', 'brands', 'products', 'employee'));
     }
@@ -40,7 +40,6 @@ class PointOfSaleController extends Controller
         $request->validate([
             'customer_name' => 'required|string|max:255',
             'amount_received' => 'required|numeric|min:0',
-            'payment_method' => 'required|in:cash,credit card,digital',
             'items' => 'required|array',
             'items.*.productID' => 'required|exists:products,productID',
             'items.*.quantity' => 'required|integer|min:1',
@@ -50,16 +49,14 @@ class PointOfSaleController extends Controller
 
         DB::beginTransaction();
         try {
-            // Create or find customer using your Customer model
             $customer = Customer::firstOrCreate(
-                ['name' => $request->customer_name] // Only 'name' is fillable
+                ['name' => $request->customer_name]
             );
 
-            // Create order
             $order = PointOfSale::create([
                 'customerID' => $customer->customerID,
                 'total_items' => count($request->items),
-                'payment_status' => $request->payment_method,
+                'payment_status' => 'cash',
                 'created_by' => Auth::user()->employeeID,
                 'created_at' => now(),
                 'amount_received' => $request->amount_received,
@@ -67,7 +64,6 @@ class PointOfSaleController extends Controller
                 'total' => $request->grand_total,
             ]);
 
-            // Create orderlines
             foreach ($request->items as $item) {
                 Orderline::create([
                     'productID' => $item['productID'],
@@ -77,7 +73,6 @@ class PointOfSaleController extends Controller
                     'created_at' => now(),
                 ]);
 
-                // Update product stock
                 $product = Product::find($item['productID']);
                 $product->stockQuantity -= $item['quantity'];
                 $product->save();

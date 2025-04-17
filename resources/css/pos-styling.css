@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons+Outlined");
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+@import url("https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap");
 
 :root {
     --color-1: #eae4da; /* Light beige */
@@ -16,27 +17,25 @@
     color: var(--color-2);
 }
 
-/* Main Container for 70/30 Split */
 .main-container {
     display: flex;
-    min-height: calc(100vh - 80px); /* Adjust based on navbar height */
+    min-height: calc(100vh - 80px);
 }
 
 .left-section {
     width: 70%;
-    background-color: var(--color-4); /* Soft peach for left side */
+    background-color: var(--color-4);
     padding: 20px;
 }
 
 .right-section {
     width: 30%;
-    background-color: var(--color-2); /* Dark teal for right side */
+    background-color: var(--color-2);
     padding: 20px;
     display: flex;
     flex-direction: column;
 }
 
-/* Navbar Styles */
 .pos-navbar {
     background-color: var(--color-2);
     padding: 1rem 1.5rem;
@@ -85,7 +84,6 @@
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23eae4da' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
-/* Search Bar Styles */
 .search-bar-container {
     display: flex;
     align-items: center;
@@ -120,7 +118,6 @@
     color: var(--color-5);
 }
 
-/* Account Section */
 .pos-navbar .account-section {
     color: var(--color-1);
 }
@@ -148,7 +145,6 @@
     color: var(--color-5);
 }
 
-/* Dropdown menu */
 .pos-navbar .dropdown-menu {
     background-color: var(--color-6);
     border: 1px solid var(--color-3);
@@ -172,7 +168,6 @@
     display: none !important;
 }
 
-/* Responsive adjustments */
 @media (max-width: 991px) {
     .pos-navbar .navbar-collapse {
         background-color: var(--color-2);
@@ -216,7 +211,6 @@
     }
 }
 
-/* Invoice-specific styles */
 .delete-btn:hover .material-icons-outlined {
     color: var(--color-5);
 }
@@ -230,14 +224,12 @@
     border-color: var(--color-5);
 }
 
-/* Remove up/down arrows from number input */
 .quantity-input::-webkit-inner-spin-button,
 .quantity-input::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
-/* Ensure scrollbar is hidden but functional */
 .products-container {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -247,7 +239,6 @@
     display: none;
 }
 
-/* Invoice Styles */
 .invoice-upper {
     display: flex;
     flex-direction: column;
@@ -289,6 +280,14 @@
     width: 100%;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.payment-frame.expanded {
+    min-height: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -376,12 +375,12 @@
     background-color: var(--color-3);
 }
 
-/* Payment Form Styles */
 .payment-form {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin-bottom: 20px; /* Adds space before button */
+    margin-bottom: 20px;
+    flex-grow: 1;
 }
 
 .form-group {
@@ -403,7 +402,7 @@
     flex-shrink: 0;
 }
 
-.form-group input.full-width {
+.form-group input.full-width, .form-group-inline .input-with-icon input.full-width {
     padding: 8px;
     border: 1px solid var(--color-3);
     border-radius: 4px;
@@ -417,7 +416,6 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    width: 50%;
 }
 
 .form-group-inline .input-with-icon input.half-width {
@@ -440,7 +438,6 @@
     border-color: var(--color-5);
 }
 
-/* Remove up/down arrows from payment form number inputs */
 .payment-form input[type="number"]::-webkit-inner-spin-button,
 .payment-form input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -451,7 +448,62 @@
     -moz-appearance: textfield;
 }
 
-/* Responsive adjustments */
+.receipt-frame {
+    background-color: var(--color-6);
+    border-radius: 8px;
+    margin: 10px 0;
+    padding: 10px;
+    flex-grow: 1;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.receipt-frame::-webkit-scrollbar {
+    display: none;
+}
+
+.receipt-content {
+    font-family: "Share Tech Mono", monospace;
+    font-size: 0.9rem;
+    color: var(--color-2);
+}
+
+.receipt-content h5 {
+    margin: 0 0 10px;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.receipt-content p {
+    margin: 5px 0;
+}
+
+.receipt-line {
+    border-top: 1px dashed var(--color-2);
+    margin: 5px 0;
+}
+
+.receipt-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+}
+
+.receipt-table th, .receipt-table td {
+    padding: 5px;
+    text-align: left;
+}
+
+.receipt-table th {
+    font-weight: normal;
+    border-bottom: 1px solid var(--color-2);
+}
+
+.receipt-table td:nth-child(2), .receipt-table td:nth-child(3), .receipt-table td:nth-child(4) {
+    text-align: right;
+}
+
 @media (max-width: 991px) {
     .right-section {
         width: 100%;
@@ -479,4 +531,39 @@
     .form-group-inline .input-with-icon {
         width: 100%;
     }
+    .payment-frame.expanded {
+        min-height: 100%;
+        height: 100%;
+    }
+}
+
+.payment-form-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.back-btn .material-icons-outlined {
+    font-size: 24px;
+    color: var(--color-2);
+    transition: color 0.3s ease;
+}
+
+.back-btn:hover .material-icons-outlined {
+    color: var(--color-5);
+}
+
+.nav-btn:hover .material-icons-outlined {
+    color: var(--color-5);
 }

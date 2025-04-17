@@ -1,6 +1,37 @@
+```blade
 @extends('employee.main')
 
 @section('content')
+    <style>
+        .payment-form .form-group-inline {
+            display: flex;
+            align-items: center;
+        }
+        .payment-form .form-group-inline label {
+            width: 120px;
+            color: var(--color-2);
+        }
+        .payment-form .input-with-icon {
+            position: relative;
+            flex-grow: 1; /* Stretch to fill available width */
+        }
+        .payment-form .input-with-icon input.full-width {
+            width: 100%; /* Full width for all inputs */
+            padding: 8px;
+            border: 1px solid var(--color-3);
+            border-radius: 4px;
+            background-color: var(--color-2);
+            color: var(--color-1);
+        }
+        .payment-form .peso-icon {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-3);
+        }
+    </style>
+
     <div class="main-container">
         <!-- Product Side (Left, 70%) -->
         <div class="left-section">
@@ -10,35 +41,22 @@
                     <span class="material-icons-outlined" style="font-size: 24px; color: var(--color-2);">swap_horiz</span>
                 </button>
             </div>
-            <div id="category-container" style="display: flex; flex-wrap: wrap; gap: 15px; padding: 10px 0;">
-                @foreach ($categories as $category)
-                    <button class="item category-btn" data-category-id="{{ $category->categoryID }}" style="width: calc(20% - 12px); height: 66px; background-color: var(--color-6); border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border: none; cursor: pointer;">
-                        <div style="display: flex; align-items: center;">
-                            <span class="material-icons-outlined" style="font-size: 24px; color: var(--color-2); margin-right: 8px;">
-                                @switch($category->categoryName)
-                                    @case('CPU') memory @break
-                                    @case('Storage') storage @break
-                                    @case('SSD') sd_card @break
-                                    @case('HDD') save @break
-                                    @case('Cables') cable @break
-                                    @case('Ethernet Cable') lan @break
-                                    @case('GPU') videogame_asset @break
-                                    @case('Laptop') laptop @break
-                                    @case('Laptop Screen') monitor @break
-                                    @case('Laptop Battery') battery_full @break
-                                    @default category
-                                @endswitch
-                            </span>
-                            <p style="margin: 0; font-size: 16px;">{{ $category->categoryName }}</p>
-                        </div>
-                    </button>
-                @endforeach
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <button id="prev-btn" class="nav-btn" style="width: 30px; height: 66px; background-color: var(--color-6); border-radius: 8px; border: 1px solid black; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                    <span class="material-icons-outlined" style="font-size: 24px; color: var(--color-2);">chevron_left</span>
+                </button>
+                <div id="category-container" style="display: flex; flex-wrap: nowrap; gap: 15px; padding: 10px 0; overflow: hidden; flex: 1;">
+                    <!-- Categories will be rendered here via JavaScript -->
+                </div>
+                <button id="next-btn" class="nav-btn" style="width: 30px; height: 66px; background-color: var(--color-6); border-radius: 8px; border: 1px solid black; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                    <span class="material-icons-outlined" style="font-size: 24px; color: var(--color-2);">chevron_right</span>
+                </button>
             </div>
 
             <h2 style="margin: 20px 0 10px;">Products</h2>
-            <div class="products-container" style="max-height: 600px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 20px; padding: 10px 0;" id="products-container">
+            <div class="products-container" style="max-height: 700px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 20px; padding: 10px 0;" id="products-container">
                 @foreach ($products as $product)
-                    <button class="product-item" data-product-id="{{ $product->productID }}" style="width: calc(33.33% - 14px); height: 150px; background-color: var(--color-6); border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 15px; border: none; cursor: pointer;">
+                    <button class="product-item" data-product-id="{{ $product->productID }}" style="width: calc(33.33% - 14px); height: 150px; background-color: var(--color-6); border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border: 1px solid black; padding: 15px; cursor: pointer;">
                         <div style="display: flex; align-items: center;">
                             <span class="material-icons-outlined" style="font-size: 60px; color: var(--color-2); margin-right: 10px;">
                                 @switch($product->categoryName)
@@ -79,24 +97,12 @@
                 <div class="payment-frame" id="payment-frame">
                     <h4>Payment Summary</h4>
                     <div class="payment-details" id="payment-details">
-                        <p>Items Ordered</p>
-                        <p id="items-ordered">0</p>
                         <p>Grand Total</p>
                         <p id="grand-total">₱0.00</p>
-                    </div>
-                    <div class="payment-methods" id="payment-methods">
-                        <button class="payment-btn" data-method="cash">
-                            <span class="material-icons-outlined">money</span>
-                            Cash
-                        </button>
-                        <button class="payment-btn" data-method="credit card">
-                            <span class="material-icons-outlined">credit_card</span>
-                            Credit Card
-                        </button>
-                        <button class="payment-btn" data-method="digital">
-                            <span class="material-icons-outlined">phone_android</span>
-                            Digital
-                        </button>
+                        <p>Items Ordered</p>
+                        <p id="items-ordered">0</p>
+                        <p>Payment Method</p>
+                        <p>Cash</p>
                     </div>
                     <button id="place-order-btn">Place an Order</button>
                 </div>
@@ -107,60 +113,76 @@
     <!-- JavaScript for toggling, filtering, and invoice -->
     <script>
         const brands = @json($brands);
+        const categories = @json($categories);
         const products = @json($products);
-        const employeeID = @json($employee->employeeID); // Pass employee ID from controller
+        const employeeID = @json($employee->employeeID);
         let showingCategories = true;
         let currentFilter = { type: null, id: null };
         let invoice = [];
-        let selectedPaymentMethod = null;
         let isPaymentFormVisible = false;
-        let grandTotal = 0; // Store grandTotal persistently
+        let grandTotal = 0;
+        let currentPage = 0;
+        const itemsPerPage = 5;
 
         function renderCategories() {
             const container = document.getElementById('category-container');
             container.innerHTML = '';
-            @foreach ($categories as $category)
+            const start = currentPage * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginatedCategories = categories.slice(start, end);
+
+            paginatedCategories.forEach(category => {
                 container.innerHTML += `
-                    <button class="item category-btn" data-category-id="{{ $category->categoryID }}" style="width: calc(20% - 12px); height: 66px; background-color: var(--color-6); border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border: none; cursor: pointer;">
+                    <button class="item category-btn" data-category-id="${category.categoryID}" style="width: calc(20% - 12px); height: 66px; background-color: var(--color-6); border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border: 1px solid black; cursor: pointer;">
                         <div style="display: flex; align-items: center;">
                             <span class="material-icons-outlined" style="font-size: 24px; color: var(--color-2); margin-right: 8px;">
-                                @switch($category->categoryName)
-                                    @case('CPU') memory @break
-                                    @case('Storage') storage @break
-                                    @case('SSD') sd_card @break
-                                    @case('HDD') save @break
-                                    @case('Cables') cable @break
-                                    @case('Ethernet Cable') lan @break
-                                    @case('GPU') videogame_asset @break
-                                    @case('Laptop') laptop @break
-                                    @case('Laptop Screen') monitor @break
-                                    @case('Laptop Battery') battery_full @break
-                                    @default category
-                                @endswitch
+                                ${getIcon(category.categoryName)}
                             </span>
-                            <p style="margin: 0; font-size: 16px;">{{ $category->categoryName }}</p>
+                            <p style="margin: 0; font-size: 16px;">${category.categoryName}</p>
                         </div>
                     </button>
                 `;
-            @endforeach
+            });
+
             document.getElementById('section-title').textContent = 'Categories';
+            updateNavButtons(categories.length);
             attachCategoryListeners();
         }
 
         function renderBrands() {
             const container = document.getElementById('category-container');
             container.innerHTML = '';
-            brands.forEach(brand => {
+            const start = currentPage * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginatedBrands = brands.slice(start, end);
+
+            paginatedBrands.forEach(brand => {
                 container.innerHTML += `
-                    <button class="item brand-btn" data-brand-id="${brand.brandID}" style="width: calc(20% - 12px); height: 66px; background-color: var(--color-6); border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border: none; cursor: pointer;">
+                    <button class="item brand-btn" data-brand-id="${brand.brandID}" style="width: calc(20% - 12px); height: 66px; background-color: var(--color-6); border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border: 1px solid black; cursor: pointer;">
                         <div style="display: flex; align-items: center;">
                             <p style="margin: 0; font-size: 16px;">${brand.brandName}</p>
                         </div>
                     </button>
                 `;
             });
+
             document.getElementById('section-title').textContent = 'Brands';
+            updateNavButtons(brands.length);
             attachBrandListeners();
+        }
+
+        function updateNavButtons(totalItems) {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const maxPage = Math.ceil(totalItems / itemsPerPage) - 1;
+
+            prevBtn.disabled = currentPage === 0;
+            nextBtn.disabled = currentPage >= maxPage;
+
+            prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
+            nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
+            prevBtn.style.cursor = prevBtn.disabled ? 'not-allowed' : 'pointer';
+            nextBtn.style.cursor = nextBtn.disabled ? 'not-allowed' : 'pointer';
         }
 
         function renderProducts(filteredProducts) {
@@ -168,7 +190,7 @@
             container.innerHTML = '';
             filteredProducts.forEach(product => {
                 container.innerHTML += `
-                    <button class="product-item" data-product-id="${product.productID}" style="width: calc(33.33% - 14px); height: 150px; background-color: var(--color-6); border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 15px; border: none; cursor: pointer;">
+                    <button class="product-item" data-product-id="${product.productID}" style="width: calc(33.33% - 14px); height: 150px; background-color: var(--color-6); border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border: 1px solid black; padding: 15px; cursor: pointer;">
                         <div style="display: flex; align-items: center;">
                             <span class="material-icons-outlined" style="font-size: 60px; color: var(--color-2); margin-right: 10px;">
                                 ${getIcon(product.categoryName)}
@@ -291,47 +313,39 @@
                 `;
             });
 
-            grandTotal = invoice.reduce((sum, item) => sum + item.price * item.quantity, 0); // Calculate and store grandTotal
+            grandTotal = invoice.reduce((sum, item) => sum + item.price * item.quantity, 0);
             const itemsOrdered = invoice.reduce((sum, item) => sum + item.quantity, 0);
-            document.getElementById('grand-total').textContent = `₱${grandTotal.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
-            document.getElementById('items-ordered').textContent = itemsOrdered;
-            document.getElementById('invoice-count').textContent = invoice.length;
+
+            // Only update DOM elements if they exist (not in payment form)
+            const grandTotalEl = document.getElementById('grand-total');
+            const itemsOrderedEl = document.getElementById('items-ordered');
+            const invoiceCountEl = document.getElementById('invoice-count');
+            if (grandTotalEl) grandTotalEl.textContent = `₱${grandTotal.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+            if (itemsOrderedEl) itemsOrderedEl.textContent = itemsOrdered;
+            if (invoiceCountEl) invoiceCountEl.textContent = invoice.length;
 
             if (!isPaymentFormVisible) {
                 renderPaymentSummary();
             }
 
             attachInvoiceListeners();
-            attachPaymentMethodListeners();
         }
 
         function renderPaymentSummary() {
+            const itemsOrdered = invoice.reduce((sum, item) => sum + item.quantity, 0);
             const paymentFrame = document.getElementById('payment-frame');
             paymentFrame.innerHTML = `
                 <h4>Payment Summary</h4>
                 <div class="payment-details" id="payment-details">
-                    <p>Items Ordered</p>
-                    <p id="items-ordered">${document.getElementById('items-ordered').textContent}</p>
                     <p>Grand Total</p>
                     <p id="grand-total">₱${grandTotal.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</p>
-                </div>
-                <div class="payment-methods" id="payment-methods">
-                    <button class="payment-btn" data-method="cash">
-                        <span class="material-icons-outlined">money</span>
-                        Cash
-                    </button>
-                    <button class="payment-btn" data-method="credit card">
-                        <span class="material-icons-outlined">credit_card</span>
-                        Credit Card
-                    </button>
-                    <button class="payment-btn" data-method="digital">
-                        <span class="material-icons-outlined">phone_android</span>
-                        Digital
-                    </button>
+                    <p>Items Ordered</p>
+                    <p id="items-ordered">${itemsOrdered}</p>
+                    <p>Payment Method</p>
+                    <p>Cash</p>
                 </div>
                 <button id="place-order-btn">Place an Order</button>
             `;
-            attachPaymentMethodListeners();
             document.getElementById('place-order-btn').addEventListener('click', showPaymentForm);
         }
 
@@ -340,51 +354,114 @@
                 alert('Please add items to the invoice before placing an order.');
                 return;
             }
-            if (!selectedPaymentMethod) {
-                alert('Please select a payment method before placing an order.');
-                return;
-            }
 
             isPaymentFormVisible = true;
+            document.querySelector('.invoice-upper').style.display = 'none';
+            document.querySelector('.payment-frame').classList.add('expanded');
+            document.querySelector('.invoice-lower').style.height = '100%';
+
             const paymentFrame = document.getElementById('payment-frame');
             paymentFrame.innerHTML = `
-                <div>
+                <div class="payment-form-header">
+                    <button id="back-btn" class="back-btn">
+                        <span class="material-icons-outlined">arrow_back</span>
+                    </button>
                     <h4>Payment Summary</h4>
-                    <div class="payment-form">
-                        <div class="form-group">
-                            <label>Customer Name:</label>
+                </div>
+                <div class="payment-form">
+                    <div class="form-group-inline">
+                        <label>Customer Name:</label>
+                        <div class="input-with-icon full-width">
                             <input type="text" id="customer-name" placeholder="Enter customer name" class="full-width">
                         </div>
-                        <div class="form-group-inline">
-                            <label>Amount Received:</label>
-                            <div class="input-with-icon">
-                                <span class="peso-icon">₱</span>
-                                <input type="number" id="amount-received" placeholder="0.00" step="0.01" min="0" class="half-width">
-                            </div>
-                        </div>
-                        <div class="form-group-inline">
-                            <label>Change:</label>
-                            <div class="input-with-icon">
-                                <span class="peso-icon">₱</span>
-                                <input type="number" id="change" readonly class="half-width">
-                            </div>
+                    </div>
+                    <div class="form-group-inline">
+                        <label>Amount Received:</label>
+                        <div class="input-with-icon full-width">
+                            <span class="peso-icon">₱</span>
+                            <input type="number" id="amount-received" placeholder="0.00" step="0.01" min="0" class="full-width">
                         </div>
                     </div>
-                    <button id="confirm-order-btn">Confirm Order</button>
+                    <div class="form-group-inline">
+                        <label>Change:</label>
+                        <div class="input-with-icon full-width">
+                            <span class="peso-icon">₱</span>
+                            <input type="number" id="change" readonly class="full-width">
+                        </div>
+                    </div>
+                    <div class="receipt-frame" id="receipt-frame"></div>
                 </div>
+                <button id="confirm-order-btn">Confirm Order</button>
             `;
 
+            const customerNameInput = document.getElementById('customer-name');
             const amountReceivedInput = document.getElementById('amount-received');
             const changeInput = document.getElementById('change');
             const confirmOrderBtn = document.getElementById('confirm-order-btn');
+            const backBtn = document.getElementById('back-btn');
 
+            function updateReceipt() {
+                const customerName = customerNameInput.value.trim() || 'N/A';
+                const amountReceived = parseFloat(amountReceivedInput.value) || 0;
+                const change = amountReceived - grandTotal >= 0 ? (amountReceived - grandTotal).toFixed(2) : '0.00';
+                const itemsOrdered = invoice.reduce((sum, item) => sum + item.quantity, 0);
+
+                const receiptFrame = document.getElementById('receipt-frame');
+                receiptFrame.innerHTML = `
+                    <div class="receipt-content">
+                        <h5>Receipt Preview</h5>
+                        <div class="receipt-line"></div>
+                        <p>Customer: ${customerName}</p>
+                        <div class="receipt-line"></div>
+                        <table class="receipt-table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${invoice.map(item => `
+                                    <tr>
+                                        <td>${item.productName}</td>
+                                        <td>${item.quantity}</td>
+                                        <td>₱${Number(item.price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</td>
+                                        <td>₱${(item.price * item.quantity).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                        <div class="receipt-line"></div>
+                        <p>Items Ordered: ${itemsOrdered}</p>
+                        <p>Grand Total: ₱${grandTotal.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</p>
+                        <p>Amount Received: ₱${amountReceived.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</p>
+                        <p>Change: ₱${change.replace(/\d(?=(\d{3})+\.)/g, '$&,')}</p>
+                        <div class="receipt-line"></div>
+                        <p>Payment Method: Cash</p>
+                    </div>
+                `;
+            }
+
+            customerNameInput.addEventListener('input', updateReceipt);
             amountReceivedInput.addEventListener('input', () => {
                 const amountReceived = parseFloat(amountReceivedInput.value) || 0;
                 const change = amountReceived - grandTotal;
                 changeInput.value = change >= 0 ? change.toFixed(2) : '0.00';
+                updateReceipt();
             });
 
             confirmOrderBtn.addEventListener('click', confirmOrder);
+            backBtn.addEventListener('click', () => {
+                isPaymentFormVisible = false;
+                document.querySelector('.invoice-upper').style.display = 'flex';
+                document.querySelector('.payment-frame').classList.remove('expanded');
+                document.querySelector('.invoice-lower').style.height = 'auto';
+                renderPaymentSummary();
+            });
+
+            updateReceipt();
         }
 
         function confirmOrder() {
@@ -403,13 +480,13 @@
             const orderData = {
                 customer_name: customerName,
                 amount_received: amountReceived,
-                payment_method: selectedPaymentMethod,
+                payment_method: 'cash',
                 items: invoice.map(item => ({
                     productID: item.productID,
                     quantity: item.quantity,
                     price: item.price,
                 })),
-                grand_total: grandTotal, // Use stored value
+                grand_total: grandTotal,
                 _token: '{{ csrf_token() }}',
             };
 
@@ -421,22 +498,37 @@
                 },
                 body: JSON.stringify(orderData),
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
-                    alert(`Order confirmed for ${customerName} via ${selectedPaymentMethod}! Change: ₱${document.getElementById('change').value} (Order ID: ${data.order_id})`);
+                    alert(`Order confirmed for ${customerName} via cash! Change: ₱${(amountReceived - grandTotal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} (Order ID: ${data.order_id})`);
+                    // Reset state
                     invoice = [];
-                    selectedPaymentMethod = null;
+                    grandTotal = 0;
                     isPaymentFormVisible = false;
-                    grandTotal = 0; // Reset grandTotal
-                    renderInvoice();
+                    // Clear invoice items
+                    const invoiceContainer = document.getElementById('invoice-items');
+                    invoiceContainer.innerHTML = '';
+                    // Update invoice count
+                    const invoiceCountEl = document.getElementById('invoice-count');
+                    if (invoiceCountEl) invoiceCountEl.textContent = '0';
+                    // Reset UI to default payment summary
+                    document.querySelector('.invoice-upper').style.display = 'flex';
+                    document.querySelector('.payment-frame').classList.remove('expanded');
+                    document.querySelector('.invoice-lower').style.height = 'auto';
+                    renderPaymentSummary();
                 } else {
-                    alert(data.message);
+                    alert(`Error: ${data.message}`);
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('An error occurred while placing the order.');
+                alert(`Failed to place order: ${error.message}`);
             });
         }
 
@@ -472,21 +564,9 @@
             });
         }
 
-        function attachPaymentMethodListeners() {
-            document.querySelectorAll('.payment-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const method = btn.getAttribute('data-method');
-                    if (selectedPaymentMethod !== method) {
-                        selectedPaymentMethod = method;
-                        document.querySelectorAll('.payment-btn').forEach(b => b.classList.remove('selected'));
-                        btn.classList.add('selected');
-                    }
-                });
-            });
-        }
-
         document.getElementById('switch-btn').addEventListener('click', () => {
             showingCategories = !showingCategories;
+            currentPage = 0;
             currentFilter = { type: null, id: null };
             if (showingCategories) {
                 renderCategories();
@@ -497,7 +577,32 @@
             }
         });
 
+        document.getElementById('prev-btn').addEventListener('click', () => {
+            if (currentPage > 0) {
+                currentPage--;
+                if (showingCategories) {
+                    renderCategories();
+                } else {
+                    renderBrands();
+                }
+            }
+        });
+
+        document.getElementById('next-btn').addEventListener('click', () => {
+            const totalItems = showingCategories ? categories.length : brands.length;
+            const maxPage = Math.ceil(totalItems / itemsPerPage) - 1;
+            if (currentPage < maxPage) {
+                currentPage++;
+                if (showingCategories) {
+                    renderCategories();
+                } else {
+                    renderBrands();
+                }
+            }
+        });
+
         renderCategories();
         renderProducts(products);
     </script>
 @endsection
+```

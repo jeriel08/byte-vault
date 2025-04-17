@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderLine extends Model
 {
-    //
     protected $table = 'orderline';
     protected $primaryKey = 'orderLineID';
     protected $fillable = ['productID', 'orderID', 'quantity', 'price'];
@@ -18,6 +17,6 @@ class OrderLine extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'productID', 'produtID');
+        return $this->belongsTo(Product::class, 'productID', 'productID');
     }
 }

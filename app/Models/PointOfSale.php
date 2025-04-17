@@ -32,7 +32,6 @@ class PointOfSale extends Model
         return $this->belongsTo(Customer::class, 'customerID', 'customerID');
     }
 
-    // Fetch active categories
     public static function getActiveCategories()
     {
         return DB::table('categories')
@@ -40,7 +39,6 @@ class PointOfSale extends Model
             ->get();
     }
 
-    // Fetch active brands
     public static function getActiveBrands()
     {
         return DB::table('brands')
