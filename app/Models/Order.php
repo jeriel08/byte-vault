@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 class Order extends Model
 {
     protected $primaryKey = 'orderID';
-    protected $fillable = ['orderID', 'customerID', 'product_id', 'quantity', 'amount', 'payment_status', 'status', 'created_by', 'updated_by'];
+    protected $fillable = ['orderID', 'customerID', 'date', 'total', 'total_items', 'amount_received', 'change', 'created_by', 'updated_by'];
 
     public function customer()
     {
@@ -17,17 +17,22 @@ class Order extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product_id', 'productID');
+        return $this->belongsTo(Product::class, 'productID', 'productID');
     }
 
     public function createdBy()
     {
-        return $this->belongsTo(User::class, 'created_by', 'id');
+        return $this->belongsTo(User::class, 'created_by', 'employeeID');
     }
 
     public function updatedBy()
     {
-        return $this->belongsTo(User::class, 'updated_by', 'id');
+        return $this->belongsTo(User::class, 'updated_by', 'employeeID');
+    }
+
+    public function orderlines()
+    {
+        return $this->hasMany(OrderLine::class, 'orderID', 'orderID');
     }
 
     protected static function boot()

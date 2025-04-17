@@ -93,8 +93,10 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
+    // OrderController.txt
     public function show(Order $order)
     {
+        $order->load('customer', 'orderlines.product'); // Eager-load customer and orderlines with products
         return view('admin.orders.show', compact('order'));
     }
 

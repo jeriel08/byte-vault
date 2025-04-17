@@ -18,6 +18,6 @@ class OrderLine extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'productID', 'produtID');
+        return $this->belongsTo(Product::class, 'productID', 'productID');
     }
 }

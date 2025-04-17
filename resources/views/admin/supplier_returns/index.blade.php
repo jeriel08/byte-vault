@@ -110,8 +110,8 @@
                                         <span class="vr me-4"></span>
                                         <div class="d-flex flex-row gap-3 align-items-start ps-4">
                                             <div class="text-start me-4" style="width: 8rem;">
-                                                <span class="text-muted d-block"><small>Created By</small></span>
-                                                <span class="fw-semibold text-truncate d-block">{{ $return->creator->full_name ?? 'Unknown' }}</span>
+                                                <span class="text-muted d-block"><small>Supplier</small></span>
+                                                <span class="fw-semibold text-truncate d-block">{{ $return->supplier->supplierName ?? 'Unknown' }}</span>
                                             </div>
                                             <div class="text-start me-4" style="width: 10rem;">
                                                 <span class="text-muted d-block"><small>

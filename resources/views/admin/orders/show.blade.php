@@ -1,113 +1,82 @@
-<!-- resources/views/orders/show.blade.php -->
 <x-app-layout>
-    <div class="orders-container">
-        <div class="main-header d-flex justify-content-between align-items-center mb-4">
-            <h1 class="h3 mb-0">Order Details</h1>
-            <div class="user-profile">
-                <div class="user-avatar">
-                    <span class="material-icons">person</span>
-                </div>
-                <div class="user-info">
-                    <div class="user-name">{{ Auth::user()->firstName }} {{ Auth::user()->lastName }}</div>
-                    <div class="user-role">{{ Auth::user()->role }}</div>
-                </div>
-                <span class="material-icons">expand_more</span>
+    <div class="container mx-auto px-4 py-6">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-2xl font-bold m-0">Order No. {{ $order->orderID }}</h2>
+            <div class="d-flex gap-2">
+                <x-secondary-button href="{{ route('orders.index') }}">
+                    <span class="material-icons-outlined">arrow_back</span>
+                    Go back
+                </x-secondary-button>
             </div>
         </div>
 
-        <div class="orders-card">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="orders-header">Order #{{ $order->order_id }}</h2>
-                <a href="{{ route('orders.index') }}" class="btn filter-btn">
-                    <span class="material-icons-outlined align-middle">arrow_back</span>
-                    Back to Orders
-                </a>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-header">
-                            <h5 class="mb-0">Order Information</h5>
+        <!-- Order Information Card -->
+        <div class="card account-settings-card p-3">
+            <div class="card-body">
+                <h5 class="fw-semibold mb-3">Order Information</h5>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Customer:</label>
+                            <p class="form-control-plaintext">{{ $order->customer ? $order->customer->name : 'N/A' }}</p>
                         </div>
-                        <div class="card-body">
-                            <table class="table table-borderless">
-                                <tr>
-                                    <th>Order ID:</th>
-                                    <td>{{ $order->order_id }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Customer:</th>
-                                    <td>{{ $order->customer_name }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Date:</th>
-                                    <td>{{ $order->created_at->format('M d, Y') }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Status:</th>
-                                    <td><span class="status-badge status-{{ strtolower($order->status) }}">{{ $order->status }}</span></td>
-                                </tr>
-                                <tr>
-                                    <th>Payment Status:</th>
-                                    <td>{{ $order->payment_status }}</td>
-                                </tr>
-                            </table>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Order Date:</label>
+                            <p class="form-control-plaintext">{{ $order->date ? \Carbon\Carbon::parse($order->date)->format('M d, Y') : $order->created_at->format('M d, Y') }}</p>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Total Items:</label>
+                            <p class="form-control-plaintext">{{ $order->total_items }}</p>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Total Order Cost:</label>
+                            <p class="form-control-plaintext">₱{{ number_format($order->total, 2) }}</p>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Amount Received:</label>
+                            <p class="form-control-plaintext">₱{{ number_format($order->amount_received, 2) }}</p>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Change:</label>
+                            <p class="form-control-plaintext">₱{{ number_format($order->change, 2) }}</p>
                         </div>
                     </div>
                 </div>
+                
+                
+                <hr class="mb-4">
 
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-header">
-                            <h5 class="mb-0">Product Information</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-3">
-                                @if($order->product && $order->product->image)
-                                    <img src="{{ asset('storage/' . $order->product->image) }}" alt="{{ $order->product->name }}" class="product-img me-3" style="width: 60px; height: 60px;">
-                                @else
-                                    <span class="material-icons-outlined me-3" style="font-size: 60px;">inventory_2</span>
-                                @endif
-                                <div>
-                                    <h5 class="mb-1">{{ $order->product ? $order->product->name : 'N/A' }}</h5>
-                                    @if($order->product)
-                                        <p class="text-muted mb-0">{{ $order->product->sku ?? 'No SKU' }}</p>
-                                    @endif
+                <!-- Order Details Section -->
+                <div id="orderDetails" class="mb-3">
+                    <h5 class="fw-semibold mb-3">Order Details</h5>
+                    <div id="productList">
+                        @forelse ($order->orderlines as $orderline)
+                            <div class="card account-manager-card p-3 d-flex flex-row align-items-center mb-3">
+                                <div class="flex-grow-1">
+                                    <h5 class="mb-1 fw-semibold">{{ $orderline->product ? $orderline->product->productName : 'N/A' }}</h5>
+                                </div>
+                                <div class="d-flex align-items-center mx-3">
+                                    <span class="vr me-5"></span>
+                                    <div class="d-flex flex-row gap-3 align-items-start">
+                                        <div class="text-start me-4" style="min-width: 80px;">
+                                            <span class="text-muted d-block"><small>Quantity</small></span>
+                                            <span class="fw-semibold fs-5">{{ $orderline->quantity }}</span>
+                                        </div>
+                                        <div class="text-start me-4" style="min-width: 10em;">
+                                            <span class="text-muted d-block"><small>Unit Price</small></span>
+                                            <span class="fw-semibold fs-5">₱{{ number_format($orderline->price, 2) }}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <table class="table table-borderless">
-                                <tr>
-                                    <th>Quantity:</th>
-                                    <td>{{ $order->quantity }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Unit Price:</th>
-                                    <td>₱{{ number_format($order->product ? $order->product->price : 0, 2) }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Total Amount:</th>
-                                    <td>₱{{ number_format($order->amount, 2) }}</td>
-                                </tr>
-                            </table>
-                        </div>
+                        @empty
+                            <p>No items in this order.</p>
+                        @endforelse
                     </div>
                 </div>
-            </div>
-
-            <div class="d-flex justify-content-end mt-4">
-                <a href="{{ route('orders.edit', $order) }}" class="btn btn-primary me-2">
-                    <span class="material-icons-outlined align-middle">edit</span>
-                    Edit Order
-                </a>
-                <form action="{{ route('orders.destroy', $order) }}" method="POST" class="d-inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this order?')">
-                        <span class="material-icons-outlined align-middle">delete</span>
-                        Delete Order
-                    </button>
-                </form>
             </div>
         </div>
     </div>

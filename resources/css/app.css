@@ -523,6 +523,7 @@ nav.navbar {
     color: var(--color-2);
     line-height: 1.5;
     font-weight: 500;
+    margin-left: 1em;
 }
 
 /* Arrow icon inside select */
@@ -582,4 +583,67 @@ nav.navbar {
 /* Hide the clear (X) icon */
 .custom-select2 + .select2-container--bootstrap-5 .select2-selection__clear {
     display: none !important;
+}
+
+/* Style the inner search input inside the dropdown */
+.select2-container--bootstrap-5
+    .select2-search--dropdown
+    .select2-search__field {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    color: var(--color-2);
+    background-color: var(--color-6);
+    border: 1px solid var(--color-3);
+    border-radius: 0.5rem;
+    outline: none;
+    box-shadow: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Remove blue shadow and apply custom glow on focus */
+.select2-container--bootstrap-5
+    .select2-dropdown
+    .select2-search--dropdown
+    .select2-search__field:focus {
+    border-color: var(--color-5);
+    box-shadow: 0 0 0 3px rgba(212, 144, 102, 0.3);
+    outline: none;
+}
+
+/* Fix focus style when Select2 closes after selecting an option */
+.custom-select2
+    + .select2-container--bootstrap-5
+    .select2-selection--single:focus,
+.custom-select2
+    + .select2-container--bootstrap-5.select2-container--focus
+    .select2-selection--single {
+    border-color: var(--color-5) !important;
+    box-shadow: 0 0 0 3px rgba(212, 144, 102, 0.3) !important;
+    outline: none !important;
+}
+
+/* Option styling for all states */
+.select2-container--bootstrap-5 .select2-results__option {
+    padding: 0.5rem 1rem !important;
+    background-color: var(--color-6) !important;
+    color: var(--color-2) !important;
+    transition: background-color 0.2s ease !important;
+}
+
+/* Hovered option */
+.select2-container--bootstrap-5 .select2-results__option--highlighted {
+    background-color: var(--color-4) !important;
+    color: var(--color-2) !important;
+}
+
+/* Selected option */
+.select2-container--bootstrap-5 .select2-results__option--selected {
+    background-color: var(--color-5) !important;
+    color: white !important;
+}
+
+/* Disabled option */
+.select2-container--bootstrap-5 .select2-results__option[aria-disabled="true"] {
+    color: var(--color-3) !important;
+    cursor: not-allowed !important;
 }

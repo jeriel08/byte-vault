@@ -8,7 +8,7 @@
                     <span class="material-icons-outlined">search</span>
                 </button>
             </div>
-            <x-primary-button href="{{ route('orders.create') }}" class="py-2">
+            <x-primary-button href="{{ route('pos.products') }}" class="py-2">
                 <span class="material-icons-outlined">add</span>
                 Add Customer Order
             </x-primary-button>
@@ -28,36 +28,7 @@
                 <div class="card filter-panel">
                     <div class="card-body p-3">
                         <h5 class="fw-semibold">Filters</h5>
-                        
-                        <!-- Order Status -->
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold mb-2">Order Status</label>
-                            <div class="btn-group d-flex flex-wrap gap-2 mb-3" role="group">
-                                <button type="button" class="btn category-filter-button flex-grow-1 {{ request('status') === 'Pending' ? 'btn-primary' : 'btn-outline-primary' }}" data-filter="status" data-value="Pending">
-                                    <span class="badge me-2">{{ $orders->where('status', 'Pending')->count() }}</span> Pending
-                                </button>
-                                <button type="button" class="btn category-filter-button flex-grow-1 {{ request('status') === 'Delivered' ? 'btn-primary' : 'btn-outline-primary' }}" data-filter="status" data-value="Delivered">
-                                    <span class="badge me-2">{{ $orders->where('status', 'Delivered')->count() }}</span> Delivered
-                                </button>
-                                <button type="button" class="btn category-filter-button flex-grow-1 {{ request('status') === null ? 'btn-primary' : 'btn-outline-primary' }}" data-filter="status" data-value="">
-                                    <span class="badge me-2">{{ $orders->count() }}</span> All
-                                </button>
-                            </div>
-                        </div>
-                        <hr>
-                        <!-- Product Filter -->
-                        <div class="mb-3">
-                            <label for="productFilter" class="form-label fw-semibold mb-2">Product</label>
-                            <select class="form-select" id="productFilter" name="product_id">
-                                <option value="">All Products</option>
-                                @foreach (App\Models\Product::all() as $product)
-                                    <option value="{{ $product->productID }}" {{ request('product_id') == $product->productID ? 'selected' : '' }}>
-                                        {{ $product->productName }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <hr>
+
                         <!-- Date Range -->
                         <div class="mb-3">
                             <label class="form-label fw-semibold mb-2">Date Range</label>
@@ -97,29 +68,19 @@
                             <div class="col-12 mb-4">
                                 <div class="card account-manager-card p-3 d-flex flex-row align-items-center">
                                     <div class="flex-grow-1">
-                                        <p class="mb-1 fw-semibold fs-5 me-4">{{ $order->order_id }}</p>
+                                        <p class="mb-1 fw-semibold fs-5 me-4">Order No. {{ $order->orderID }}</p>
                                     </div>
                     
-                                    <div class="d-flex align-items-center flex-grow-1">
+                                    <div class="d-flex align-items-center mx-3 price-section">
                                         <span class="vr me-4"></span>
                                         <div class="d-flex flex-row gap-3 align-items-start">
-                                            <div class="text-start me-4" style="width: 16rem;">
-                                                <span class="text-muted d-block"><small>Product</small></span>
-                                                <span class="fw-semibold text-truncate d-block">{{ $order->product ? $order->product->productName : 'N/A' }}</span>
-                                            </div>
-                                            <div class="text-start me-4" style="width: 12rem;">
+                                            <div class="text-start me-4" style="width: 7rem;">
                                                 <span class="text-muted d-block"><small>Customer</small></span>
                                                 <span class="fw-semibold text-truncate d-block">{{ $order->customer ? $order->customer->name : 'N/A' }}</span>
                                             </div>
-                                            <div class="text-start me-4" style="width: 5rem;">
-                                                <span class="text-muted d-block"><small>Status</small></span>
-                                                <span class="badge bg-{{ $order->status === 'Pending' ? 'warning' : ($order->status === 'Delivered' ? 'success' : 'danger') }}">
-                                                    {{ $order->status }}
-                                                </span>
-                                            </div>
-                                            <div class="text-start me-4" style="width: 8rem;">
-                                                <span class="text-muted d-block"><small>Amount</small></span>
-                                                <span class="fw-semibold text-truncate d-block">₱{{ number_format($order->amount, 2) }}</span>
+                                            <div class="text-start me-4" style="width: 7rem;">
+                                                <span class="text-muted d-block"><small>Total Amount</small></span>
+                                                <span class="fw-semibold text-truncate d-block">₱{{ number_format($order->total, 2) }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -127,9 +88,6 @@
                                     <div class="ms-5 d-flex flex-column gap-2">
                                         <x-primary-button class="btn-sm" href="{{ route('orders.show', $order) }}">
                                             <span class="material-icons-outlined">visibility</span>
-                                        </x-primary-button>
-                                        <x-primary-button href="{{ route('orders.edit', $order) }}" class="btn-sm">
-                                            <span class="material-icons-outlined">edit</span>
                                         </x-primary-button>
                                     </div>
                                 </div>
