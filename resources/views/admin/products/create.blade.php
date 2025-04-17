@@ -23,7 +23,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="brandID" class="form-label fw-semibold">Brand</label>
-                        <select name="brandID" id="brandID" class="form-select" required>
+                        <select name="brandID" id="brandID" class="form-select select2 custom-select2" data-placeholder="Select a brand" required>
                             <option value="">Select Brand</option>
                             @foreach ($brands as $brand)
                                 <option value="{{ $brand->brandID }}">{{ $brand->brandName }}</option>
@@ -33,7 +33,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="categoryID" class="form-label fw-semibold">Category</label>
-                        <select name="categoryID" id="categoryID" class="form-select" required>
+                        <select name="categoryID" id="categoryID" class="form-select select2 custom-select2" data-placeholder="Select a category" required>
                             <option value="">Select Category</option>
                             @foreach ($categories as $category)
                                 <option value="{{ $category->categoryID }}">{{ $category->categoryName }}</option>
@@ -57,4 +57,18 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        $(document).ready(function () {
+            $('.select2').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                placeholder: "Select an option",
+                allowClear: false // set true if you want an X to clear
+            });
+        });
+    </script>
+    @endpush
+
 </x-app-layout>

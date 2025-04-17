@@ -182,14 +182,24 @@
                                         <h5 class="mb-1 fw-semibold fs-4">{{ $product->productName }}</h5>
                                         <p class="mb-0 text-muted d-flex align-items-center gap-1">
                                             {{ $product->category->categoryName }} • 
-                                            {{ $product->brand->brandName }} • 
+                                            {{ $product->brand->brandName }} •
+                                            {{-- Product status badge --}}
+                                            @if ($product->productStatus === 'Active')
+                                                <span class="badge bg-success">Active</span>•
+                                            @elseif ($product->productStatus === 'Inactive')
+                                                <span class="badge bg-danger">Inactive</span>•
+                                            @endif 
                                             <strong>Stock: {{ $product->stockQuantity }}</strong>
+                                        
+                                            {{-- Low stock warning badge --}}
                                             @if ($product->stockQuantity >= 0 && $product->stockQuantity <= 10)
                                                 <a href="{{ route('supplier_orders.index', ['supplier_id' => $product->supplierID]) }}" class="badge bg-danger ms-2">
                                                     <span class="material-icons-outlined danger-badge">priority_high</span>
                                                 </a>
                                             @endif
-                                        </p>
+                                        
+                                            
+                                        </p>                                        
                                     </div>
                     
                                     <div class="d-flex align-items-center mx-3 price-section">
