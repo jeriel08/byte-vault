@@ -1,37 +1,6 @@
-```blade
 @extends('employee.main')
 
 @section('content')
-    <style>
-        .payment-form .form-group-inline {
-            display: flex;
-            align-items: center;
-        }
-        .payment-form .form-group-inline label {
-            width: 120px;
-            color: var(--color-2);
-        }
-        .payment-form .input-with-icon {
-            position: relative;
-            flex-grow: 1; /* Stretch to fill available width */
-        }
-        .payment-form .input-with-icon input.full-width {
-            width: 100%; /* Full width for all inputs */
-            padding: 8px;
-            border: 1px solid var(--color-3);
-            border-radius: 4px;
-            background-color: var(--color-2);
-            color: var(--color-1);
-        }
-        .payment-form .peso-icon {
-            position: absolute;
-            left: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--color-3);
-        }
-    </style>
-
     <div class="main-container">
         <!-- Product Side (Left, 70%) -->
         <div class="left-section">
@@ -110,7 +79,7 @@
         </div>
     </div>
 
-    <!-- JavaScript for toggling, filtering, and invoice -->
+    <!-- JavaScript for toggling, filtering, searching, and invoice -->
     <script>
         const brands = @json($brands);
         const categories = @json($categories);
@@ -123,6 +92,7 @@
         let grandTotal = 0;
         let currentPage = 0;
         const itemsPerPage = 5;
+        let searchQuery = '';
 
         function renderCategories() {
             const container = document.getElementById('category-container');
@@ -223,13 +193,23 @@
             }
         }
 
-        function filterProducts(type, id) {
+        function filterProducts() {
             let filteredProducts = products;
-            if (type === 'category' && id) {
-                filteredProducts = products.filter(product => product.categoryID === id);
-            } else if (type === 'brand' && id) {
-                filteredProducts = products.filter(product => product.brandID === id);
+
+            // Apply search filter
+            if (searchQuery) {
+                filteredProducts = filteredProducts.filter(product =>
+                    product.productName.toLowerCase().includes(searchQuery.toLowerCase())
+                );
             }
+
+            // Apply category or brand filter
+            if (currentFilter.type === 'category' && currentFilter.id) {
+                filteredProducts = filteredProducts.filter(product => product.categoryID === currentFilter.id);
+            } else if (currentFilter.type === 'brand' && currentFilter.id) {
+                filteredProducts = filteredProducts.filter(product => product.brandID === currentFilter.id);
+            }
+
             renderProducts(filteredProducts);
         }
 
@@ -238,7 +218,7 @@
                 btn.addEventListener('click', () => {
                     const categoryId = parseInt(btn.getAttribute('data-category-id'));
                     currentFilter = { type: 'category', id: categoryId };
-                    filterProducts('category', categoryId);
+                    filterProducts();
                 });
             });
         }
@@ -248,7 +228,7 @@
                 btn.addEventListener('click', () => {
                     const brandId = parseInt(btn.getAttribute('data-brand-id'));
                     currentFilter = { type: 'brand', id: brandId };
-                    filterProducts('brand', brandId);
+                    filterProducts();
                 });
             });
         }
@@ -337,12 +317,12 @@
             paymentFrame.innerHTML = `
                 <h4>Payment Summary</h4>
                 <div class="payment-details" id="payment-details">
-                    <p>Grand Total</p>
-                    <p id="grand-total">₱${grandTotal.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</p>
-                    <p>Items Ordered</p>
-                    <p id="items-ordered">${itemsOrdered}</p>
                     <p>Payment Method</p>
                     <p>Cash</p>
+                    <p>Items Ordered</p>
+                    <p id="items-ordered">${itemsOrdered}</p>
+                    <p style="font-weight: bold; font-size: 1.1rem;">Grand Total</p>
+                    <p id="grand-total" style="font-weight: bold; font-size: 1.1rem;">₱${grandTotal.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</p>
                 </div>
                 <button id="place-order-btn">Place an Order</button>
             `;
@@ -369,29 +349,33 @@
                     <h4>Payment Summary</h4>
                 </div>
                 <div class="payment-form">
-                    <div class="form-group-inline">
-                        <label>Customer Name:</label>
-                        <div class="input-with-icon full-width">
-                            <input type="text" id="customer-name" placeholder="Enter customer name" class="full-width">
+                    <div class="row mb-1 align-items-center">
+                        <label for="customer-name" class="col-5 text-nowrap" style="color: var(--color-2);">Customer Name:</label>
+                        <div class="col-7">
+                            <input type="text" id="customer-name" placeholder="Enter customer name" class="form-control" style="border: 1px solid var(--color-3); border-radius: 4px; background-color: var(--color-2); color: var(--color-1);">
                         </div>
                     </div>
-                    <div class="form-group-inline">
-                        <label>Amount Received:</label>
-                        <div class="input-with-icon full-width">
-                            <span class="peso-icon">₱</span>
-                            <input type="number" id="amount-received" placeholder="0.00" step="0.01" min="0" class="full-width">
+                    <div class="row mb-1 align-items-center">
+                        <label for="amount-received" class="col-5 text-nowrap" style="color: var(--color-2);">Amount Received:</label>
+                        <div class="col-7">
+                            <div class="input-group">
+                                <span class="input-group-text" style="background-color: var(--color-2); color: var(--color-3); border: 1px solid var(--color-3); border-right: none;">₱</span>
+                                <input type="number" id="amount-received" placeholder="0.00" step="0.01" min="0" class="form-control" style="border: 1px solid var(--color-3); border-radius: 0 4px 4px 0; background-color: var(--color-2); color: var(--color-1);">
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group-inline">
-                        <label>Change:</label>
-                        <div class="input-with-icon full-width">
-                            <span class="peso-icon">₱</span>
-                            <input type="number" id="change" readonly class="full-width">
+                    <div class="row mb-1 align-items-center">
+                        <label for="change" class="col-5 text-nowrap" style="color: var(--color-2);">Change:</label>
+                        <div class="col-7">
+                            <div class="input-group">
+                                <span class="input-group-text" style="background-color: var(--color-2); color: var(--color-3); border: 1px solid var(--color-3); border-right: none;">₱</span>
+                                <input type="number" id="change" readonly class="form-control" style="border: 1px solid var(--color-3); border-radius: 0 4px 4px 0; background-color: var(--color-2); color: var(--color-1);">
+                            </div>
                         </div>
                     </div>
                     <div class="receipt-frame" id="receipt-frame"></div>
                 </div>
-                <button id="confirm-order-btn">Confirm Order</button>
+                <button id="confirm-order-btn" class="btn btn-primary w-100">Confirm Order</button>
             `;
 
             const customerNameInput = document.getElementById('customer-name');
@@ -434,12 +418,12 @@
                             </tbody>
                         </table>
                         <div class="receipt-line"></div>
+                        <p>Payment Method: Cash</p>
                         <p>Items Ordered: ${itemsOrdered}</p>
-                        <p>Grand Total: ₱${grandTotal.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</p>
                         <p>Amount Received: ₱${amountReceived.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</p>
                         <p>Change: ₱${change.replace(/\d(?=(\d{3})+\.)/g, '$&,')}</p>
                         <div class="receipt-line"></div>
-                        <p>Payment Method: Cash</p>
+                        <p style="font-weight: bold; font-size: 1.1rem;">Grand Total: ₱${grandTotal.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</p>
                     </div>
                 `;
             }
@@ -570,10 +554,10 @@
             currentFilter = { type: null, id: null };
             if (showingCategories) {
                 renderCategories();
-                renderProducts(products);
+                filterProducts();
             } else {
                 renderBrands();
-                renderProducts(products);
+                filterProducts();
             }
         });
 
@@ -601,8 +585,13 @@
             }
         });
 
+        // Search functionality
+        document.querySelector('.search-input').addEventListener('input', (e) => {
+            searchQuery = e.target.value.trim();
+            filterProducts();
+        });
+
         renderCategories();
-        renderProducts(products);
+        filterProducts();
     </script>
 @endsection
-```
