@@ -144,6 +144,13 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/pos', [PointOfSaleController::class, 'products'])->name('pos.products');
     Route::get('/pos/sales', [PointOfSaleController::class, 'sales'])->name('pos.sales');
+    Route::post('/pos/store', [PointOfSaleController::class, 'storeOrder'])->name('pos.store');
 });
+
+
+
+
+// POS Section (Category)
+
 
 require __DIR__ . '/auth.php';
