@@ -10,22 +10,43 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Fetch all categories with relationships
-        $allCategories = Category::with('children', 'parent')->get();
+        $search = $request->query('search');
+
+        // Build query based on search
+        $query = Category::query()
+            ->with('children', 'parent')
+            ->where('categoryStatus', 'Active')
+            ->orderBy('categoryName');
+
+        if ($search) {
+            // Include all categories (parent and child) when searching
+            $query->where('categoryName', 'like', '%' . $search . '%');
+        } else {
+            // Exclude child categories when no search
+            $query->whereNull('parentCategoryID');
+        }
+
+        // Paginate results
+        $categories = $query->paginate(10);
 
         // Top-level parents with children (for accordions)
-        $parentCategories = $allCategories->whereNull('parentCategoryID')->filter(function ($category) {
-            return $category->children->isNotEmpty();
+        $parentCategories = $categories->filter(function ($category) {
+            return is_null($category->parentCategoryID) && $category->children->isNotEmpty();
         });
 
         // Top-level categories without children (standalone cards)
-        $standaloneCategories = $allCategories->whereNull('parentCategoryID')->filter(function ($category) {
-            return $category->children->isEmpty();
+        $standaloneCategories = $categories->filter(function ($category) {
+            return is_null($category->parentCategoryID) && $category->children->isEmpty();
         });
 
-        return view('admin.products.categories.index', compact('parentCategories', 'standaloneCategories'));
+        // Child categories (only for search results)
+        $childCategories = $search ? $categories->filter(function ($category) {
+            return !is_null($category->parentCategoryID);
+        }) : collect([]);
+
+        return view('admin.products.categories.index', compact('categories', 'parentCategories', 'standaloneCategories', 'childCategories'));
     }
 
     /**
