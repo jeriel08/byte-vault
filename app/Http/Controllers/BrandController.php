@@ -10,10 +10,18 @@ class BrandController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $brands = Brand::all();
+        $search = $request->query('search');
+
+        $brands = Brand::query()
+            ->when($search, function ($query, $search) {
+                return $query->where('brandName', 'like', '%' . $search . '%');
+            })
+            ->where('brandStatus', 'Active') // Align with POS logic
+            ->orderBy('brandName')
+            ->paginate(10); // 10 brands per page
+
         return view('admin.products.brands.index', compact('brands'));
     }
 

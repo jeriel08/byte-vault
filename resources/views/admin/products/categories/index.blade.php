@@ -11,11 +11,15 @@
                     </x-primary-button>
                 </form>
             </div>
-            <div class="col-auto">
+            <div class="col-auto d-flex align-items-center gap-2">
                 <x-primary-button href="{{ route('categories.create') }}">
                     <span class="material-icons-outlined">add</span>
                     Add Category
                 </x-primary-button>
+                <x-secondary-button href="{{ route('products.index') }}">
+                    <span class="material-icons-outlined">arrow_back</span>
+                    Go back
+                </x-secondary-button>
             </div>
         </div>
 
@@ -146,7 +150,7 @@
 
                 <!-- Child Categories (only shown in search results) -->
                 @if (request('search') && $childCategories->isNotEmpty())
-                    <h5 class="mt-4 mb-3">Child Categories</h5>
+                    <h5 class="mt-3 mb-3">Child Categories</h5>
                     @foreach ($childCategories as $child)
                         <div class="col-12 mb-3">
                             <div class="card account-manager-card px-3 py-4 d-flex flex-row align-items-center">
