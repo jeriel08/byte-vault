@@ -474,6 +474,9 @@
                 _token: '{{ csrf_token() }}',
             };
 
+            console.log('CSRF Token:', orderData._token);
+            console.log('Order Data:', JSON.stringify(orderData));
+
             fetch('{{ route("pos.store") }}', {
                 method: 'POST',
                 headers: {
@@ -593,5 +596,7 @@
 
         renderCategories();
         filterProducts();
+
+        console.log('User authenticated:', {{ Auth::check() ? 'true' : 'false' }});
     </script>
 @endsection

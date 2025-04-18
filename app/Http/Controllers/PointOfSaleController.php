@@ -37,6 +37,9 @@ class PointOfSaleController extends Controller
 
     public function storeOrder(Request $request)
     {
+        // Add this line
+        \Illuminate\Support\Facades\Log::info('Request Data:', $request->all());
+
         $request->validate([
             'customer_name' => 'required|string|max:255',
             'amount_received' => 'required|numeric|min:0',
@@ -65,6 +68,11 @@ class PointOfSaleController extends Controller
             ]);
 
             foreach ($request->items as $item) {
+                $product = Product::find($item['productID']);
+                if ($product->stockQuantity < $item['quantity']) {
+                    throw new \Exception('Insufficient stock for product ID: ' . $item['productID']);
+                }
+
                 Orderline::create([
                     'productID' => $item['productID'],
                     'orderID' => $order->orderID,
