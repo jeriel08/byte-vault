@@ -81,7 +81,7 @@
                             </select>
                         </div>
                         <hr>
-                        <button type="button" class="btn btn-outline-secondary w-100" id="clearFilters">Clear Filters</button>
+                        <button type="button" class="btn btn-outline-danger w-100" id="clearFilters">Clear Filters</button>
                     </div>
                 </div>
             </div>

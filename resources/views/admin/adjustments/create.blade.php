@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
-        <div class="d-flex justify-content-between align-items-center">
-            <h1 class="text-2xl font-bold mb-4">Add Adjustment</h1>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-2xl fw-semibold mb-0">Add Adjustment</h2>
             <x-secondary-button href="{{ route('adjustments.index') }}">
                 <span class="material-icons-outlined">arrow_back</span>
                 Go back
@@ -51,16 +51,16 @@
         </div>
         <div class="modal-body custom-modal-body">
             <div class="row d-flex justify-content-center align-content-center">
-                <div class="row mb-3">
+                <div class="mb-3">
                     <label class="form-label fw-semibold">Product</label>
-                    <select id="productID" class="form-select" required>
+                    <select id="productID" class="form-select custom-select2 select2" required>
                         <option value="">Select Product</option>
                         @foreach ($products as $product)
                             <option value="{{ $product->productID }}">{{ $product->productName}} (Stock: {{ $product->stockQuantity }})</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="row mb-3">
+                <div class="mb-3">
                     <label class="form-label fw-semibold">Quantity</label>
                     <input type="number" id="quantity" class="form-control" min="1" required>
                 </div>
@@ -122,4 +122,20 @@
             }
         });
     </script>
+
+    @push('scripts')
+    <script>
+        $(document).ready(function () {
+            // Select inside modal
+            $('#productID').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                placeholder: "Select Product",
+                dropdownParent: $('#addProductModal'),
+                allowClear: false
+            });
+        });   
+    </script>
+    @endpush
+
 </x-app-layout>

@@ -185,7 +185,16 @@
                 placeholder: "Select Supplier",
                 allowClear: false
             });
-        });
+
+            // Select inside modal
+            $('#productID').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                placeholder: "Select Product",
+                dropdownParent: $('#addProductModal'),
+                allowClear: false
+            });
+        });        
     </script>
     @endpush
 
