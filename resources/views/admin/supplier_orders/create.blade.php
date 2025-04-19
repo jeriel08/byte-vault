@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="text-2xl fw-semibold">Create New Supplier Order</h2>
+            <h2 class="text-2xl fw-semibold mb-0">Create New Supplier Order</h2>
             <x-secondary-button href="{{ route('supplier_orders.index') }}">
                 <span class="material-icons-outlined">arrow_back</span>
                 Go back
@@ -183,15 +183,6 @@
                 theme: 'bootstrap-5',
                 width: '100%',
                 placeholder: "Select Supplier",
-                allowClear: false
-            });
-
-            // Select inside modal
-            $('#productID').select2({
-                theme: 'bootstrap-5',
-                width: '100%',
-                placeholder: "Select Product",
-                dropdownParent: $('#addProductModal'),
                 allowClear: false
             });
         });

@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="text-2xl font-bold">Return No. {{ $return->returnSupplierID }}</h2>
+            <h2 class="text-2xl fw-semibold mb-0">Return No. {{ $return->returnSupplierID }}</h2>
             <x-secondary-button href="{{ route('supplier_returns.index') }}">
                 <span class="material-icons-outlined">arrow_back</span>
                 Go back

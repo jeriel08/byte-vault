@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="text-2xl font-bold">Add Return to Supplier</h2>
+            <h2 class="text-2xl fw-semibold mb-0">Add Return to Supplier</h2>
             <x-secondary-button href="{{ route('supplier_returns.index') }}">
                 <span class="material-icons-outlined">arrow_back</span>
                 Go back
@@ -15,7 +15,7 @@
                     <h5 class="fw-semibold mb-3">Return Information</h5>
                     <div class="mb-3">
                         <label for="supplierOrderID" class="form-label fw-semibold">Supplier Order</label>
-                        <select name="supplierOrderID" id="supplierOrderID" class="form-select" required>
+                        <select name="supplierOrderID" id="supplierOrderID" class="form-select custom-select2 select2" required>
                             <option value="">Select Supplier Order</option>
                             @foreach ($orders as $supplierOrder)
                                 <option value="{{ $supplierOrder->supplierOrderID }}" {{ $order && $order->supplierOrderID === $supplierOrder->supplierOrderID ? 'selected' : '' }} data-details="{{ $supplierOrder->details->toJson() }}">
@@ -82,62 +82,61 @@
         </div>
     </div>
 
-    <!-- JavaScript for Managing Products -->
+    @push('scripts')
     <script>
-        let index = {{ $order ? $order->details->count() : 0 }};
+        $(document).ready(function () {
+            $('#supplierOrderID').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                placeholder: "Select Supplier",
+                allowClear: false
+            });
 
-        document.getElementById('supplierOrderID').addEventListener('change', function() {
-            const productList = document.getElementById('productList');
-            productList.innerHTML = '';
-            index = 0;
+            let index = {{ $order ? $order->details->count() : 0 }};
 
-            const selectedOption = this.options[this.selectedIndex];
-            const details = JSON.parse(selectedOption.getAttribute('data-details') || '[]');
+            // Proper change listener for Select2
+            $('#supplierOrderID').on('change', function () {
+                const selectedOption = this.options[this.selectedIndex];
+                const details = JSON.parse(selectedOption.getAttribute('data-details') || '[]');
+                const productList = document.getElementById('productList');
+                productList.innerHTML = '';
+                index = 0;
 
-            if (details.length === 0) {
-                productList.innerHTML = `
-                    <div class="card account-manager-card text-center p-5">
-                        <h5 class="text-muted d-flex justify-content-center align-items-center gap-3">
-                            Please select a supplier order to load products.
-                            <span class="material-icons-outlined fs-2">inventory</span>
-                        </h5>
-                    </div>
-                `;
-                return;
-            }
+                if (details.length === 0) {
+                    productList.innerHTML = `
+                        <div class="card account-manager-card text-center p-5">
+                            <h5 class="text-muted d-flex justify-content-center align-items-center gap-3">
+                                Please select a supplier order to load products.
+                                <span class="material-icons-outlined fs-2">inventory</span>
+                            </h5>
+                        </div>
+                    `;
+                    return;
+                }
 
-            details.forEach(detail => {
-                const productCard = document.createElement('div');
-                productCard.className = 'card account-manager-card p-3 d-flex flex-row align-items-center mb-3';
-                productCard.innerHTML = `
-                    <div class="flex-grow-1">
-                        <h5 class="mb-1 fw-semibold">${detail.product.productName}</h5>
-                    </div>
-                    <div class="d-flex align-items-center mx-3">
-                        <span class="vr me-3"></span>
-                        <div class="d-flex flex-row gap-3 align-items-start">
-                            <div class="text-start" style="min-width: 80px;">
-                                <span class="text-muted d-block"><small>Quantity</small></span>
-                                <input type="number" class="form-control quantity-input" name="details[${index}][quantity]" value="0" min="0" max="${detail.quantity}">
+                details.forEach(detail => {
+                    const productCard = document.createElement('div');
+                    productCard.className = 'card account-manager-card p-3 d-flex flex-row align-items-center mb-3';
+                    productCard.innerHTML = `
+                        <div class="flex-grow-1">
+                            <h5 class="mb-1 fw-semibold">${detail.product.productName}</h5>
+                        </div>
+                        <div class="d-flex align-items-center mx-3">
+                            <span class="vr me-3"></span>
+                            <div class="d-flex flex-row gap-3 align-items-start">
+                                <div class="text-start" style="min-width: 80px;">
+                                    <span class="text-muted d-block"><small>Quantity</small></span>
+                                    <input type="number" class="form-control quantity-input" name="details[${index}][quantity]" value="0" min="0" max="${detail.quantity}">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="ms-5">
-                        <button type="button" class="btn btn-danger btn-sm remove-product">
-                            <span class="material-icons-outlined danger-badge fs-1">delete</span>
-                        </button>
-                    </div>
-                    <input type="hidden" name="details[${index}][productID]" value="${detail.productID}">
-                `;
-                productList.appendChild(productCard);
-                index++;
+                        <input type="hidden" name="details[${index}][productID]" value="${detail.productID}">
+                    `;
+                    productList.appendChild(productCard);
+                    index++;
+                });
             });
         });
-
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.remove-product')) {
-                e.target.closest('.card').remove();
-            }
-        });
     </script>
+    @endpush
 </x-app-layout>
