@@ -1,3 +1,5 @@
+@section('title', 'Supplier Orders | ByteVault')
+
 <x-app-layout>
     <div class="container-fluid mx-auto px-4 py-6 position-relative">
         <!-- Header with Search and Add Supplier Order -->

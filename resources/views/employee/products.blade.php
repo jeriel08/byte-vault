@@ -1,5 +1,7 @@
 @extends('employee.main')
 
+@section('title', 'POS | ByteVault')
+
 @section('content')
     <div class="main-container">
         <!-- Product Side (Left, 70%) -->

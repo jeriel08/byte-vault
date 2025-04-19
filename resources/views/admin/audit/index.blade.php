@@ -1,3 +1,5 @@
+@section('title', 'Audit Logs | ByteVault')
+
 <x-app-layout>
     <div class="container-fluid mx-auto px-4 py-6 position-relative">
         <!-- Header -->

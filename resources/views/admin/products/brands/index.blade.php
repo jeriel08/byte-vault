@@ -1,3 +1,5 @@
+@section('title', 'Brands | ByteVault')
+
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
         <div class="row d-flex justify-content-between align-items-center mb-4">

@@ -1,3 +1,5 @@
+@section('title', 'Inventory Report | ByteVault')
+
 <x-app-layout>
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -9,11 +11,11 @@
                 <x-primary-button href="{{ route('reports.inventory.download.pdf') }}" class="me-2">
                     <i class="fa-solid fa-file-pdf"></i> Download PDF
                 </x-primary-button> 
-                <x-primary-button href="{{ route('dashboard') }}">
+                <x-secondary-button href="{{ route('dashboard') }}">
                     <span class="material-icons-outlined">
                         arrow_back
                     </span>Go back
-                </x-primary-button>
+                </x-secondary-button>
             </div>
         </div>
         <hr class="mb-4">

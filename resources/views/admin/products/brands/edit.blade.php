@@ -1,7 +1,9 @@
+@section('title', 'Edit Brand | ByteVault')
+
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="text-2xl">Edit Brand: <strong>{{ $brand->brandName }}</strong></h2>
+            <h2 class="text-2xl mb-0">Edit Brand: <strong>{{ $brand->brandName }}</strong></h2>
             <x-secondary-button href="{{ route('brands.index') }}">
                 <span class="material-icons-outlined">arrow_back</span>
                 Go back

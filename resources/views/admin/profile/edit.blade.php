@@ -1,3 +1,5 @@
+@section('title', 'Account Settings | ByteVault')
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="fw-semibold fs-2 text-dark">
@@ -13,7 +15,7 @@
                     <div class="card h-100 shadow-sm account-settings-card">
                         <div class="card-body p-3 p-sm-4">
                             <div class="card-text">
-                                @include('profile.partials.update-profile-information-form')
+                                @include('admin.profile.partials.update-profile-information-form')
                             </div>
                         </div>
                     </div>
@@ -24,7 +26,7 @@
                     <div class="card h-100 shadow-sm account-settings-card">
                         <div class="card-body p-3 p-sm-4">
                             <div class="card-text">
-                                @include('profile.partials.update-password-form')
+                                @include('admin.profile.partials.update-password-form')
                             </div>
                         </div>
                     </div>
@@ -35,7 +37,7 @@
                     <div class="card h-100 shadow-sm account-settings-card">
                         <div class="card-body p-3 p-sm-4">
                             <div class="card-text">
-                                @include('profile.partials.delete-user-form')
+                                @include('admin.profile.partials.delete-user-form')
                             </div>
                         </div>
                     </div>

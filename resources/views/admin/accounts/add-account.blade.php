@@ -1,6 +1,14 @@
+@section('title', 'Add Account | ByteVault')
+
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
-        <h1 class="text-2xl fw-semibold mb-4">Add New Employee Account</h1>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-2xl fw-semibold mb-0">Add Account</h2>
+            <x-secondary-button href="{{ route('account.manager') }}">
+                <span class="material-icons-outlined">arrow_back</span>
+                Go back
+            </x-secondary-button>
+        </div>
 
         @if ($errors->any())
             <div class="alert alert-danger mb-4">

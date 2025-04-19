@@ -1,6 +1,14 @@
+@section('title', 'Edit Account | ByteVault')
+
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
-        <h1 class="text-2xl fw-semibold mb-4">Edit Employee Account: {{ $employee->firstName }} {{ $employee->lastName }}</h1>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-2xl mb-0">Edit Account: <strong>{{ $employee->firstName }} {{ $employee->lastName }}</strong></h2>
+            <x-secondary-button href="{{ route('account.manager') }}">
+                <span class="material-icons-outlined">arrow_back</span>
+                Go back
+            </x-secondary-button>
+        </div>
 
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">

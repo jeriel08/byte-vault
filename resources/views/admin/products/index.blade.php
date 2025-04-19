@@ -1,3 +1,5 @@
+@section('title', 'Products | ByteVault')
+
 <x-app-layout>
     <div class="container-fluid py-6 position-relative">
         <!-- Header with Search and Add Product -->

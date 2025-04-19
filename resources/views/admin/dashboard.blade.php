@@ -1,3 +1,5 @@
+@section('title', 'Dashboard | ByteVault')
+
 <x-app-layout>
     <div class="container">
         <div class="py-12">
