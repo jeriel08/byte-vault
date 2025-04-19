@@ -27,7 +27,7 @@
         @endif
 
         <div class="row mx-2">
-            <!-- Static Filter Panel -->
+            <!-- Product Filter Panel -->
             <div class="col-lg-3 col-md-4 col-sm-12">
                 <div class="card filter-panel">
                     <form method="GET" action="{{ route('products.index') }}" id="filterForm">

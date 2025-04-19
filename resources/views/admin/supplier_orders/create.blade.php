@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="text-2xl font-bold">Create New Supplier Order</h2>
+            <h2 class="text-2xl fw-semibold">Create New Supplier Order</h2>
             <x-secondary-button href="{{ route('supplier_orders.index') }}">
                 <span class="material-icons-outlined">arrow_back</span>
                 Go back
@@ -15,7 +15,7 @@
                     <h5 class="fw-semibold mb-3">Order Information</h5>
                     <div class="mb-3">
                         <label for="supplierID" class="form-label fw-semibold">Supplier</label>
-                        <select name="supplierID" id="supplierID" class="form-select" required>
+                        <select name="supplierID" id="supplierID" class="form-select select2 custom-select2" required>
                             <option value="">Select Supplier</option>
                             @foreach ($suppliers as $supplier)
                                 <option value="{{ $supplier->supplierID }}" {{ $reorderOrder && $reorderOrder->supplierID == $supplier->supplierID ? 'selected' : '' }}>
@@ -93,20 +93,20 @@
         </div>
         <div class="modal-body custom-modal-body">
             <div class="row d-flex justify-content-center align-content-center">
-                <div class="row mb-3">
+                <div class="mb-3">
                     <label class="form-label fw-semibold">Product</label>
-                    <select id="productID" class="form-select" required>
+                    <select id="productID" class="form-select select2 custom-select2" required>
                         <option value="">Select Product</option>
                         @foreach ($products as $product)
                             <option value="{{ $product->productID }}">{{ $product->productName }}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="row mb-3">
+                <div class="mb-3">
                     <label class="form-label fw-semibold">Quantity</label>
                     <input type="number" id="quantity" class="form-control" min="1" required>
                 </div>
-                <div class="row mb-3">
+                <div class="mb-3">
                     <label class="form-label fw-semibold">Unit Cost</label>
                     <input type="number" id="unitCost" class="form-control" step="0.01" min="0" required>
                 </div>
@@ -174,4 +174,28 @@
             }
         });
     </script>
+
+    @push('scripts')
+    <script>
+        $(document).ready(function () {
+            // Select outside modal
+            $('#supplierID').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                placeholder: "Select Supplier",
+                allowClear: false
+            });
+
+            // Select inside modal
+            $('#productID').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                placeholder: "Select Product",
+                dropdownParent: $('#addProductModal'),
+                allowClear: false
+            });
+        });
+    </script>
+    @endpush
+
 </x-app-layout>

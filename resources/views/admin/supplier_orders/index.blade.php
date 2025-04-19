@@ -23,7 +23,7 @@
         @endif
 
         <div class="row">
-            <!-- Filter Panel (unchanged) -->
+            <!-- Supplier Order Filter Panel -->
             <div class="col-lg-3 col-md-4 col-sm-12">
                 <div class="card filter-panel">
                     <div class="card-body p-3">
@@ -47,7 +47,7 @@
                         <!-- Supplier -->
                         <div class="mb-3">
                             <label for="supplierFilter" class="form-label fw-semibold mb-2">Supplier</label>
-                            <select class="form-select" id="supplierFilter" name="supplier_id">
+                            <select class="form-select select2 custom-select2" id="supplierFilter" name="supplier_id">
                                 <option value="">All Suppliers</option>
                                 @foreach ($suppliers as $supplier)
                                     <option value="{{ $supplier->supplierID }}" {{ request('supplier_id') == $supplier->supplierID ? 'selected' : '' }}>
@@ -76,7 +76,7 @@
                         </div>
                         <hr>
                         <div>
-                            <button type="button" class="btn btn-outline-secondary w-100" id="clearFilters">Clear Filters</button>
+                            <button type="button" class="btn btn-outline-danger w-100" id="clearFilters">Clear Filters</button>
                         </div>
                     </div>
                 </div>
@@ -336,7 +336,37 @@
                 sortBy.value = 'date_desc';
                 searchInput.value = '';
                 window.location.href = window.location.pathname;
+
+                $('.select2').val('').trigger('change.select2');
             });
         });
     </script>
+
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                $('.select2').select2({
+                    theme: 'bootstrap-5',
+                    placeholder: "Select a supplier",
+                    allowClear: true,
+                    width: '100%'
+                }).on('change', function() {
+                    // Get the selected supplier ID
+                    var supplierId = $(this).val();
+                    
+                    // Get current URL and update/add supplier_id query parameter
+                    var url = new URL(window.location.href);
+                    if (supplierId) {
+                        url.searchParams.set('supplier_id', supplierId);
+                    } else {
+                        url.searchParams.delete('supplier_id');
+                    }
+                    
+                    // Reload the page with the updated URL
+                    window.location.href = url.toString();
+                });
+            });
+        </script>
+    @endpush
+
 </x-app-layout>

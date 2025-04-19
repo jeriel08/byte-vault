@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="text-2xl font-bold"> Order No. {{ $supplierOrder->supplierOrderID }}</h2>
+            <h2 class="text-2xl fw-semibold"> Order No. {{ $supplierOrder->supplierOrderID }}</h2>
             <x-secondary-button href="{{ route('supplier_orders.index') }}">
                 <span class="material-icons-outlined">arrow_back</span>
                 Go back
@@ -24,7 +24,7 @@
                     <h5 class="fw-semibold mb-3">Order Information</h5>
                     <div class="mb-3">
                         <label for="supplierID" class="form-label fw-semibold">Supplier</label>
-                        <select name="supplierID" id="supplierID" class="form-select" required>
+                        <select name="supplierID" id="supplierID" class="custom-select2 select2" required>
                             <option value="">Select Supplier</option>
                             @foreach ($suppliers as $supplier)
                                 <option value="{{ $supplier->supplierID }}" {{ $supplierOrder->supplierID == $supplier->supplierID ? 'selected' : '' }}>
@@ -94,8 +94,8 @@
                                             <input type="number" class="form-control edit-unitCost" value="{{ $detail->unitCost }}" step="0.01" min="0" required>
                                         </div>
                                     </div>
-                                    <div class="modal-footer custom-modal-footer pb-0">
-                                        <x-primary-button type="button" class="btn btn-primary mb-4 update-product" data-detail-id="{{ $detail->supplierOrderDetailID }}">Update</x-primary-button>
+                                    <div class="modal-footer custom-modal-footer">
+                                        <x-primary-button type="button" class="btn btn-primary update-product" data-detail-id="{{ $detail->supplierOrderDetailID }}">Update</x-primary-button>
                                         <x-secondary-button type="button" data-bs-dismiss="modal">Close</x-secondary-button>
                                     </div>
                                 </x-modal>
@@ -133,4 +133,18 @@
             }
         });
     </script>
+    
+    @push('scripts')
+    <script>
+        $(document).ready(function () {
+            // Select outside modal
+            $('#supplierID').select2({
+                theme: 'bootstrap-5',
+                width: '100%',
+                placeholder: "Select Supplier",
+                allowClear: false
+            });
+        });
+    </script>
+    @endpush
 </x-app-layout>

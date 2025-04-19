@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-6">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="text-2xl font-bold m-0">Order No. {{ $supplierOrder->supplierOrderID }}</h2>
+            <h2 class="text-2xl fw-semibold m-0">Order No. {{ $supplierOrder->supplierOrderID }}</h2>
             <div class="d-flex gap-2">
                 @if ($supplierOrder->receivedDate)
                     <x-primary-button href="{{ route('supplier_returns.create', ['order' => $supplierOrder->supplierOrderID]) }}">
