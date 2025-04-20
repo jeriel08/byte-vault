@@ -97,7 +97,7 @@
                 </x-slot>
             </x-dropdown>
         </div>
-<
+
         <!-- Offcanvas Menu -->
         <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
             <div class="offcanvas-header d-flex align-items-center mt-4">
@@ -105,7 +105,7 @@
                     <img src="{{ asset('images/logo-cropped.png') }}" alt="SmartStock Inventory Logo" class="img-fluid"/>
                 </div>
             </div>
-            <div class="offcanvas-body">
+            <div class="offcanvas-body" data-simplebar>
                 <ul class="navbar-nav justify-content-end flex-grow-1 px-auto">
                     <li class="nav-item">
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="btn btn-outline-dark d-flex align-items-center gap-2 mb-3 py-2 px-4">
