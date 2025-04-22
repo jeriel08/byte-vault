@@ -23,6 +23,7 @@
     <!-- Scripts -->
     @vite([
         'resources/css/pos-styling.css',
+        'resources/css/pos-sales-styling.css',
     ])
 </head>
 
@@ -38,6 +39,8 @@
 
     <!-- Bootstrap JavaScript CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+
+    @yield('scripts')
 
 </body>
 

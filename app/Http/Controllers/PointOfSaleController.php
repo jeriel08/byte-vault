@@ -6,6 +6,8 @@ use App\Models\PointOfSale;
 use App\Models\Orderline;
 use App\Models\Product;
 use App\Models\Customer;
+use App\Models\Order;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -31,8 +33,18 @@ class PointOfSaleController extends Controller
 
     public function sales()
     {
-        $orders = PointOfSale::with('orderLines.product')->get();
-        return view('employee.sales', compact('orders'));
+        // Fetch total sales (sum of all orders' total)
+        $totalSales = Order::sum('total');
+
+        // Fetch sales for today (sum of orders' total for current day)
+        $todaySales = Order::whereDate('created_at', today())->sum('total') ?? 0;
+
+        // Fetch orders with related customer and orderline data
+        $orders = Order::with(['customer', 'orderlines.product'])
+            ->latest('created_at')
+            ->paginate(10);
+
+        return view('employee.sales', compact('totalSales', 'todaySales', 'orders'));
     }
 
     public function storeOrder(Request $request)
