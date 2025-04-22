@@ -5,10 +5,10 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Inventory report as of {{ \Carbon\Carbon::now()->format('F j, Y') }}</h2>
             <div class="d-flex gap-2">
-                <x-primary-button href="{{ route('reports.inventory.download.excel') }}" class="me-2">
+                <x-primary-button href="{{ route('reports.inventory.download.excel', ['filter_start_date' => $filter_start_date, 'filter_end_date' => $filter_end_date]) }}" class="me-2">
                     <i class="fa-solid fa-file-excel"></i> Download Excel
                 </x-primary-button> 
-                <x-primary-button href="{{ route('reports.inventory.download.pdf') }}" class="me-2">
+                <x-primary-button href="{{ route('reports.inventory.download.pdf', ['filter_start_date' => $filter_start_date, 'filter_end_date' => $filter_end_date]) }}" class="me-2">
                     <i class="fa-solid fa-file-pdf"></i> Download PDF
                 </x-primary-button> 
                 <x-secondary-button href="{{ route('dashboard') }}">
@@ -18,15 +18,46 @@
                 </x-secondary-button>
             </div>
         </div>
-        <hr class="mb-4">
-        
-        <!-- Summary Stats -->
+
         <div class="mb-4">
-            <p><strong>Total Products:</strong> {{ $totalProducts }}</p>
-            <p><strong>Total Inventory Value:</strong> ${{ number_format($totalValue, 2) }}</p>
-            <p><strong>Low Stock Items (Stock < 5):</strong> {{ $lowStockCount }}</p>
+            <!-- Date Range Filter -->
+            <form action="{{ route('reports.inventory') }}" method="GET" class="mb-4">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label for="dateRangePickerInput" class="form-label fw-semibold">Select Date Range (Sales)</label>
+                        <input type="text" class="form-control form-control-sm" id="dateRangePickerInput" placeholder="Select date range...">
+                        {{-- Hidden fields to store and submit the actual dates --}}
+                        <input type="hidden" name="filter_start_date" id="filter_start_date" value="{{ request('filter_start_date') }}">
+                        <input type="hidden" name="filter_end_date" id="filter_end_date" value="{{ request('filter_end_date') }}">
+                    </div>
+                    {{-- Removed the Apply Filters button --}}
+                    <div class="col-md-auto d-flex align-items-center">
+                        <x-secondary-button href="{{ route('reports.inventory') }}" class="btn btn-secondary btn-sm">
+                        <span class="material-icons-outlined" style="font-size: 1.1em; vertical-align: middle;">clear</span> Clear Date Filter
+                        </x-secondary-button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <hr class="mb-4">
+
+        <div class="row mb-4">
+            <p><strong>Report Generated:</strong> {{ $reportDate }}</p>
+            <p><strong>Date Range:</strong> {{ $dateRangeDisplay }}</p>
+            <div class="col-6">
+                <p><strong>Total Products:</strong> {{ $totalProducts }}</p>
+                <p><strong>Total Inventory Value:</strong> ${{ number_format($totalValue, 2) }}</p>
+                <p><strong>Low Stock Items (Stock < 5):</strong> {{ $lowStockCount }}</p>
+            </div>
+            <div class="col-6">
+                <p><strong>Orders in Range:</strong> {{ $salesOrdersCount }}</p>
+                <p><strong>Sales Total in Range:</strong> ₱{{ number_format($salesTotalValue, 2) }}</p>
+            </div>
         </div>
     
+        <hr class="mb-4">
+            
         <!-- Products Table -->
         <table class="table table-bordered inventory-table">
             <thead class="inventory-table-header">
@@ -51,4 +82,57 @@
             </tbody>
         </table>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the input element and the hidden fields
+            const dateInput = document.getElementById('dateRangePickerInput');
+            const startDateInput = document.getElementById('filter_start_date');
+            const endDateInput = document.getElementById('filter_end_date');
+            const filterForm = document.getElementById('filterForm'); // Get the form
+    
+            // Initialize Litepicker
+            const picker = new Litepicker({
+                element: dateInput,
+                singleMode: false, // Enable range selection
+                format: 'YYYY-MM-DD', // Format for display and hidden inputs
+                tooltipText: {
+                  one: 'day',
+                  other: 'days'
+                },
+                tooltipNumber: (totalDays) => {
+                  return totalDays; // Show total days selected
+                },
+                setup: (picker) => {
+                    // Event triggered when a date range is selected
+                    picker.on('selected', (date1, date2) => {
+                        // Update hidden inputs with formatted dates
+                        startDateInput.value = date1.format('YYYY-MM-DD');
+                        endDateInput.value = date2.format('YYYY-MM-DD');
+    
+                        // Automatically submit the form
+                        if (filterForm) {
+                            filterForm.submit();
+                        } else {
+                            console.error('Filter form not found.');
+                        }
+                    });
+                },
+            });
+    
+            // --- Optional: Display initial dates if they exist (from backend) ---
+            const initialStartDate = startDateInput.value;
+            const initialEndDate = endDateInput.value;
+            if (initialStartDate && initialEndDate) {
+                // Set the visible input's value (display only)
+                dateInput.value = `${initialStartDate} - ${initialEndDate}`;
+                // Optionally, set the picker's dates if needed (might depend on library version)
+                // picker.setDateRange(initialStartDate, initialEndDate);
+            } else if (initialStartDate) { // Handle case where only start date might be set (unlikely for range)
+                 dateInput.value = initialStartDate;
+            }
+            // --- End Optional Initial Display ---
+    
+        });
+    </script>
 </x-app-layout>

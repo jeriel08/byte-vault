@@ -21,12 +21,29 @@
 </head>
 <body>
     <div class="container">
-        <h2>Inventory Report as of {{ $reportDate }}</h2>
+        @if ($dateRangeDisplay)
+            <h2>Inventory Report {{ $dateRangeDisplay }}</h2>
+        @else
+            <h2>Inventory Report as of {{ $reportDate }}</h2>
+        @endif
+        
 
         <div class="summary">
-            <p><strong>Total Products:</strong> {{ $totalProducts }}</p>
-            <p><strong>Total Inventory Value:</strong> ${{ number_format($totalValue, 2) }}</p>
-            <p><strong>Low Stock Items (Stock < 5):</strong> {{ $lowStockCount }}</p>
+            <p><strong>Report Generated:</strong> {{ $reportDate }}</p>
+            <p><strong>Date Range:</strong> {{ $dateRangeDisplay }}</p>
+            <div>
+                <div class="mb-4">
+                    <h2>Product Report</h2>
+                    <p><strong>Total Products:</strong> {{ $totalProducts }}</p>
+                    <p><strong>Total Inventory Value:</strong> ₱{{ number_format($totalValue, 2) }}</p>
+                    <p><strong>Low Stock Items (Stock < 5):</strong> {{ $lowStockCount }}</p>
+                </div>
+                <div>
+                    <h2>Sales Report</h2>
+                    <p><strong>Orders in Range:</strong> {{ $salesOrdersCount }}</p>
+                    <p><strong>Sales Total in Range:</strong> ₱{{ number_format($salesTotalValue, 2) }}</p>
+                </div>
+            </div>
         </div>
 
         <table>
@@ -45,8 +62,8 @@
                         <td class="text-center">{{ $product->productID }}</td>
                         <td>{{ $product->productName }}</td>
                         <td class="text-end">{{ $product->stockQuantity }}</td>
-                        <td class="text-end">${{ number_format($product->price, 2) }}</td>
-                        <td class="text-end">${{ number_format($product->stockQuantity * $product->price, 2) }}</td>
+                        <td class="text-end">₱{{ number_format($product->price, 2) }}</td>
+                        <td class="text-end">₱{{ number_format($product->stockQuantity * $product->price, 2) }}</td>
                     </tr>
                 @empty
                     <tr>
