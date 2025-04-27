@@ -343,13 +343,13 @@
 .payment-btn {
     flex: 1;
     padding: 10px;
-    background-color: var(--color-2);
-    color: var(--color-1);
+    background-color: var(--color-2); /* Dark teal */
+    color: var(--color-1); /* Light beige */
     border: none;
     border-radius: 4px;
     font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
     margin: 0 5px;
     display: flex;
     flex-direction: column;
@@ -357,18 +357,40 @@
     justify-content: center;
 }
 
+.payment-btn img {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 5px;
+    transition: filter 0.3s ease;
+}
+
 .payment-btn .material-icons-outlined {
     font-size: 24px;
     margin-bottom: 5px;
-    color: var(--color-1);
+    color: var(--color-1); /* Light beige */
+    transition: color 0.3s ease;
 }
 
 .payment-btn:hover {
-    background-color: var(--color-3);
+    background-color: var(--color-3); /* Muted green-gray */
+    color: var(--color-1);
+}
+
+.payment-btn:hover img {
+    filter: brightness(1.2);
 }
 
 .payment-btn.selected {
-    background-color: var(--color-5);
+    background-color: #28a745 !important; /* Bright green */
+    color: #ffffff !important; /* White */
+}
+
+.payment-btn.selected img {
+    filter: brightness(1); /* Ensure image stays visible */
+}
+
+.payment-btn.selected .material-icons-outlined {
+    color: #ffffff !important; /* White */
 }
 
 #place-order-btn, #confirm-order-btn {
@@ -592,10 +614,10 @@
 }
 .payment-form .input-with-icon {
     position: relative;
-    flex-grow: 1; /* Stretch to fill available width */
+    flex-grow: 1;
 }
 .payment-form .input-with-icon input.full-width {
-    width: 100%; /* Full width for customer name input */
+    width: 100%;
     padding: 8px;
     border: 1px solid var(--color-3);
     border-radius: 4px;
@@ -603,7 +625,7 @@
     color: var(--color-1);
 }
 .payment-form .input-with-icon input.half-width {
-    width: 120px; /* Fixed width for amount and change */
+    width: 120px;
     padding: 8px 8px 8px 20px;
     border: 1px solid var(--color-3);
     border-radius: 4px;

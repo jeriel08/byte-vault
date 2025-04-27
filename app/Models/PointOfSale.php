@@ -2,24 +2,26 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class PointOfSale extends Model
 {
+    use HasFactory;
+
     protected $table = 'orders';
     protected $primaryKey = 'orderID';
+
     protected $fillable = [
         'customerID',
         'total_items',
         'payment_status',
-        'created_by',
-        'updated_by',
-        'created_at',
-        'updated_at',
+        'gcash_number',
         'amount_received',
         'change',
         'total',
+        'created_by',
+        'created_at',
     ];
 
     public function orderLines()
@@ -34,15 +36,12 @@ class PointOfSale extends Model
 
     public static function getActiveCategories()
     {
-        return DB::table('categories')
-            ->where('categoryStatus', 'Active')
-            ->get();
+        return Category::where('categoryStatus', 'Active')->get();
     }
 
     public static function getActiveBrands()
     {
-        return DB::table('brands')
-            ->where('brandStatus', 'Active')
-            ->get();
+        return Brand::where('brandStatus', 'Active')->get();
     }
 }
+?>
