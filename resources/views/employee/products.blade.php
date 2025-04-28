@@ -27,30 +27,32 @@
             <h2 style="margin: 20px 0 10px;">Products</h2>
             <div class="products-container" style="max-height: 700px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 20px; padding: 10px 0;" id="products-container">
                 @foreach ($products as $product)
-                    <button class="product-item" data-product-id="{{ $product->productID }}" style="width: calc(33.33% - 14px); height: 150px; background-color: var(--color-6); border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border: 1px solid black; padding: 15px; cursor: pointer;">
-                        <div style="display: flex; align-items: center;">
-                            <span class="material-icons-outlined" style="font-size: 60px; color: var(--color-2); margin-right: 10px;">
-                                @switch($product->categoryName)
-                                    @case('CPU') memory @break
-                                    @case('Storage') storage @break
-                                    @case('SSD') sd_card @break
-                                    @case('HDD') save @break
-                                    @case('Cables') cable @break
-                                    @case('Ethernet Cable') lan @break
-                                    @case('GPU') videogame_asset @break
-                                    @case('Laptop') laptop @break
-                                    @case('Laptop Screen') monitor @break
-                                    @case('Laptop Battery') battery_full @break
-                                    @default category
-                                @endswitch
-                            </span>
-                            <div>
-                                <p style="margin: 0; font-size: 16px; font-weight: 500;">{{ $product->productName }}</p>
-                                <p style="margin: 5px 0 0; font-size: 12px; color: var(--color-3);">{{ $product->productDescription ?? 'No description available' }}</p>
+                    @if ($product->stockQuantity > 0)
+                        <button class="product-item" data-product-id="{{ $product->productID }}" data-stock="{{ $product->stockQuantity }}" style="width: calc(33.33% - 14px); height: 150px; background-color: var(--color-6); border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border: 1px solid black; padding: 15px; cursor: pointer;">
+                            <div style="display: flex; align-items: center;">
+                                <span class="material-icons-outlined" style="font-size: 60px; color: var(--color-2); margin-right: 10px;">
+                                    @switch($product->categoryName)
+                                        @case('CPU') memory @break
+                                        @case('Storage') storage @break
+                                        @case('SSD') sd_card @break
+                                        @case('HDD') save @break
+                                        @case('Cables') cable @break
+                                        @case('Ethernet Cable') lan @break
+                                        @case('GPU') videogame_asset @break
+                                        @case('Laptop') laptop @break
+                                        @case('Laptop Screen') monitor @break
+                                        @case('Laptop Battery') battery_full @break
+                                        @default category
+                                    @endswitch
+                                </span>
+                                <div>
+                                    <p style="margin: 0; font-size: 16px; font-weight: 500;">{{ $product->productName }}</p>
+                                    <p style="margin: 5px 0 0; font-size: 12px; color: var(--color-3);">{{ $product->productDescription ?? 'No description available' }}</p>
+                                </div>
                             </div>
-                        </div>
-                        <p style="margin: 0; font-size: 14px; text-align: right;">₱{{ number_format($product->price, 2) }}</p>
-                    </button>
+                            <p style="margin: 0; font-size: 14px; text-align: right;">₱{{ number_format($product->price, 2) }}</p>
+                        </button>
+                    @endif
                 @endforeach
             </div>
         </div>
@@ -68,12 +70,20 @@
                 <div class="payment-frame" id="payment-frame">
                     <h4>Payment Summary</h4>
                     <div class="payment-details" id="payment-details">
-                        <p>Grand Total</p>
-                        <p id="grand-total">₱0.00</p>
                         <p>Items Ordered</p>
                         <p id="items-ordered">0</p>
-                        <p>Payment Method</p>
-                        <p>Cash</p>
+                        <p style="font-weight: bold; font-size: 1.1rem;">Grand Total</p>
+                        <p id="grand-total" style="font-weight: bold; font-size: 1.1rem;">₱0.00</p>
+                    </div>
+                    <div class="payment-methods">
+                        <button class="payment-btn cash" data-method="cash">
+                            <span class="material-icons-outlined">money</span>
+                            Cash
+                        </button>
+                        <button class="payment-btn gcash" data-method="gcash">
+                            <img width="50" height="50" src="https://img.icons8.com/plasticine/50/gcash.png" alt="gcash">
+                            GCash
+                        </button>
                     </div>
                     <button id="place-order-btn">Place an Order</button>
                 </div>
@@ -85,7 +95,7 @@
     <script>
         const brands = @json($brands);
         const categories = @json($categories);
-        const products = @json($products);
+        let products = @json($products);
         const employeeID = @json($employee->employeeID);
         let showingCategories = true;
         let currentFilter = { type: null, id: null };
@@ -95,6 +105,7 @@
         let currentPage = 0;
         const itemsPerPage = 5;
         let searchQuery = '';
+        let selectedPaymentMethod = null;
 
         function renderCategories() {
             const container = document.getElementById('category-container');
@@ -161,20 +172,22 @@
             const container = document.getElementById('products-container');
             container.innerHTML = '';
             filteredProducts.forEach(product => {
-                container.innerHTML += `
-                    <button class="product-item" data-product-id="${product.productID}" style="width: calc(33.33% - 14px); height: 150px; background-color: var(--color-6); border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border: 1px solid black; padding: 15px; cursor: pointer;">
-                        <div style="display: flex; align-items: center;">
-                            <span class="material-icons-outlined" style="font-size: 60px; color: var(--color-2); margin-right: 10px;">
-                                ${getIcon(product.categoryName)}
-                            </span>
-                            <div>
-                                <p style="margin: 0; font-size: 16px; font-weight: 500;">${product.productName}</p>
-                                <p style="margin: 5px 0 0; font-size: 12px; color: var(--color-3);">${product.productDescription || 'No description available'}</p>
+                if (product.stockQuantity > 0) {
+                    container.innerHTML += `
+                        <button class="product-item" data-product-id="${product.productID}" data-stock="${product.stockQuantity}" style="width: calc(33.33% - 14px); height: 150px; background-color: var(--color-6); border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); border: 1px solid black; padding: 15px; cursor: pointer;">
+                            <div style="display: flex; align-items: center;">
+                                <span class="material-icons-outlined" style="font-size: 60px; color: var(--color-2); margin-right: 10px;">
+                                    ${getIcon(product.categoryName)}
+                                </span>
+                                <div>
+                                    <p style="margin: 0; font-size: 16px; font-weight: 500;">${product.productName}</p>
+                                    <p style="margin: 5px 0 0; font-size: 12px; color: var(--color-3);">${product.productDescription || 'No description available'}</p>
+                                </div>
                             </div>
-                        </div>
-                        <p style="margin: 0; font-size: 14px; text-align: right;">₱${Number(product.price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</p>
-                    </button>
-                `;
+                            <p style="margin: 0; font-size: 14px; text-align: right;">₱${Number(product.price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</p>
+                        </button>
+                    `;
+                }
             });
             attachProductListeners();
         }
@@ -198,14 +211,12 @@
         function filterProducts() {
             let filteredProducts = products;
 
-            // Apply search filter
             if (searchQuery) {
                 filteredProducts = filteredProducts.filter(product =>
                     product.productName.toLowerCase().includes(searchQuery.toLowerCase())
                 );
             }
 
-            // Apply category or brand filter
             if (currentFilter.type === 'category' && currentFilter.id) {
                 filteredProducts = filteredProducts.filter(product => product.categoryID === currentFilter.id);
             } else if (currentFilter.type === 'brand' && currentFilter.id) {
@@ -239,7 +250,12 @@
             document.querySelectorAll('.product-item').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const productId = parseInt(btn.getAttribute('data-product-id'));
+                    const stock = parseInt(btn.getAttribute('data-stock'));
                     const product = products.find(p => p.productID === productId);
+                    if (stock <= 0) {
+                        alert(`Product ${product.productName} is out of stock!`);
+                        return;
+                    }
                     addToInvoice(product);
                 });
             });
@@ -248,8 +264,16 @@
         function addToInvoice(product) {
             const existingItem = invoice.find(item => item.productID === product.productID);
             if (existingItem) {
+                if (existingItem.quantity + 1 > product.stockQuantity) {
+                    alert(`Cannot add more of ${product.productName}. Only ${product.stockQuantity} in stock.`);
+                    return;
+                }
                 existingItem.quantity += 1;
             } else {
+                if (product.stockQuantity < 1) {
+                    alert(`Cannot add ${product.productName}. Out of stock.`);
+                    return;
+                }
                 invoice.push({ ...product, quantity: 1 });
             }
             renderInvoice();
@@ -262,9 +286,17 @@
 
         function updateQuantity(productId, change) {
             const item = invoice.find(item => item.productID === productId);
+            const product = products.find(p => p.productID === productId);
             if (item) {
-                item.quantity = Math.max(1, item.quantity + change);
-                renderInvoice();
+                const newQuantity = item.quantity + change;
+                if (newQuantity < 1) {
+                    removeFromInvoice(productId);
+                } else if (newQuantity > product.stockQuantity) {
+                    alert(`Cannot set quantity to ${newQuantity} for ${product.productName}. Only ${product.stockQuantity} in stock.`);
+                } else {
+                    item.quantity = newQuantity;
+                    renderInvoice();
+                }
             }
         }
 
@@ -298,7 +330,6 @@
             grandTotal = invoice.reduce((sum, item) => sum + item.price * item.quantity, 0);
             const itemsOrdered = invoice.reduce((sum, item) => sum + item.quantity, 0);
 
-            // Only update DOM elements if they exist (not in payment form)
             const grandTotalEl = document.getElementById('grand-total');
             const itemsOrderedEl = document.getElementById('items-ordered');
             const invoiceCountEl = document.getElementById('invoice-count');
@@ -319,21 +350,48 @@
             paymentFrame.innerHTML = `
                 <h4>Payment Summary</h4>
                 <div class="payment-details" id="payment-details">
-                    <p>Payment Method</p>
-                    <p>Cash</p>
                     <p>Items Ordered</p>
                     <p id="items-ordered">${itemsOrdered}</p>
                     <p style="font-weight: bold; font-size: 1.1rem;">Grand Total</p>
                     <p id="grand-total" style="font-weight: bold; font-size: 1.1rem;">₱${grandTotal.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</p>
                 </div>
+                <div class="payment-methods">
+                    <button class="payment-btn cash ${selectedPaymentMethod === 'cash' ? 'selected' : ''}" data-method="cash">
+                        <span class="material-icons-outlined">money</span>
+                        Cash
+                    </button>
+                    <button class="payment-btn gcash ${selectedPaymentMethod === 'gcash' ? 'selected' : ''}" data-method="gcash">
+                        <img width="50" height="50" src="https://img.icons8.com/plasticine/50/gcash.png" alt="gcash">
+                        GCash
+                    </button>
+                </div>
                 <button id="place-order-btn">Place an Order</button>
             `;
+            attachPaymentMethodListeners(); // Re-attach listeners after rendering
             document.getElementById('place-order-btn').addEventListener('click', showPaymentForm);
+        }
+
+        function attachPaymentMethodListeners() {
+            const buttons = document.querySelectorAll('.payment-btn');
+            console.log('Found payment buttons:', buttons.length); // Debug log
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    console.log('Button clicked:', btn.getAttribute('data-method'));
+                    selectedPaymentMethod = btn.getAttribute('data-method');
+                    document.querySelectorAll('.payment-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    renderPaymentSummary();
+                });
+            });
         }
 
         function showPaymentForm() {
             if (invoice.length === 0) {
                 alert('Please add items to the invoice before placing an order.');
+                return;
+            }
+            if (!selectedPaymentMethod) {
+                alert('Please select a payment method (Cash or GCash).');
                 return;
             }
 
@@ -357,6 +415,20 @@
                             <input type="text" id="customer-name" placeholder="Enter customer name" class="form-control" style="border: 1px solid var(--color-3); border-radius: 4px; background-color: var(--color-2); color: var(--color-1);">
                         </div>
                     </div>
+                    ${selectedPaymentMethod === 'gcash' ? `
+                        <div class="row mb-1 align-items-center">
+                            <label for="gcash-number" class="col-5 text-nowrap" style="color: var(--color-2);">GCash Number:</label>
+                            <div class="col-7">
+                                <input type="text" id="gcash-number" placeholder="09XXXXXXXXX" class="form-control" style="border: 1px solid var(--color-3); border-radius: 4px; background-color: var(--color-2); color: var(--color-1);">
+                            </div>
+                        </div>
+                        <div class="row mb-1 align-items-center">
+                            <label for="reference-number" class="col-5 text-nowrap" style="color: var(--color-2);">Reference Number:</label>
+                            <div class="col-7">
+                                <input type="number" id="reference-number" placeholder="Enter GCash reference number" class="form-control" style="border: 1px solid var(--color-3); border-radius: 4px; background-color: var(--color-2); color: var(--color-1);" min="10" max="99999999999999999999" required>
+                            </div>
+                        </div>
+                    ` : ''}
                     <div class="row mb-1 align-items-center">
                         <label for="amount-received" class="col-5 text-nowrap" style="color: var(--color-2);">Amount Received:</label>
                         <div class="col-7">
@@ -381,6 +453,8 @@
             `;
 
             const customerNameInput = document.getElementById('customer-name');
+            const gcashNumberInput = document.getElementById('gcash-number');
+            const referenceNumberInput = document.getElementById('reference-number');
             const amountReceivedInput = document.getElementById('amount-received');
             const changeInput = document.getElementById('change');
             const confirmOrderBtn = document.getElementById('confirm-order-btn');
@@ -388,6 +462,8 @@
 
             function updateReceipt() {
                 const customerName = customerNameInput.value.trim() || 'N/A';
+                const gcashNumber = gcashNumberInput ? gcashNumberInput.value.trim() || 'N/A' : 'N/A';
+                const referenceNumber = referenceNumberInput ? referenceNumberInput.value.trim() || 'N/A' : 'N/A';
                 const amountReceived = parseFloat(amountReceivedInput.value) || 0;
                 const change = amountReceived - grandTotal >= 0 ? (amountReceived - grandTotal).toFixed(2) : '0.00';
                 const itemsOrdered = invoice.reduce((sum, item) => sum + item.quantity, 0);
@@ -398,6 +474,10 @@
                         <h5>Receipt Preview</h5>
                         <div class="receipt-line"></div>
                         <p>Customer: ${customerName}</p>
+                        ${selectedPaymentMethod === 'gcash' ? `
+                            <p>GCash Number: ${gcashNumber}</p>
+                            <p>Reference Number: ${referenceNumber}</p>
+                        ` : ''}
                         <div class="receipt-line"></div>
                         <table class="receipt-table">
                             <thead>
@@ -420,7 +500,7 @@
                             </tbody>
                         </table>
                         <div class="receipt-line"></div>
-                        <p>Payment Method: Cash</p>
+                        <p>Payment Method: ${selectedPaymentMethod.charAt(0).toUpperCase() + selectedPaymentMethod.slice(1)}</p>
                         <p>Items Ordered: ${itemsOrdered}</p>
                         <p>Amount Received: ₱${amountReceived.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</p>
                         <p>Change: ₱${change.replace(/\d(?=(\d{3})+\.)/g, '$&,')}</p>
@@ -431,6 +511,12 @@
             }
 
             customerNameInput.addEventListener('input', updateReceipt);
+            if (gcashNumberInput) {
+                gcashNumberInput.addEventListener('input', updateReceipt);
+            }
+            if (referenceNumberInput) {
+                referenceNumberInput.addEventListener('input', updateReceipt);
+            }
             amountReceivedInput.addEventListener('input', () => {
                 const amountReceived = parseFloat(amountReceivedInput.value) || 0;
                 const change = amountReceived - grandTotal;
@@ -452,10 +538,20 @@
 
         function confirmOrder() {
             const customerName = document.getElementById('customer-name').value.trim();
+            const gcashNumber = document.getElementById('gcash-number') ? document.getElementById('gcash-number').value.trim() : null;
+            const referenceNumber = document.getElementById('reference-number') ? document.getElementById('reference-number').value.trim() : null;
             const amountReceived = parseFloat(document.getElementById('amount-received').value) || 0;
 
             if (!customerName) {
                 alert('Please enter a customer name.');
+                return;
+            }
+            if (selectedPaymentMethod === 'gcash' && (!gcashNumber || !/^(09)[0-9]{9}$/.test(gcashNumber))) {
+                alert('Please enter a valid 11-digit GCash number starting with 09.');
+                return;
+            }
+            if (selectedPaymentMethod === 'gcash' && (!referenceNumber || !/^[0-9]{2,20}$/.test(referenceNumber))) {
+                alert('Please enter a valid GCash reference number (2-20 digits).');
                 return;
             }
             if (amountReceived < grandTotal) {
@@ -463,10 +559,20 @@
                 return;
             }
 
+            for (const item of invoice) {
+                const product = products.find(p => p.productID === item.productID);
+                if (item.quantity > product.stockQuantity) {
+                    alert(`Cannot place order. ${product.productName} has only ${product.stockQuantity} in stock.`);
+                    return;
+                }
+            }
+
             const orderData = {
                 customer_name: customerName,
                 amount_received: amountReceived,
-                payment_method: 'cash',
+                payment_status: selectedPaymentMethod,
+                gcash_number: gcashNumber,
+                reference_number: referenceNumber,
                 items: invoice.map(item => ({
                     productID: item.productID,
                     quantity: item.quantity,
@@ -476,8 +582,7 @@
                 _token: '{{ csrf_token() }}',
             };
 
-            console.log('CSRF Token:', orderData._token);
-            console.log('Order Data:', JSON.stringify(orderData));
+            console.log('Order Data:', orderData); // Debug log
 
             fetch('{{ route("pos.store") }}', {
                 method: 'POST',
@@ -489,24 +594,19 @@
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
+                    return response.json().then(err => { throw new Error(err.message || `HTTP error! Status: ${response.status}`); });
                 }
                 return response.json();
             })
             .then(data => {
                 if (data.success) {
-                    alert(`Order confirmed for ${customerName} via cash! Change: ₱${(amountReceived - grandTotal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} (Order ID: ${data.order_id})`);
-                    // Reset state
+                    alert(`Order confirmed for ${customerName} via ${selectedPaymentMethod}! Change: ₱${(amountReceived - grandTotal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} (Order ID: ${data.order_id}, Reference: ${data.reference_number})`);
                     invoice = [];
                     grandTotal = 0;
                     isPaymentFormVisible = false;
-                    // Clear invoice items
-                    const invoiceContainer = document.getElementById('invoice-items');
-                    invoiceContainer.innerHTML = '';
-                    // Update invoice count
-                    const invoiceCountEl = document.getElementById('invoice-count');
-                    if (invoiceCountEl) invoiceCountEl.textContent = '0';
-                    // Reset UI to default payment summary
+                    selectedPaymentMethod = null;
+                    document.getElementById('invoice-items').innerHTML = '';
+                    document.getElementById('invoice-count').textContent = '0';
                     document.querySelector('.invoice-upper').style.display = 'flex';
                     document.querySelector('.payment-frame').classList.remove('expanded');
                     document.querySelector('.invoice-lower').style.height = 'auto';
@@ -544,10 +644,16 @@
                 input.addEventListener('change', () => {
                     const productId = parseInt(input.getAttribute('data-product-id'));
                     const newQuantity = parseInt(input.value) || 1;
-                    const item = invoice.find(item => item.productID === productId);
-                    if (item) {
-                        item.quantity = Math.max(1, newQuantity);
-                        renderInvoice();
+                    const product = products.find(p => p.productID === productId);
+                    if (newQuantity > product.stockQuantity) {
+                        alert(`Cannot set quantity to ${newQuantity} for ${product.productName}. Only ${product.stockQuantity} in stock.`);
+                        input.value = product.stockQuantity;
+                    } else {
+                        const item = invoice.find(item => item.productID === productId);
+                        if (item) {
+                            item.quantity = Math.max(1, newQuantity);
+                            renderInvoice();
+                        }
                     }
                 });
             });
@@ -590,8 +696,7 @@
             }
         });
 
-        // Search functionality
-        document.querySelector('.search-input').addEventListener('input', (e) => {
+        document.querySelector('.search-input')?.addEventListener('input', (e) => {
             searchQuery = e.target.value.trim();
             filterProducts();
         });

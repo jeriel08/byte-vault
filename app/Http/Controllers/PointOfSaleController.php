@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PointOfSaleController extends Controller
 {
@@ -23,7 +24,8 @@ class PointOfSaleController extends Controller
             ->join('categories', 'products.categoryID', '=', 'categories.categoryID')
             ->where('products.productStatus', 'Active')
             ->where('products.price', '>', 0)
-            ->select('products.productID', 'products.productName', 'products.productDescription', 'products.price', 'products.brandID', 'products.categoryID', 'brands.brandName', 'categories.categoryName')
+            ->where('products.stockQuantity', '>', 0)
+            ->select('products.productID', 'products.productName', 'products.productDescription', 'products.price', 'products.brandID', 'products.categoryID', 'brands.brandName', 'categories.categoryName', 'products.stockQuantity')
             ->get();
 
         $employee = Auth::user();
@@ -49,13 +51,15 @@ class PointOfSaleController extends Controller
 
     public function storeOrder(Request $request)
     {
-        // Add this line
-        \Illuminate\Support\Facades\Log::info('Request Data:', $request->all());
+        Log::info('Received order data:', $request->all()); // Debug log
 
         $request->validate([
             'customer_name' => 'required|string|max:255',
             'amount_received' => 'required|numeric|min:0',
-            'items' => 'required|array',
+            'payment_status' => 'required|in:cash,gcash',
+            'gcash_number' => 'nullable|regex:/^09[0-9]{9}$/|required_if:payment_status,gcash',
+            'reference_number' => 'nullable|numeric|digits_between:4,20|required_if:payment_status,gcash',
+            'items' => 'required|array|min:1',
             'items.*.productID' => 'required|exists:products,productID',
             'items.*.quantity' => 'required|integer|min:1',
             'items.*.price' => 'required|numeric|min:0',
@@ -64,19 +68,26 @@ class PointOfSaleController extends Controller
 
         DB::beginTransaction();
         try {
-            $customer = Customer::firstOrCreate(
-                ['name' => $request->customer_name]
-            );
+            foreach ($request->items as $item) {
+                $product = Product::find($item['productID']);
+                if (!$product || $product->stockQuantity < $item['quantity']) {
+                    throw new \Exception("Insufficient stock for product: {$product->productName}");
+                }
+            }
+
+            $customer = Customer::firstOrCreate(['name' => $request->customer_name]);
 
             $order = PointOfSale::create([
                 'customerID' => $customer->customerID,
                 'total_items' => count($request->items),
-                'payment_status' => 'cash',
-                'created_by' => Auth::user()->employeeID,
-                'created_at' => now(),
+                'payment_status' => $request->payment_status,
+                'gcash_number' => $request->gcash_number,
+                'reference_number' => $request->reference_number ?? 'REF-' . strtoupper(uniqid()),
                 'amount_received' => $request->amount_received,
                 'change' => $request->amount_received - $request->grand_total,
                 'total' => $request->grand_total,
+                'created_by' => Auth::user()->employeeID,
+                'created_at' => now(),
             ]);
 
             foreach ($request->items as $item) {
@@ -99,10 +110,16 @@ class PointOfSaleController extends Controller
             }
 
             DB::commit();
-            return response()->json(['success' => true, 'message' => 'Order placed successfully!', 'order_id' => $order->orderID]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Order placed successfully!',
+                'order_id' => $order->orderID,
+                'reference_number' => $order->reference_number
+            ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['success' => false, 'message' => 'Error placing order: ' . $e->getMessage()], 500);
+            Log::error('POS storeOrder error: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Failed to place order: ' . $e->getMessage()], 500);
         }
     }
 }
