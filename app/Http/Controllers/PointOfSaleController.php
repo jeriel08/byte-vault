@@ -39,11 +39,14 @@ class PointOfSaleController extends Controller
 
     public function storeOrder(Request $request)
     {
+        Log::info('Received order data:', $request->all()); // Debug log
+
         $request->validate([
             'customer_name' => 'required|string|max:255',
             'amount_received' => 'required|numeric|min:0',
             'payment_status' => 'required|in:cash,gcash',
             'gcash_number' => 'nullable|regex:/^09[0-9]{9}$/|required_if:payment_status,gcash',
+            'reference_number' => 'nullable|numeric|digits_between:4,20|required_if:payment_status,gcash',
             'items' => 'required|array|min:1',
             'items.*.productID' => 'required|exists:products,productID',
             'items.*.quantity' => 'required|integer|min:1',
@@ -67,6 +70,7 @@ class PointOfSaleController extends Controller
                 'total_items' => count($request->items),
                 'payment_status' => $request->payment_status,
                 'gcash_number' => $request->gcash_number,
+                'reference_number' => $request->reference_number ?? 'REF-' . strtoupper(uniqid()),
                 'amount_received' => $request->amount_received,
                 'change' => $request->amount_received - $request->grand_total,
                 'total' => $request->grand_total,
@@ -89,7 +93,12 @@ class PointOfSaleController extends Controller
             }
 
             DB::commit();
-            return response()->json(['success' => true, 'message' => 'Order placed successfully!', 'order_id' => $order->orderID], 200);
+            return response()->json([
+                'success' => true,
+                'message' => 'Order placed successfully!',
+                'order_id' => $order->orderID,
+                'reference_number' => $order->reference_number
+            ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('POS storeOrder error: ' . $e->getMessage());
@@ -97,4 +106,3 @@ class PointOfSaleController extends Controller
         }
     }
 }
-?>

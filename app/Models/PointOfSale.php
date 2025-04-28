@@ -17,6 +17,7 @@ class PointOfSale extends Model
         'total_items',
         'payment_status',
         'gcash_number',
+        'reference_number',
         'amount_received',
         'change',
         'total',
@@ -44,4 +45,3 @@ class PointOfSale extends Model
         return Brand::where('brandStatus', 'Active')->get();
     }
 }
-?>

@@ -1,8 +1,6 @@
 @extends('employee.main')
 
 @section('content')
-    <link rel="stylesheet" href="{{ asset('css/products.css') }}">
-
     <div class="main-container">
         <!-- Product Side (Left, 70%) -->
         <div class="left-section">
@@ -356,24 +354,27 @@
                     <p id="grand-total" style="font-weight: bold; font-size: 1.1rem;">₱${grandTotal.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</p>
                 </div>
                 <div class="payment-methods">
-                    <button class="payment-btn cash" data-method="cash">
+                    <button class="payment-btn cash ${selectedPaymentMethod === 'cash' ? 'selected' : ''}" data-method="cash">
                         <span class="material-icons-outlined">money</span>
                         Cash
                     </button>
-                    <button class="payment-btn gcash" data-method="gcash">
+                    <button class="payment-btn gcash ${selectedPaymentMethod === 'gcash' ? 'selected' : ''}" data-method="gcash">
                         <img width="50" height="50" src="https://img.icons8.com/plasticine/50/gcash.png" alt="gcash">
                         GCash
                     </button>
                 </div>
                 <button id="place-order-btn">Place an Order</button>
             `;
-            attachPaymentMethodListeners();
+            attachPaymentMethodListeners(); // Re-attach listeners after rendering
             document.getElementById('place-order-btn').addEventListener('click', showPaymentForm);
         }
 
         function attachPaymentMethodListeners() {
-            document.querySelectorAll('.payment-btn').forEach(btn => {
+            const buttons = document.querySelectorAll('.payment-btn');
+            console.log('Found payment buttons:', buttons.length); // Debug log
+            buttons.forEach(btn => {
                 btn.addEventListener('click', () => {
+                    console.log('Button clicked:', btn.getAttribute('data-method'));
                     selectedPaymentMethod = btn.getAttribute('data-method');
                     document.querySelectorAll('.payment-btn').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
@@ -419,6 +420,12 @@
                                 <input type="text" id="gcash-number" placeholder="09XXXXXXXXX" class="form-control" style="border: 1px solid var(--color-3); border-radius: 4px; background-color: var(--color-2); color: var(--color-1);">
                             </div>
                         </div>
+                        <div class="row mb-1 align-items-center">
+                            <label for="reference-number" class="col-5 text-nowrap" style="color: var(--color-2);">Reference Number:</label>
+                            <div class="col-7">
+                                <input type="number" id="reference-number" placeholder="Enter GCash reference number" class="form-control" style="border: 1px solid var(--color-3); border-radius: 4px; background-color: var(--color-2); color: var(--color-1);" min="10" max="99999999999999999999" required>
+                            </div>
+                        </div>
                     ` : ''}
                     <div class="row mb-1 align-items-center">
                         <label for="amount-received" class="col-5 text-nowrap" style="color: var(--color-2);">Amount Received:</label>
@@ -445,6 +452,7 @@
 
             const customerNameInput = document.getElementById('customer-name');
             const gcashNumberInput = document.getElementById('gcash-number');
+            const referenceNumberInput = document.getElementById('reference-number');
             const amountReceivedInput = document.getElementById('amount-received');
             const changeInput = document.getElementById('change');
             const confirmOrderBtn = document.getElementById('confirm-order-btn');
@@ -453,6 +461,7 @@
             function updateReceipt() {
                 const customerName = customerNameInput.value.trim() || 'N/A';
                 const gcashNumber = gcashNumberInput ? gcashNumberInput.value.trim() || 'N/A' : 'N/A';
+                const referenceNumber = referenceNumberInput ? referenceNumberInput.value.trim() || 'N/A' : 'N/A';
                 const amountReceived = parseFloat(amountReceivedInput.value) || 0;
                 const change = amountReceived - grandTotal >= 0 ? (amountReceived - grandTotal).toFixed(2) : '0.00';
                 const itemsOrdered = invoice.reduce((sum, item) => sum + item.quantity, 0);
@@ -463,7 +472,10 @@
                         <h5>Receipt Preview</h5>
                         <div class="receipt-line"></div>
                         <p>Customer: ${customerName}</p>
-                        ${selectedPaymentMethod === 'gcash' ? `<p>GCash Number: ${gcashNumber}</p>` : ''}
+                        ${selectedPaymentMethod === 'gcash' ? `
+                            <p>GCash Number: ${gcashNumber}</p>
+                            <p>Reference Number: ${referenceNumber}</p>
+                        ` : ''}
                         <div class="receipt-line"></div>
                         <table class="receipt-table">
                             <thead>
@@ -500,6 +512,9 @@
             if (gcashNumberInput) {
                 gcashNumberInput.addEventListener('input', updateReceipt);
             }
+            if (referenceNumberInput) {
+                referenceNumberInput.addEventListener('input', updateReceipt);
+            }
             amountReceivedInput.addEventListener('input', () => {
                 const amountReceived = parseFloat(amountReceivedInput.value) || 0;
                 const change = amountReceived - grandTotal;
@@ -522,6 +537,7 @@
         function confirmOrder() {
             const customerName = document.getElementById('customer-name').value.trim();
             const gcashNumber = document.getElementById('gcash-number') ? document.getElementById('gcash-number').value.trim() : null;
+            const referenceNumber = document.getElementById('reference-number') ? document.getElementById('reference-number').value.trim() : null;
             const amountReceived = parseFloat(document.getElementById('amount-received').value) || 0;
 
             if (!customerName) {
@@ -530,6 +546,10 @@
             }
             if (selectedPaymentMethod === 'gcash' && (!gcashNumber || !/^(09)[0-9]{9}$/.test(gcashNumber))) {
                 alert('Please enter a valid 11-digit GCash number starting with 09.');
+                return;
+            }
+            if (selectedPaymentMethod === 'gcash' && (!referenceNumber || !/^[0-9]{2,20}$/.test(referenceNumber))) {
+                alert('Please enter a valid GCash reference number (2-20 digits).');
                 return;
             }
             if (amountReceived < grandTotal) {
@@ -550,6 +570,7 @@
                 amount_received: amountReceived,
                 payment_status: selectedPaymentMethod,
                 gcash_number: gcashNumber,
+                reference_number: referenceNumber,
                 items: invoice.map(item => ({
                     productID: item.productID,
                     quantity: item.quantity,
@@ -558,6 +579,8 @@
                 grand_total: grandTotal,
                 _token: '{{ csrf_token() }}',
             };
+
+            console.log('Order Data:', orderData); // Debug log
 
             fetch('{{ route("pos.store") }}', {
                 method: 'POST',
@@ -575,7 +598,7 @@
             })
             .then(data => {
                 if (data.success) {
-                    alert(`Order confirmed for ${customerName} via ${selectedPaymentMethod}! Change: ₱${(amountReceived - grandTotal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} (Order ID: ${data.order_id})`);
+                    alert(`Order confirmed for ${customerName} via ${selectedPaymentMethod}! Change: ₱${(amountReceived - grandTotal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} (Order ID: ${data.order_id}, Reference: ${data.reference_number})`);
                     invoice = [];
                     grandTotal = 0;
                     isPaymentFormVisible = false;
