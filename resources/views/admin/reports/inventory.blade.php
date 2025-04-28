@@ -45,15 +45,20 @@
         <div class="row mb-4">
             <p><strong>Report Generated:</strong> {{ $reportDate }}</p>
             <p><strong>Date Range:</strong> {{ $dateRangeDisplay }}</p>
-            <div class="col-6">
-                <p><strong>Total Products:</strong> {{ $totalProducts }}</p>
-                <p><strong>Total Inventory Value:</strong> ${{ number_format($totalValue, 2) }}</p>
-                <p><strong>Low Stock Items (Stock < 5):</strong> {{ $lowStockCount }}</p>
+            <div class="row mt-3">
+                <div class="col-6">
+                    <h2 class="fw-bold mb-3">Products</h2>
+                    <p><strong>Total Products:</strong> {{ $totalProducts }}</p>
+                    <p><strong>Total Inventory Value:</strong> ${{ number_format($totalValue, 2) }}</p>
+                    <p><strong>Low Stock Items (Stock < 5):</strong> {{ $lowStockCount }}</p>
+                </div>
+                <div class="col-6">
+                    <h2 class="fw-bold mb-3">Sales</h2>
+                    <p><strong>Orders in Range:</strong> {{ $salesOrdersCount }}</p>
+                    <p><strong>Sales Total in Range:</strong> ₱{{ number_format($salesTotalValue, 2) }}</p>
+                </div>
             </div>
-            <div class="col-6">
-                <p><strong>Orders in Range:</strong> {{ $salesOrdersCount }}</p>
-                <p><strong>Sales Total in Range:</strong> ₱{{ number_format($salesTotalValue, 2) }}</p>
-            </div>
+            
         </div>
     
         <hr class="mb-4">
@@ -81,6 +86,55 @@
                 @endforeach
             </tbody>
         </table>
+
+        <div class="d-flex justify-content-center">
+            <ul class="pagination">
+                <!-- Previous Page Link -->
+                @if ($products->onFirstPage())
+                    <li class="page-item disabled">
+                        <span class="material-icons-outlined page-link">
+                            navigate_before
+                        </span>
+                    </li>
+                @else
+                    <li class="page-item">
+                        <a class="page-link d-flex justify-content-center align-items-center" href="{{ $products->previousPageUrl() }}&{{ http_build_query(request()->except('page')) }}" rel="prev">
+                            <span class="material-icons-outlined">
+                                navigate_before
+                            </span>
+                        </a>
+                    </li>
+                @endif
+        
+                <!-- Page Numbers -->
+                @for ($i = 1; $i <= $products->lastPage(); $i++)
+                    <li class="page-item {{ $products->currentPage() === $i ? 'active' : '' }}">
+                        @if ($products->currentPage() === $i)
+                            <span class="page-link">{{ $i }}</span>
+                        @else
+                            <a class="page-link" href="{{ $products->url($i) }}&{{ http_build_query(request()->except('page')) }}">{{ $i }}</a>
+                        @endif
+                    </li>
+                @endfor
+        
+                <!-- Next Page Link -->
+                @if ($products->hasMorePages())
+                    <li class="page-item">
+                        <a class="page-link d-flex justify-content-center align-items-center" href="{{ $products->nextPageUrl() }}&{{ http_build_query(request()->except('page')) }}" rel="next">
+                            <span class="material-icons-outlined">
+                                navigate_next
+                            </span>
+                        </a>
+                    </li>
+                @else
+                    <li class="page-item disabled">
+                        <span class="material-icons-outlined page-link">
+                            navigate_next
+                        </span>
+                    </li>
+                @endif
+            </ul>
+        </div>
     </div>
 
     <script>

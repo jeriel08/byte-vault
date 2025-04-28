@@ -53,6 +53,9 @@
                     <tbody>
                         @forelse ($orders as $order)
                             <tr>
+                                @php
+                                    \Illuminate\Support\Facades\Log::info('Order Data:', $order->toArray());
+                                @endphp
                                 <td>#{{ $order->orderID }}</td>
                                 <td>{{ $order->customer ? $order->customer->name : 'N/A' }}</td>
                                 <td>
@@ -107,6 +110,8 @@
                             <p><strong>Customer:</strong> <span id="receipt-customer"></span></p>
                             <p><strong>Date:</strong> <span id="receipt-date"></span></p>
                             <p><strong>Payment Status:</strong> <span id="receipt-payment-status"></span></p>
+                            <p class="gcash-field" style="display: none;"><strong>Reference Number:</strong> <span id="receipt-reference-number"></span></p>
+                            <p class="gcash-field" style="display: none;"><strong>Phone Number:</strong> <span id="receipt-phone-number"></span></p>
                         </div>
                         <div class="receipt-products">
                             <table>
@@ -152,12 +157,25 @@
                     ? new Date(order.created_at).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'long',
-                        day: 'numeric'  
+                        day: 'numeric'
                     })
                     : 'N/A';
                 document.getElementById('receipt-payment-status').textContent = order.payment_status
                     ? (order.payment_status.charAt(0).toUpperCase() + order.payment_status.slice(1))
                     : 'N/A';
+
+                // Handle GCash-specific fields
+                const referenceNumberElement = document.getElementById('receipt-reference-number');
+                const phoneNumberElement = document.getElementById('receipt-phone-number');
+                const gcashFields = document.querySelectorAll('.gcash-field');
+                if (order.payment_status === 'gcash' && referenceNumberElement && phoneNumberElement) {
+                    referenceNumberElement.textContent = order.reference_number || 'N/A';
+                    phoneNumberElement.textContent = order.gcash_number || 'N/A';
+                    gcashFields.forEach(field => field.style.display = 'block');
+                } else {
+                    gcashFields.forEach(field => field.style.display = 'none');
+                }
+
                 document.getElementById('receipt-grand-total').textContent = order.total
                     ? parseFloat(order.total).toFixed(2)
                     : '0.00';

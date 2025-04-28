@@ -31,6 +31,12 @@
                             <label class="form-label fw-semibold">Total Items:</label>
                             <p class="form-control-plaintext">{{ $order->total_items }}</p>
                         </div>
+                        @if ($order->payment_status == 'cash')
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Payment method:</label>
+                            <p class="form-control-plaintext">Cash</p>
+                        </div>
+                        @endif
                     </div>
                     <div class="col-6">
                         <div class="mb-4">
@@ -46,6 +52,27 @@
                             <p class="form-control-plaintext">₱{{ number_format($order->change, 2) }}</p>
                         </div>
                     </div>
+                    @if ($order->payment_status == 'gcash')
+                        <div class="row">
+                            <hr>
+                            <div class="col-6">
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold">Payment method:</label>
+                                    <p class="form-control-plaintext">GCash</p>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold">Reference Number:</label>
+                                    <p class="form-control-plaintext">{{ $order->reference_number }}</p>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold">Customer Phone Number:</label>
+                                    <p class="form-control-plaintext">{{ $order->gcash_number }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
                 
                 

@@ -45,7 +45,7 @@ class ReportController extends Controller
 
 
         // --- Inventory Data (Remains the same - current snapshot) ---
-        $products = Product::all();
+        $products = Product::paginate(10);
         $totalProducts = $products->count();
         $totalValue = $products->sum(function ($product) {
             return $product->stockQuantity * $product->price;
