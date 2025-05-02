@@ -10,10 +10,16 @@ class DashboardController extends Controller
     /**
      * Display the dashboard with all required data.
      *
+     * @param Request $request
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
+        // Get the period filter from the request (default to 'all')
+        $period = $request->query('period', 'all');
+        $validPeriods = ['daily', 'weekly', 'monthly', 'all'];
+        $period = in_array($period, $validPeriods) ? $period : 'all';
+
         // Fetch data from the Dashboard model
         $totalSales = Dashboard::getTotalSales();
         $totalOrders = Dashboard::getTotalOrders();
@@ -22,6 +28,7 @@ class DashboardController extends Controller
         $dailySales = Dashboard::getDailySales();
         $categoryDistribution = Dashboard::getCategoryDistribution();
         $salesByCategory = Dashboard::getSalesByCategory();
+        $topSellingProducts = Dashboard::getTopSellingProducts($period);
 
         // Format total sales with peso sign and 2 decimal places
         $formattedTotalSales = '₱' . number_format($totalSales, 2);
@@ -65,6 +72,8 @@ class DashboardController extends Controller
             'categoryData' => json_encode($categoryData),
             'salesCategoryLabels' => json_encode($salesCategoryLabels),
             'salesCategoryData' => json_encode($salesCategoryData),
+            'topSellingProducts' => $topSellingProducts,
+            'selectedPeriod' => $period
         ]);
     }
 }
