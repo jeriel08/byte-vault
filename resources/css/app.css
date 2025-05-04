@@ -28,6 +28,10 @@ ul {
     list-style-type: none;
 }
 
+h5 {
+    color: var(--color-2) !important;
+}
+
 .primary-button {
     /* Base styles */
     background-color: var(--color-2); /* Dark teal background */
@@ -566,11 +570,7 @@ nav.navbar {
     border: 1px solid var(--color-3);
     border-radius: 0.5rem;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-}
-
-.select2-container--bootstrap-5 {
-    width: 100% !important;
+    overflow: hidden !important;
 }
 
 /* Each option in dropdown */
