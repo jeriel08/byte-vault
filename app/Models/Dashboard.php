@@ -11,24 +11,24 @@ class Dashboard extends Model
     protected $table = null;
 
     /**
-     * Get the total sales (sum of totalCost from supplier_orders).
+     * Get the total sales (sum of total from orders).
      *
      * @return float
      */
     public static function getTotalSales()
     {
-        return DB::table('supplier_orders')
-            ->sum('totalCost');
+        return DB::table('orders')
+            ->sum('total');
     }
 
     /**
-     * Get the total number of orders (count of supplier_orders).
+     * Get the total number of orders (count of orders).
      *
      * @return int
      */
     public static function getTotalOrders()
     {
-        return DB::table('supplier_orders')
+        return DB::table('orders')
             ->count();
     }
 
@@ -52,18 +52,19 @@ class Dashboard extends Model
     {
         return DB::table('products')
             ->where('stockQuantity', '<=', 10)
+            ->where('stockQuantity', '>', 0)
             ->count();
     }
 
     /**
-     * Get total sales per day from supplier_orders.
+     * Get total sales per day from orders.
      *
      * @return array
      */
     public static function getDailySales()
     {
-        return DB::table('supplier_orders')
-            ->select(DB::raw('DATE(orderDate) as date'), DB::raw('SUM(totalCost) as total_sales'))
+        return DB::table('orders')
+            ->select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(total) as total_sales'))
             ->groupBy('date')
             ->orderBy('date', 'asc')
             ->get()
@@ -86,20 +87,41 @@ class Dashboard extends Model
     }
 
     /**
-     * Get total sales (cost) per category from supplier_order_details.
+     * Get total sales (revenue) per category from orderline.
      *
      * @return array
      */
     public static function getSalesByCategory()
     {
-        return DB::table('supplier_order_details')
-            ->join('products', 'supplier_order_details.productID', '=', 'products.productID')
+        return DB::table('orderline')
+            ->join('products', 'orderline.productID', '=', 'products.productID')
             ->join('categories', 'products.categoryID', '=', 'categories.categoryID')
             ->select(
                 'categories.categoryName',
-                DB::raw('SUM(supplier_order_details.unitCost * supplier_order_details.quantity) as total_sales')
+                DB::raw('SUM(orderline.price * orderline.quantity) as total_sales')
             )
             ->groupBy('categories.categoryName')
+            ->get()
+            ->toArray();
+    }
+
+    /**
+     * Get top-selling products (based on total quantity sold in orderline).
+     *
+     * @return array
+     */
+    public static function getTopSellingProducts()
+    {
+        return DB::table('orderline')
+            ->join('products', 'orderline.productID', '=', 'products.productID')
+            ->select(
+                'products.productName',
+                DB::raw('SUM(orderline.quantity) as total_quantity'),
+                DB::raw('SUM(orderline.price * orderline.quantity) as total_revenue')
+            )
+            ->groupBy('products.productName')
+            ->orderByDesc('total_quantity')
+            ->limit(5)
             ->get()
             ->toArray();
     }
