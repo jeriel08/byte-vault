@@ -271,27 +271,328 @@
     }
 }
 
-@media (max-width: 991px) {
-    .sales-card {
-        margin-bottom: 20px;
+.pos-navbar {
+    background-color: var(--color-2);
+    padding: 0.5rem 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pos-navbar .navbar-brand {
+    color: var(--color-1);
+    font-weight: bold;
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+.pos-navbar .navbar-brand img {
+    height: 40px;
+}
+
+.pos-navbar .navbar-brand:hover {
+    color: var(--color-5);
+}
+
+.pos-navbar .navbar-nav .nav-link {
+    color: var(--color-1);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.pos-navbar .navbar-nav .nav-link:hover {
+    color: var(--color-6);
+    background-color: var(--color-3);
+    border-radius: 4px;
+}
+
+.pos-navbar .navbar-nav .nav-link.active {
+    color: var(--color-5);
+    background-color: var(--color-4);
+    border-radius: 4px;
+}
+
+.pos-navbar .navbar-toggler {
+    border-color: var(--color-1);
+    padding: 4px;
+    background-color: var(--color-4);
+}
+
+.pos-navbar .navbar-toggler .material-icons-outlined {
+    font-size: 20px;
+    color: var(--color-2);
+}
+
+.pos-navbar .navbar-collapse {
+    background-color: var(--color-2);
+}
+
+.search-bar-container {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-1);
+    border-radius: 25px;
+    padding: 4px 8px;
+    height: 32px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 250px;
+}
+
+.search-input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 14px;
+    width: 100%;
+    padding: 4px;
+    color: var(--color-2);
+}
+
+.search-input::placeholder {
+    color: var(--color-3);
+}
+
+.search-bar-container .material-icons-outlined {
+    font-size: 20px;
+    color: var(--color-2);
+    transition: color 0.3s ease;
+}
+
+.search-bar-container:hover .material-icons-outlined {
+    color: var(--color-5);
+}
+
+.pos-navbar .account-section {
+    color: var(--color-1);
+}
+
+.pos-navbar .account-section .material-icons-outlined {
+    color: var(--color-1);
+    transition: color 0.3s ease;
+}
+
+.pos-navbar .account-section .profile-icon {
+    font-size: 40px;
+}
+
+.pos-navbar .account-section p {
+    color: var(--color-1);
+    font-size: 0.9rem;
+}
+
+.pos-navbar .account-section small {
+    color: var(--color-4);
+    font-size: 0.75rem;
+}
+
+.pos-navbar .account-section .btn {
+    color: var(--color-1);
+}
+
+.pos-navbar .account-section .btn:hover .material-icons-outlined {
+    color: var(--color-5);
+}
+
+.pos-navbar .dropdown-menu {
+    background-color: var(--color-6);
+    border: 1px solid var(--color-3);
+}
+
+.pos-navbar .dropdown-item {
+    color: var(--color-2);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.pos-navbar .dropdown-item span {
+    color: inherit !important;
+}
+
+.pos-navbar .dropdown-item:hover {
+    background-color: var(--color-4);
+    color: var(--color-5);
+}
+
+.pos-navbar .dropdown-toggle::after {
+    display: none !important;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem;
+    border-radius: 4px;
+}
+
+.nav-btn .material-icons-outlined {
+    font-size: 20px;
+    margin-right: 0.4rem;
+}
+
+.nav-btn .nav-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+@media (min-width: 992px) {
+    .pos-navbar .nav-btn-group {
+        flex-grow: 1;
+        justify-content: center;
+        gap: 0.8rem;
+        flex-direction: row;
     }
-    .search-input {
-        width: 100%;
+    .pos-navbar .nav-btn {
+        padding: 0.4rem 0.8rem;
+        background-color: var(--color-4);
+    }
+    .pos-navbar .nav-btn .material-icons-outlined {
+        color: var(--color-2);
+    }
+    .pos-navbar .nav-btn:hover {
+        background-color: var(--color-3);
+    }
+    .pos-navbar .nav-btn.active {
+        background-color: var(--color-5);
+    }
+    .pos-navbar .nav-btn.active .material-icons-outlined {
+        color: var(--color-1);
+    }
+    .pos-navbar .search-bar-container {
+        margin-right: 0.8rem;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .pos-navbar {
+        background-color: var(--color-2);
+        padding: 0.4rem 0.8rem;
+    }
+    .pos-navbar .container-fluid {
+        justify-content: space-between;
+    }
+    .pos-navbar .navbar-brand {
+        margin-left: 0.4rem;
+    }
+    .pos-navbar .navbar-brand img {
+        height: 32px;
+    }
+    .pos-navbar .navbar-toggler {
+        display: none;
     }
     .pos-navbar .navbar-collapse {
-        background-color: var(--color-2);
-        padding: 1rem;
+        display: none; /* Hide collapse for tablet since search bar is always visible */
+    }
+    .pos-navbar .nav-btn-group {
+        flex-grow: 1;
+        justify-content: center;
+        gap: 0.8rem;
+        flex-direction: row; /* Explicitly set to row for horizontal alignment */
+        align-items: center;
+    }
+    .pos-navbar .nav-btn {
+        padding: 0.4rem 0.8rem;
+        background-color: var(--color-4);
+    }
+    .pos-navbar .nav-btn .material-icons-outlined {
+        color: var(--color-2);
+        margin-right: 0;
+    }
+    .pos-navbar .nav-btn:hover {
+        background-color: var(--color-3);
+    }
+    .pos-navbar .nav-btn.active {
+        background-color: var(--color-5);
+    }
+    .pos-navbar .nav-btn.active .material-icons-outlined {
+        color: var(--color-1);
+    }
+    .pos-navbar .search-bar-container {
+        margin-right: 0.8rem;
     }
     .pos-navbar .account-section {
-        margin-top: 1rem;
-        padding: 0.5rem 1rem;
-        border-top: 1px solid var(--color-3);
+        margin-right: 0.4rem;
     }
-    .table th,
-    .table td {
-        padding: 8px;
+    .pos-navbar .account-section .profile-icon {
+        font-size: 40px;
     }
-    .receipt-container {
-        max-width: 100%;
+    .pos-navbar .account-section p {
+        font-size: 0.8rem;
+    }
+    .pos-navbar .account-section small {
+        font-size: 0.65rem;
+    }
+    .pos-navbar .account-section .btn .material-icons-outlined {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 767px) {
+    .pos-navbar {
+        background-color: var(--color-2);
+        padding: 0.4rem 0.8rem;
+    }
+    .pos-navbar .container-fluid {
+        justify-content: space-between;
+    }
+    .pos-navbar .navbar-brand {
+        margin-left: 0.2rem;
+    }
+    .pos-navbar .navbar-brand img {
+        height: 28px;
+    }
+    .pos-navbar .navbar-toggler {
+        display: none;
+    }
+    .pos-navbar .navbar-collapse {
+        flex-grow: 0;
+        padding: 0.4rem;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        background-color: var(--color-2);
+    }
+    .pos-navbar .search-bar-container {
+        margin-bottom: 0;
+    }
+    .pos-navbar .nav-btn-group {
+        flex-direction: row;
+        align-items: center;
+        gap: 6px;
+    }
+    .pos-navbar .nav-btn {
+        width: 28px;
+        height: 28px;
+        background-color: var(--color-4);
+        justify-content: center;
+    }
+    .pos-navbar .nav-btn .material-icons-outlined {
+        color: var(--color-2);
+        margin-right: 0;
+    }
+    .pos-navbar .nav-btn:hover {
+        background-color: var(--color-3);
+    }
+    .pos-navbar .nav-btn.active {
+        background-color: var(--color-5);
+    }
+    .pos-navbar .nav-btn.active .material-icons-outlined {
+        color: var(--color-1);
+    }
+    .pos-navbar .account-section {
+        margin-right: 0.2rem;
+    }
+    .pos-navbar .account-section .profile-icon {
+        font-size: 16px;
+    }
+    .pos-navbar .account-section p {
+        font-size: 0.7rem;
+    }
+    .pos-navbar .account-section small {
+        font-size: 0.6rem;
+    }
+    .pos-navbar .account-section .btn .material-icons-outlined {
+        font-size: 16px;
     }
 }

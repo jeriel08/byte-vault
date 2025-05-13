@@ -48,138 +48,6 @@ body {
     flex-direction: column;
 }
 
-.pos-navbar {
-    background-color: var(--color-2);
-    padding: 1rem 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.pos-navbar .navbar-brand {
-    color: var(--color-1);
-    font-weight: bold;
-    font-size: 2rem;
-    transition: color 0.3s ease;
-}
-
-.pos-navbar .navbar-brand img {
-    height: 50px;
-}
-
-.pos-navbar .navbar-brand:hover {
-    color: var(--color-5);
-}
-
-.pos-navbar .navbar-nav .nav-link {
-    color: var(--color-1);
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    transition: color 0.3s ease, background-color 0.3s ease;
-}
-
-.pos-navbar .navbar-nav .nav-link:hover {
-    color: var(--color-6);
-    background-color: var(--color-3);
-    border-radius: 4px;
-}
-
-.pos-navbar .navbar-nav .nav-link.active {
-    color: var(--color-5);
-    background-color: var(--color-4);
-    border-radius: 4px;
-}
-
-.pos-navbar .navbar-toggler {
-    border-color: var(--color-1);
-}
-
-.pos-navbar .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23eae4da' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-}
-
-.search-bar-container {
-    display: flex;
-    align-items: center;
-    background-color: var(--color-1);
-    border-radius: 25px;
-    padding: 5px 10px;
-    height: 38px;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.search-input {
-    border: none;
-    background: transparent;
-    outline: none;
-    font-size: 16px;
-    width: 400px;
-    padding: 5px;
-    color: var(--color-2);
-}
-
-.search-input::placeholder {
-    color: var(--color-3);
-}
-
-.search-bar-container .material-icons-outlined {
-    font-size: 24px;
-    color: var(--color-2);
-    transition: color 0.3s ease;
-}
-
-.search-bar-container:hover .material-icons-outlined {
-    color: var(--color-5);
-}
-
-.pos-navbar .account-section {
-    color: var(--color-1);
-}
-
-.pos-navbar .account-section .material-icons-outlined {
-    color: var(--color-1);
-    transition: color 0.3s ease;
-}
-
-.pos-navbar .account-section p {
-    color: var(--color-1);
-    font-size: 1rem;
-}
-
-.pos-navbar .account-section small {
-    color: var(--color-4);
-    font-size: 0.85rem;
-}
-
-.pos-navbar .account-section .btn {
-    color: var(--color-1);
-}
-
-.pos-navbar .account-section .btn:hover .material-icons-outlined {
-    color: var(--color-5);
-}
-
-.pos-navbar .dropdown-menu {
-    background-color: var(--color-6);
-    border: 1px solid var(--color-3);
-}
-
-.pos-navbar .dropdown-item {
-    color: var(--color-2);
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.pos-navbar .dropdown-item span {
-    color: inherit !important;
-}
-
-.pos-navbar .dropdown-item:hover {
-    background-color: var(--color-4);
-    color: var(--color-5);
-}
-
-.pos-navbar .dropdown-toggle::after {
-    display: none !important;
-}
-
 .cart-invoice-btn {
     display: none;
     position: fixed;
@@ -208,7 +76,7 @@ body {
     top: -5px;
     right: -5px;
     background-color: var(--color-4);
-    color: var(--color-2 Controversy);
+    color: var(--color-2);
     border-radius: 50%;
     width: 20px;
     height: 20px;
@@ -510,7 +378,7 @@ body {
     text-align: center;
 }
 
-.recept-content p {
+.receipt-content p {
     margin: 5px 0;
 }
 
@@ -616,29 +484,6 @@ body {
 }
 
 @media (max-width: 991px) {
-    .pos-navbar .navbar-collapse {
-        background-color: var(--color-2);
-        padding: 1rem;
-    }
-    .pos-navbar .navbar-nav .nav-link {
-        padding: 0.75rem 1rem;
-    }
-    .pos-navbar .account-section {
-        margin-top: 1rem;
-        padding: 0.5rem 1rem;
-        border-top: 1px solid var(--color-3);
-    }
-    .pos-navbar .dropdown-menu {
-        width: 100%;
-        margin-top: 0.5rem;
-    }
-    .search-bar-container {
-        width: 100%;
-        margin-bottom: 1rem;
-    }
-    .search-input {
-        width: 100%;
-    }
     .main-container {
         flex-direction: column;
         overflow-y: auto;

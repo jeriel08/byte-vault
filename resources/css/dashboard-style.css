@@ -2,12 +2,12 @@
 
 /* Dashboard-Specific Styling */
 .dashboard-container {
-    max-width: 1500px; /* Reduced from 900px for a more compact middle */
+    max-width: 1500px;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 10px; /* Increased from 100px for bigger side space */
-    padding-right: 10px; /* Increased from 100px for bigger side space */
-    color: #2a5055; /* Moved from Blade, applies to container and children */
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #2a5055;
 }
 
 .dashboard-container .card-title,
@@ -15,26 +15,45 @@
 .dashboard-container h3,
 .dashboard-container p,
 .logged-in-message {
-    color: #2a5055; /* Moved from Blade, specific elements */
+    color: #2a5055;
 }
 
 /* Margin and Button-Like Styling for "You're logged in!" */
 .logged-in-message {
-    margin-top: 1px; /* Reduced top margin */
-    margin-bottom: 30px; /* Existing bottom margin */
-    background-color: #2a5055; /* Button-like background */
-    color: #ffffff; /* White text for contrast */
-    padding: 0.5rem 1rem; /* Button-like padding */
-    border-radius: 0.25rem; /* Rounded corners like a button */
-    display: inline-block; /* Keeps it from stretching full width */
-    font-weight: 600; /* Matches fw-semibold for consistency */
+    margin-top: 1px;
+    margin-bottom: 20px;
+    background-color: #2a5055;
+    color: #ffffff;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.2rem;
+    display: inline-block;
+    font-weight: 600;
 }
 
 /* Responsive Adjustments for Dashboard */
-@media (max-width: 768px) {
+@media (max-width: 991px) {
     .dashboard-container {
-        padding-left: 30px; /* Slightly increased from 20px for mobile */
-        padding-right: 30px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    .icon-summary {
+        font-size: 36px;
+    }
+    .icon-title {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .dashboard-container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .icon-summary {
+        font-size: 30px;
+    }
+    .icon-title {
+        font-size: 18px;
     }
 }
 
