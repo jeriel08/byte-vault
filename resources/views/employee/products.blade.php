@@ -61,7 +61,7 @@
         <div class="right-section" id="invoice-section">
             <div class="invoice-upper">
                 <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                    <h2 style="margin: 0; color: var(--color-1);">Invoice</h2>
+                    <h2 style="margin: 0; color: var(--color-1);">Cart</h2>
                     <span id="invoice-count" class="invoice-count" style="margin-left: 10px;">0</span>
                 </div>
                 <div class="invoice-items-container" id="invoice-items"></div>

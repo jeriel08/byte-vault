@@ -187,9 +187,9 @@
                                             {{ $product->brand->brandName }} •
                                             {{-- Product status badge --}}
                                             @if ($product->productStatus === 'Active')
-                                                <span class="badge bg-success">Active</span>•
+                                                <span class="badge bg-success fixed-badge">Active</span>•
                                             @elseif ($product->productStatus === 'Inactive')
-                                                <span class="badge bg-danger">Inactive</span>•
+                                                <span class="badge bg-danger fixed-badge">Inactive</span>•
                                             @endif 
                                             <strong>Stock: {{ $product->stockQuantity }}</strong>
                                         

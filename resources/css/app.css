@@ -680,3 +680,10 @@ nav.navbar {
 .simplebar-scrollbar.simplebar-visible::before {
     opacity: 0.8; /* Adjust opacity */
 }
+
+/* ===================== Fixed Badge Styling ===================== */
+.fixed-badge {
+    min-width: 80px; /* Adjust as needed */
+    text-align: center;
+    padding: 0.25rem 0.5rem; /* Consistent padding */
+}

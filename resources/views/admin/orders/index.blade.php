@@ -98,8 +98,53 @@
                     </div>
 
                     <!-- Pagination -->
-                    <div class="mt-4">
-                        {{ $orders->links() }}
+                    <div class="d-flex justify-content-center">
+                        <ul class="pagination">
+                            <!-- Previous Page Link -->
+                            @if ($orders->onFirstPage())
+                                <li class="page-item disabled">
+                                    <span class="material-icons-outlined page-link">
+                                        navigate_before
+                                    </span>
+                                </li>
+                            @else
+                                <li class="page-item">
+                                    <a class="page-link d-flex justify-content-center align-items-center" href="{{ $orders->previousPageUrl() }}&{{ http_build_query(request()->except('page')) }}" rel="prev">
+                                        <span class="material-icons-outlined">
+                                            navigate_before
+                                        </span>
+                                    </a>
+                                </li>
+                            @endif
+                    
+                            <!-- Page Numbers -->
+                            @for ($i = 1; $i <= $orders->lastPage(); $i++)
+                                <li class="page-item {{ $orders->currentPage() === $i ? 'active' : '' }}">
+                                    @if ($orders->currentPage() === $i)
+                                        <span class="page-link">{{ $i }}</span>
+                                    @else
+                                        <a class="page-link" href="{{ $orders->url($i) }}&{{ http_build_query(request()->except('page')) }}">{{ $i }}</a>
+                                    @endif
+                                </li>
+                            @endfor
+                    
+                            <!-- Next Page Link -->
+                            @if ($orders->hasMorePages())
+                                <li class="page-item">
+                                    <a class="page-link d-flex justify-content-center align-items-center" href="{{ $orders->nextPageUrl() }}&{{ http_build_query(request()->except('page')) }}" rel="next">
+                                        <span class="material-icons-outlined">
+                                            navigate_next
+                                        </span>
+                                    </a>
+                                </li>
+                            @else
+                                <li class="page-item disabled">
+                                    <span class="material-icons-outlined page-link">
+                                        navigate_next
+                                    </span>
+                                </li>
+                            @endif
+                        </ul>
                     </div>
                 @endif
             </div>

@@ -51,10 +51,14 @@
                         </select>
                         @error('productStatus') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
-                    <x-primary-button type="submit" class="mt-4">
-                        <span class="material-icons-outlined">save</span>
-                        Save Product
-                    </x-primary-button>
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-4 d-flex justify-content-center align-items-center">
+                            <x-primary-button type="submit" class="mt-4 align-items-center">
+                                <span class="material-icons-outlined">save</span>
+                                Save Product
+                            </x-primary-button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>

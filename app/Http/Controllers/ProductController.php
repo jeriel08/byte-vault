@@ -60,8 +60,8 @@ class ProductController extends Controller
             }
         }
 
-        // Get paginated filtered products (15 per page)
-        $products = $query->paginate(10)->appends($request->query());
+        // Get paginated filtered products
+        $products = $query->paginate(5)->appends($request->query());
 
         return view('admin.products.index', compact('products', 'allProducts'));
     }
