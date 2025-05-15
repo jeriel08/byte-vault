@@ -93,10 +93,10 @@
                                     <div class="flex-grow-1">
                                         <p class="mb-1 fw-semibold fs-5 me-4">Order No. {{ $supplierOrder->supplierOrderID }}</p>
                                     </div>
-                                    <div class="d-flex align-items-center flex-grow-1 pe-0">
+                                    <div class="d-flex align-items-center">
                                         <span class="vr me-4"></span>
                                         <div class="d-flex flex-row gap-3 align-items-start ps-4">
-                                            <div class="text-start me-4" style="width: 16rem;">
+                                            <div class="text-start me-4" style="width: 7rem;">
                                                 <span class="text-muted d-block"><small>Supplier</small></span>
                                                 <span class="fw-semibold text-truncate d-block">{{ $supplierOrder->supplier->supplierName }}</span>
                                             </div>
