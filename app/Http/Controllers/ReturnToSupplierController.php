@@ -56,10 +56,12 @@ class ReturnToSupplierController extends Controller
         if ($request->has('sort_by')) {
             $direction = $request->input('sort_direction', 'asc');
             $query->orderBy($request->input('sort_by'), $direction);
+        } else {
+            $query->orderBy('returnSupplierID', 'desc');
         }
 
         // Paginate results
-        $returns = $query->paginate(15)->appends($request->query());
+        $returns = $query->paginate(5)->appends($request->query());
 
         // Status Counts
         $statusCounts = [

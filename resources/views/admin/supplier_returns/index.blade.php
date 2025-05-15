@@ -129,7 +129,7 @@
                                             </div>
                                             <div class="text-start" style="width: 8rem;">
                                                 <span class="text-muted d-block"><small>Status</small></span>
-                                                <span class="badge {{ $return->completionDate ? 'bg-success' : ($return->cancellationDate ? 'bg-danger' : 'bg-warning') }}">
+                                                <span class="badge {{ $return->completionDate ? 'bg-success' : ($return->cancellationDate ? 'bg-danger' : 'bg-warning') }} fixed-badge">
                                                     {{ $return->completionDate ? 'Completed' : ($return->cancellationDate ? 'Rejected' : 'Pending') }}
                                                 </span>
                                             </div>
@@ -138,34 +138,35 @@
                                     
                                     <!-- Dropdown and Status Actions -->
                                     <div class="ms-5">
-                                        <div class="dropdown supplier-order-dropdown">
-                                            <a class="btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <span class="material-icons-outlined fs-2">more_horiz</span>
-                                            </a>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <a class="dropdown-item" href="{{ route('supplier_returns.show', $return->returnSupplierID) }}">
-                                                        <span class="material-icons-outlined align-middle me-2">visibility</span> View
-                                                    </a>
-                                                </li>
-                                                @if (!$return->completionDate && !$return->cancellationDate)
-                                                    <li>
-                                                        <form action="{{ route('supplier_returns.complete', $return->returnSupplierID) }}" method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <button type="submit" class="dropdown-item">
-                                                                <span class="material-icons-outlined align-middle me-2">check_circle</span> Complete
+                                        <x-primary-button class="btn-sm" href="{{ route('supplier_returns.show', $return->returnSupplierID) }}">
+                                            <span class="material-icons-outlined">visibility</span>
+                                        </x-primary-button>
+                                        @if (!$return->completionDate && !$return->cancellationDate)
+                                            <div class="dropdown supplier-order-dropdown">
+                                                <x-primary-button class="btn-sm mt-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <span class="material-icons-outlined">more_horiz</span>
+                                                </x-primary-button>
+                                                <ul class="dropdown-menu">
+                                                    @if (!$return->completionDate && !$return->cancellationDate)
+                                                        <li>
+                                                            <form action="{{ route('supplier_returns.complete', $return->returnSupplierID) }}" method="POST" class="d-inline">
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                <button type="submit" class="dropdown-item">
+                                                                    <span class="material-icons-outlined align-middle me-2">check_circle</span> Complete
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                        <li>
+                                                            <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#rejectModal-{{ $return->returnSupplierID }}">
+                                                                <span class="material-icons-outlined align-middle me-2">cancel</span> Reject
                                                             </button>
-                                                        </form>
-                                                    </li>
-                                                    <li>
-                                                        <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#rejectModal-{{ $return->returnSupplierID }}">
-                                                            <span class="material-icons-outlined align-middle me-2">cancel</span> Reject
-                                                        </button>
-                                                    </li>
-                                                @endif
-                                            </ul>
-                                        </div>
+                                                        </li>
+                                                    @endif
+                                                </ul>
+                                            </div>
+                                        @endif
+                                        
                                     </div>
                                     
                                     <!-- Reject Modal -->
