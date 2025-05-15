@@ -178,3 +178,12 @@
 .category-accordion .accordion-button:not(.collapsed) .accordion-icon {
     transform: rotate(-180deg); /* Rotate 180 degrees */
 }
+
+.inventory-report-card {
+    border: 1px solid #2a5055;
+    transition: box-shadow 0.3s ease;
+}
+
+.inventory-report-card:hover {
+    box-shadow: 0 4px 15px rgba(42, 80, 85, 0.4);
+}

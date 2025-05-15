@@ -10,6 +10,7 @@ export default defineConfig({
                 "resources/css/account-manager-style.css",
                 "resources/css/product-style.css",
                 "resources/css/orders-style.css",
+                "resources/css/login-style.css",
             ],
             refresh: true,
         }),

@@ -46,17 +46,27 @@
             <p><strong>Report Generated:</strong> {{ $reportDate }}</p>
             <p><strong>Date Range:</strong> {{ $dateRangeDisplay }}</p>
             <div class="row mt-3">
-                <div class="col-6">
-                    <h2 class="fw-bold mb-3">Products</h2>
-                    <p><strong>Total Products:</strong> {{ $totalProducts }}</p>
-                    <p><strong>Total Inventory Value:</strong> ${{ number_format($totalValue, 2) }}</p>
-                    <p><strong>Low Stock Items (Stock < 5):</strong> {{ $lowStockCount }}</p>
-                </div>
-                <div class="col-6">
-                    <h2 class="fw-bold mb-3">Sales</h2>
-                    <p><strong>Orders in Range:</strong> {{ $salesOrdersCount }}</p>
-                    <p><strong>Sales Total in Range:</strong> ₱{{ number_format($salesTotalValue, 2) }}</p>
-                </div>
+<div class="col-6">
+    <div class="card shadow-sm rounded-3 p-3 border inventory-report-card enhanced-card" style="height: 100%;">
+        <h2 class="fw-bold mb-3"><span class="material-icons-outlined icon-header">inventory_2</span> Products</h2>
+        <p><strong>Total Products:</strong> <span class="highlight-number">{{ $totalProducts }}</span></p>
+        <p><strong>Total Inventory Value:</strong> <span class="highlight-number">${{ number_format($totalValue, 2) }}</span></p>
+        <p><strong>Low Stock Items (Stock < 5):</strong> <span class="badge badge-low-stock">{{ $lowStockCount }}</span></p>
+        <div class="card-footer mt-3 text-muted small">
+            Keep an eye on low stock items to avoid shortages.
+        </div>
+    </div>
+</div>
+<div class="col-6">
+    <div class="card shadow-sm rounded-3 p-3 border inventory-report-card enhanced-card" style="height: 100%;">
+        <h2 class="fw-bold mb-3"><span class="material-icons-outlined icon-header">sell</span> Sales</h2>
+        <p><strong>Orders in Range:</strong> <span class="highlight-number">{{ $salesOrdersCount }}</span></p>
+        <p><strong>Sales Total in Range:</strong> <span class="highlight-number">₱{{ number_format($salesTotalValue, 2) }}</span></p>
+        <div class="card-footer mt-3 text-muted small">
+            Sales data is based on selected date range.
+        </div>
+    </div>
+</div>
             </div>
             
         </div>
