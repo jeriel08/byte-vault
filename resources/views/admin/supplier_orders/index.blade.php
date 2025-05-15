@@ -68,15 +68,6 @@
                             <input type="date" class="form-control" id="dateTo" name="date_to" value="{{ request('date_to') }}" placeholder="To">
                         </div>
                         <hr>
-                        <!-- Sort By -->
-                        <div class="mb-3">
-                            <label for="sortBy" class="form-label fw-semibold mb-2">Sort By</label>
-                            <select class="form-select" id="sortBy" name="sort_by">
-                                <option value="date_desc" {{ request('sort_by') === 'date_desc' ? 'selected' : '' }}>Order Date: Recent First</option>
-                                <option value="date_asc" {{ request('sort_by') === 'date_asc' ? 'selected' : '' }}>Order Date: Oldest First</option>
-                            </select>
-                        </div>
-                        <hr>
                         <div>
                             <button type="button" class="btn btn-outline-danger w-100" id="clearFilters">Clear Filters</button>
                         </div>
@@ -121,7 +112,7 @@
                                             </div>
                                             <div class="text-start me-4" style="width: 5rem;">
                                                 <span class="text-muted d-block"><small>Status</small></span>
-                                                <span class="badge bg-{{ $supplierOrder->receivedDate ? 'success' : ($supplierOrder->cancelledDate ? 'danger' : 'warning') }}">
+                                                <span class="badge bg-{{ $supplierOrder->receivedDate ? 'success' : ($supplierOrder->cancelledDate ? 'danger' : 'warning') }} fixed-badge">
                                                     {{ $supplierOrder->receivedDate ? 'Received' : ($supplierOrder->cancelledDate ? 'Cancelled' : 'Pending') }}
                                                 </span>
                                             </div>
@@ -132,29 +123,32 @@
                                         </div>
                                     </div>
                                     <div class="ms-5">
-                                        <div class="dropdown supplier-order-dropdown">
-                                            <a class="btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <span class="material-icons-outlined fs-2">more_horiz</span>
-                                            </a>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="{{ route('supplier_orders.show', $supplierOrder->supplierOrderID) }}"><span class="material-icons-outlined align-middle me-2">visibility</span> View</a></li>
-                                                @if ($supplierOrder->receivedDate || $supplierOrder->cancelledDate)
-                                                    <li><a class="dropdown-item" href="{{ route('supplier_orders.create', ['reorder' => $supplierOrder->supplierOrderID]) }}"><span class="material-icons-outlined align-middle me-2">replay</span> Reorder</a></li>
-                                                @endif
-                                                @if (!$supplierOrder->receivedDate && !$supplierOrder->cancelledDate)
+                                        <x-primary-button class="btn-sm mb-2" href="{{ route('supplier_orders.show', $supplierOrder->supplierOrderID) }}">
+                                            <span class="material-icons-outlined">visibility</span>
+                                        </x-primary-button>
+                                        @if ($supplierOrder->receivedDate || $supplierOrder->cancelledDate)
+                                            <x-primary-button class="btn-sm" href="{{ route('supplier_orders.create', ['reorder' => $supplierOrder->supplierOrderID]) }}">
+                                                <span class="material-icons-outlined">replay</span>
+                                            </x-primary-button>
+                                        @else
+                                            <div class="dropdown supplier-order-dropdown">
+                                                <x-primary-button class="btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <span class="material-icons-outlined">more_horiz</span>
+                                                </x-primary-button>
+                                                <ul class="dropdown-menu">
                                                     <li><a class="dropdown-item" href="{{ route('supplier_orders.edit', $supplierOrder->supplierOrderID) }}"><span class="material-icons-outlined align-middle me-2">edit</span> Edit</a></li>
-                                                    <li>
-                                                        <form action="{{ route('supplier_orders.update', $supplierOrder->supplierOrderID) }}" method="POST" class="d-inline">
-                                                            @csrf
-                                                            @method('PUT')
-                                                            <input type="hidden" name="markAsReceived" value="1">
-                                                            <button type="submit" class="dropdown-item"><span class="material-icons-outlined align-middle me-2">check_circle</span> Receive</button>
-                                                        </form>
-                                                    </li>
-                                                    <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#cancelModal-{{ $supplierOrder->supplierOrderID }}"><span class="material-icons-outlined align-middle me-2">cancel</span> Cancel</button></li>
-                                                @endif
-                                            </ul>
-                                        </div>
+                                                        <li>
+                                                            <form action="{{ route('supplier_orders.update', $supplierOrder->supplierOrderID) }}" method="POST" class="d-inline">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                <input type="hidden" name="markAsReceived" value="1">
+                                                                <button type="submit" class="dropdown-item"><span class="material-icons-outlined align-middle me-2">check_circle</span> Receive</button>
+                                                            </form>
+                                                        </li>
+                                                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#cancelModal-{{ $supplierOrder->supplierOrderID }}"><span class="material-icons-outlined align-middle me-2">cancel</span> Cancel</button></li>
+                                                </ul>
+                                            </div>
+                                        @endif
                                     </div>
                                     <x-modal name="cancelModal-{{ $supplierOrder->supplierOrderID }}" maxWidth="md">
                                         <div class="modal-header">
@@ -244,7 +238,6 @@
             const supplierFilter = document.getElementById('supplierFilter');
             const dateFrom = document.getElementById('dateFrom');
             const dateTo = document.getElementById('dateTo');
-            const sortBy = document.getElementById('sortBy');
             const clearFiltersBtn = document.getElementById('clearFilters');
             const searchInput = document.querySelector('.search-input');
             const searchForm = document.getElementById('searchForm');
@@ -253,7 +246,7 @@
 
             function applyFilters() {
                 const params = new URLSearchParams(window.location.search);
-                
+
                 // Status filter
                 const activeButton = document.querySelector('.category-filter-button.btn-primary');
                 if (activeButton) {
@@ -281,9 +274,6 @@
                     params.delete('date_to');
                 }
 
-                // Sort by
-                params.set('sort_by', sortBy.value);
-
                 // Search
                 if (searchInput.value) {
                     params.set('search', searchInput.value);
@@ -307,8 +297,8 @@
                 });
             });
 
-            // Other filters (supplier, date, sort)
-            [supplierFilter, dateFrom, dateTo, sortBy].forEach(element => {
+            // Other filters (supplier, date)
+            [supplierFilter, dateFrom, dateTo].forEach(element => {
                 element.addEventListener('change', applyFilters);
             });
 
@@ -320,7 +310,7 @@
                 }, 500); // 500ms delay after typing stops
             });
 
-            // Prevent form submission on Enter (optional, if you want pure JS handling)
+            // Prevent form submission on Enter
             searchForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 applyFilters();
@@ -335,7 +325,6 @@
                 supplierFilter.value = '';
                 dateFrom.value = '';
                 dateTo.value = '';
-                sortBy.value = 'date_desc';
                 searchInput.value = '';
                 window.location.href = window.location.pathname;
 

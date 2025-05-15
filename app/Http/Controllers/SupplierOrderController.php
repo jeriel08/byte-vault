@@ -53,12 +53,11 @@ class SupplierOrderController extends Controller
             $query->where('orderDate', '<=', $request->date_to);
         }
 
-        // Sort by order date
-        $sortBy = $request->input('sort_by', 'date_desc');
-        $query->orderBy('orderDate', $sortBy === 'date_asc' ? 'asc' : 'desc');
+        // Sort by supplierOrderID (ascending)
+        $query->orderBy('supplierOrderID', 'desc');
 
-        // Paginate results (15 per page) and append query params
-        $supplierOrders = $query->paginate(15)->appends($request->query());
+        // Paginate results (5 per page) and append query params
+        $supplierOrders = $query->paginate(5)->appends($request->query());
 
         // Calculate total counts for each status (unfiltered)
         $pendingCount = SupplierOrder::whereNotNull('orderPlacedDate')
