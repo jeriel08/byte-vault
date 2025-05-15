@@ -114,18 +114,9 @@
                                     
                                     <!-- Dropdown for options -->
                                     <div class="ms-5">
-                                        <div class="dropdown supplier-order-dropdown">
-                                            <a class="btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <span class="material-icons-outlined fs-2">more_horiz</span>
-                                            </a>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <a class="dropdown-item" href="{{ route('adjustments.show', $adjustment->adjustmentID) }}">
-                                                        <span class="material-icons-outlined align-middle me-2">visibility</span> View
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        <x-primary-button class="btn-sm" href="{{ route('adjustments.show', $adjustment->adjustmentID) }}">
+                                            <span class="material-icons-outlined">visibility</span>
+                                        </x-primary-button>
                                     </div>
                                 </div>
                             </div>

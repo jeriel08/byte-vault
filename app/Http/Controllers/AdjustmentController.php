@@ -66,12 +66,12 @@ class AdjustmentController extends Controller
                 break;
             case 'adjustmentDate_desc': // Default case
             default:
-                $query->orderBy('adjustmentDate', 'desc');
+                $query->orderBy('adjustmentID', 'desc');
                 break;
         }
 
         // Paginate results and append query parameters to pagination links
-        $adjustments = $query->paginate(15)->appends($request->query());
+        $adjustments = $query->paginate(5)->appends($request->query());
 
         // Optionally: Calculate counts for filter buttons (like in supplier orders)
         $reasonCounts = [
