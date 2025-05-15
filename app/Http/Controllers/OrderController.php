@@ -24,13 +24,7 @@ class OrderController extends Controller
 
         $orders = Order::with('product', 'customer')
             ->when($search, function ($query, $search) {
-                return $query->where('order_id', 'like', "%{$search}%")
-                    ->orWhereHas('customer', function ($q) use ($search) {
-                        $q->where('name', 'like', "%{$search}%");
-                    })
-                    ->orWhereHas('product', function ($q) use ($search) {
-                        $q->where('productName', 'like', "%{$search}%");
-                    });
+                return $query->where('orderID', 'like', "%{$search}%");
             })
             ->when($status, function ($query, $status) {
                 return $query->where('status', $status);
@@ -55,7 +49,7 @@ class OrderController extends Controller
                     return $query->orderBy('created_at', 'desc');
                 }
             })
-            ->paginate(15);
+            ->paginate(5);
 
         return view('admin.orders.index', compact('orders', 'search'));
     }

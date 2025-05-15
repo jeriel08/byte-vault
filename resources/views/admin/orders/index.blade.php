@@ -5,8 +5,8 @@
         <!-- Header with Search and Add Supplier Order-->
         <div class="d-flex justify-content-between align-items-center mx-1 mb-4">
             <div class="input-group w-50">
-                <input type="text" class="search-input" placeholder="Search by order ID" aria-label="Search orderID">
-                <button class="search-button d-flex align-items-center justify-content-center" type="button">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search by order ID" aria-label="Search orderID" value="{{ request('search') }}">
+                <button class="search-button d-flex align-items-center justify-content-center" type="button" id="searchButton">
                     <span class="material-icons-outlined">search</span>
                 </button>
             </div>
@@ -61,8 +61,12 @@
             <!-- Main Content: Order Cards -->
             <div class="col-lg-9 col-md-8 col-sm-12 product-table" id="orderTable">
                 @if ($orders->isEmpty())
-                    <div class="text-center text-muted py-3">
-                        There's no order yet.
+                    <div class="col-12 mb-4">
+                        <div class="card account-manager-card p-3 py-5 d-flex flex-row align-items-center">
+                            <div class="flex-grow-1 text-center text-muted">
+                                <span class="fw-semibold">There's no order yet.</span>
+                            </div>
+                        </div>
                     </div>
                 @else
                     <div class="row">
@@ -81,15 +85,26 @@
                                                 <span class="fw-semibold text-truncate d-block">{{ $order->customer ? $order->customer->name : 'N/A' }}</span>
                                             </div>
                                             <div class="text-start me-4" style="width: 7rem;">
+                                                <span class="text-muted d-block"><small>Order Date</small></span>
+                                                <span class="fw-semibold text-truncate d-block">
+                                                    {{ \Carbon\Carbon::parse($order->created_at)->format('M d, Y')  }}
+                                                </span>
+                                            </div>
+                                            <div class="text-start me-4" style="width: 7rem;">
                                                 <span class="text-muted d-block"><small>Total Amount</small></span>
-                                                <span class="fw-semibold text-truncate d-block">₱{{ number_format($order->total, 2) }}</span>
+                                                <div class="d-flex align-items-center">
+                                                    <span class="fw-semibold text-truncate d-block total-amount" data-order-id="{{ $order->orderID }}" data-amount="₱{{ number_format($order->total, 2) }}">*****</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                     
                                     <div class="ms-5 d-flex flex-column gap-2">
-                                        <x-primary-button class="btn-sm" href="{{ route('orders.show', $order) }}">
+                                        <x-primary-button class="btn btn-sm toggle-amount" type="button" data-order-id="{{ $order->orderID }}">
                                             <span class="material-icons-outlined">visibility</span>
+                                        </x-primary-button>
+                                        <x-primary-button class="btn-sm" href="{{ route('orders.show', $order) }}">
+                                            <span class="material-icons-outlined">receipt_long</span>
                                         </x-primary-button>
                                     </div>
                                 </div>
@@ -154,8 +169,8 @@
     <!-- JavaScript for Filter Interactivity -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const filterButtons = document.querySelectorAll('.category-filter-button');
-            const productFilter = document.getElementById('productFilter');
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
             const dateFrom = document.getElementById('dateFrom');
             const dateTo = document.getElementById('dateTo');
             const sortBy = document.getElementById('sortBy');
@@ -163,20 +178,12 @@
 
             function applyFilters() {
                 const params = new URLSearchParams(window.location.search);
-                
-                // Status filter
-                const activeButton = document.querySelector('.category-filter-button.btn-primary');
-                if (activeButton && activeButton.dataset.value) {
-                    params.set('status', activeButton.dataset.value);
-                } else {
-                    params.delete('status');
-                }
 
-                // Product filter
-                if (productFilter.value) {
-                    params.set('product_id', productFilter.value);
+                // Search filter
+                if (searchInput.value) {
+                    params.set('search', searchInput.value);
                 } else {
-                    params.delete('product_id');
+                    params.delete('search');
                 }
 
                 // Date range filter
@@ -192,40 +199,42 @@
                 }
 
                 // Sort by
-                params.set('sort_by', sortBy.value);
+                if (sortBy.value) {
+                    params.set('sort_by', sortBy.value);
+                } else {
+                    params.delete('sort_by');
+                }
 
                 window.location.href = `${window.location.pathname}?${params.toString()}`;
             }
 
-            // Status button toggle
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    filterButtons.forEach(btn => {
-                        btn.classList.remove('btn-primary');
-                        btn.classList.add('btn-outline-primary');
-                    });
-                    this.classList.remove('btn-outline-primary');
-                    this.classList.add('btn-primary');
-                    applyFilters();
-                });
-            });
-
-            // Other filters (product, date, sort)
-            [productFilter, dateFrom, dateTo, sortBy].forEach(element => {
+            // Event listeners for filters
+            [searchInput, dateFrom, dateTo, sortBy].forEach(element => {
                 element.addEventListener('change', applyFilters);
             });
 
+            // Search button click
+            searchButton.addEventListener('click', applyFilters);
+
             // Clear filters
             clearFiltersBtn.addEventListener('click', function() {
-                filterButtons.forEach(btn => {
-                    btn.classList.remove('btn-primary');
-                    btn.classList.add('btn-outline-primary');
-                });
-                productFilter.value = '';
+                searchInput.value = '';
                 dateFrom.value = '';
                 dateTo.value = '';
                 sortBy.value = 'date_desc';
                 window.location.href = window.location.pathname;
+            });
+
+            // Toggle amount
+            document.querySelectorAll('.toggle-amount').forEach(button => {
+                button.addEventListener('click', () => {
+                    const orderId = button.dataset.orderId;
+                    const totalSpan = document.querySelector(`.total-amount[data-order-id="${orderId}"]`);
+                    const actualAmount = totalSpan.dataset.amount;
+                    const isMasked = totalSpan.textContent === '*****';
+                    totalSpan.textContent = isMasked ? actualAmount : '*****';
+                    button.querySelector('span').textContent = isMasked ? 'visibility_off' : 'visibility';
+                });
             });
         });
     </script>
