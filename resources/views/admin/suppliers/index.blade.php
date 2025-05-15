@@ -66,15 +66,13 @@
     
                             <!-- Buttons -->
                             <div class="d-flex flex-column gap-2">
-                                <a href="tel:{{ $supplier->supplierPhoneNumber }}"
-                                    class="primary-button d-flex justify-content-center align-items-center gap-2 px-5"> 
+                                <x-primary-button href="tel:{{ $supplier->supplierPhoneNumber }}"
+                                    class="btn-sm"> 
                                     <span class="material-icons-outlined">phone</span>
-                                    Contact
-                                </a>
+                                </x-primary-button>
     
                                 <x-primary-button href="{{ route('suppliers.edit', $supplier->supplierID) }}" >
                                     <span class="material-icons-outlined">edit</span>
-                                    Edit
                                 </x-primary-button>
                             </div>
                         </div>

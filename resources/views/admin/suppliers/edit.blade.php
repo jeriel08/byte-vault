@@ -16,10 +16,6 @@
                     @csrf
                     @method('PATCH')
                     <div class="mb-3">
-                        <label for="supplierName" class="form-label fw-semibold">Supplier Name</label>
-                        <input type="text" class="form-control" id="supplierName" name="supplierName" value="{{ $supplier->supplierName }}" required>
-                    </div>
-                    <div class="mb-3">
                         <label for="supplierAddress" class="form-label fw-semibold">Address</label>
                         <textarea class="form-control" id="supplierAddress" name="supplierAddress" rows="3">{{ $supplier->supplierAddress }}</textarea>
                     </div>
@@ -48,7 +44,14 @@
                             <option value="Inactive" {{ $supplier->supplierStatus == 'Inactive' ? 'selected' : '' }}>Inactive</option>
                         </select>
                     </div>
-                    <x-primary-button type="submit" class="mt-4">Update</x-primary-button>
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-auto d-flex justify-content-center">
+                            <x-primary-button type="submit" class="mt-4">
+                                <span class="material-icons-outlined">save</span>
+                                Update
+                            </x-primary-button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>

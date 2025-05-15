@@ -99,7 +99,6 @@ class SupplierController extends Controller
     {
         // Validate the request data
         $request->validate([
-            'supplierName' => 'required|string|max:255',
             'supplierAddress' => 'nullable|string',
             'supplierPhoneNumber' => 'nullable|string|max:20',
             'supplierProfileImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -122,7 +121,6 @@ class SupplierController extends Controller
 
         // Update the supplier data
         $supplier->update([
-            'supplierName' => $request->supplierName,
             'supplierAddress' => $request->supplierAddress,
             'supplierPhoneNumber' => $request->supplierPhoneNumber,
             'supplierStatus' => $request->supplierStatus, // Add supplierStatus
