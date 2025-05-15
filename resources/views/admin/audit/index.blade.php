@@ -15,33 +15,33 @@
             <table class="table table-striped inventory-table">
                 <thead class="inventory-table-header">
                     <tr>
-                        <th>Log ID</th>
-                        <th>Employee</th>
-                        <th>Action</th>
-                        <th>Record</th>
-                        <th>Date</th>
-                        <th>Actions</th>
+                        <th class="text-center">Log ID</th>
+                        <th class="text-center">Employee</th>
+                        <th class="text-center">Action</th>
+                        <th class="text-center">Record</th>
+                        <th class="text-center">Date</th>
+                        <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="inventory-table-body table-group-divider">
                     @forelse ($auditLogs as $log)
                         <tr>
-                            <td class="align-middle">{{ $log->logID }}</td>
-                            <td class="align-middle">
+                            <td class="text-center align-middle">{{ $log->logID }}</td>
+                            <td class="text-center align-middle">
                                 {{ $log->employee ? $log->employee->firstName . ' ' . $log->employee->lastName : 'System' }}
                             </td>
-                            <td class="align-middle">{{ ucfirst($log->actionType) }}</td>
-                            <td class="align-middle">
+                            <td class="text-center align-middle">{{ ucfirst($log->actionType) }}</td>
+                            <td class="text-center align-middle">
                                 {{ $tableNames[$log->tableName] ?? ucfirst(str_replace('_', ' ', $log->tableName)) }}
                             </td>
-                            <td class="align-middle">{{ $log->timestamp->format('F j, Y') }}</td>
-                            <td class="align-middle">
+                            <td class="text-center align-middle">{{ $log->timestamp->format('F j, Y') }}</td>
+                            <td class="align-middle d-flex justify-content-center">
                                 @if ($log->details->isNotEmpty())
                                     <x-primary-button class="btn-sm" data-bs-toggle="modal" data-bs-target="#detailsModal{{ $log->logID }}">
                                         View Details
                                     </x-primary-button>
                                 @else
-                                    N/A
+                                    <span class="">N/A</span>
                                 @endif
                             </td>
                         </tr>

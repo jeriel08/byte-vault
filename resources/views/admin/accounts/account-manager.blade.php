@@ -43,7 +43,7 @@
                                 <th scope="col">Email</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Role</th>
-                                <th scope="col">Actions</th>
+                                <th scope="col" class="text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="table-group-divider">
