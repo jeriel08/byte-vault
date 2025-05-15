@@ -46,19 +46,24 @@
             <p><strong>Report Generated:</strong> {{ $reportDate }}</p>
             <p><strong>Date Range:</strong> {{ $dateRangeDisplay }}</p>
             <div class="row mt-3">
+                <!-- Products Card -->
                 <div class="col-6">
-                    <h2 class="fw-bold mb-3">Products</h2>
-                    <p><strong>Total Products:</strong> {{ $totalProducts }}</p>
-                    <p><strong>Total Inventory Value:</strong> ${{ number_format($totalValue, 2) }}</p>
-                    <p><strong>Low Stock Items (Stock < 5):</strong> {{ $lowStockCount }}</p>
+                    <div class="card shadow-sm rounded-4 p-3 d-flex flex-column inventory-report-card" style="height: 100%;">
+                        <h2 class="fw-bold mb-3">Products</h2>
+                        <p><strong>Total Products:</strong> {{ $totalProducts }}</p>
+                        <p><strong>Total Inventory Value:</strong> ${{ number_format($totalValue, 2) }}</p>
+                        <p><strong>Low Stock Items (Stock < 5):</strong> {{ $lowStockCount }}</p>
+                    </div>
                 </div>
+                <!-- Sales Card -->
                 <div class="col-6">
-                    <h2 class="fw-bold mb-3">Sales</h2>
-                    <p><strong>Orders in Range:</strong> {{ $salesOrdersCount }}</p>
-                    <p><strong>Sales Total in Range:</strong> ₱{{ number_format($salesTotalValue, 2) }}</p>
+                    <div class="card shadow-sm rounded-4 p-3 d-flex flex-column inventory-report-card" style="height: 100%;">
+                        <h2 class="fw-bold mb-3">Sales</h2>
+                        <p><strong>Orders in Range:</strong> {{ $salesOrdersCount }}</p>
+                        <p><strong>Sales Total in Range:</strong> ₱{{ number_format($salesTotalValue, 2) }}</p>
+                    </div>
                 </div>
             </div>
-            
         </div>
     
         <hr class="mb-4">

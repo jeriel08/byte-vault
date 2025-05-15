@@ -28,7 +28,8 @@ ul {
     list-style-type: none;
 }
 
-h5 {
+h5,
+h2 {
     color: var(--color-2) !important;
 }
 
@@ -686,4 +687,9 @@ nav.navbar {
     min-width: 80px; /* Adjust as needed */
     text-align: center;
     padding: 0.25rem 0.5rem; /* Consistent padding */
+}
+
+/* ===================== Inventory Report Card Styling ===================== */
+.inventory-report-card {
+    border: 1px solid var(--color-3) !important;
 }
